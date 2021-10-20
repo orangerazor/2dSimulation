@@ -19,6 +19,7 @@ Sprite::Sprite()
 	m_NumberOfVerts = 0;
 	m_xpos = 0;
 	m_ypos = 0;
+	objectRotation = glm::mat4(1.0f);
 }
 
 void Sprite::SetWidth(float size)
@@ -39,6 +40,9 @@ void Sprite::SetYpos(float y)
 {
 	m_ypos = y;
 }
+void Sprite::setMatrix(glm::mat4 matrix) {
+	objectRotation = matrix;
+}
 float Sprite::GetXPos()
 {
 	return m_xpos;
@@ -52,6 +56,21 @@ void Sprite::IncPos(float x, float y)
 {
 	m_xpos += x;
 	m_ypos += y;
+}
+glm::mat4 Sprite::transform(float speed, int direction)
+{
+	if (direction == 0) {
+		//std::cout << "noot noot";
+		objectRotation = glm::rotate(objectRotation, -0.01f, glm::vec3(0, 1, 0));
+	}
+	if (direction == 1) {
+		//std::cout << "noot noot";
+		objectRotation = glm::rotate(objectRotation, 0.01f, glm::vec3(0, 1, 0));
+	}
+	m_xpos += objectRotation[2][0] * speed;
+	m_ypos += objectRotation[2][2] * speed;
+	glm::vec3 vector = glm::vec3(m_xpos, m_ypos, 0);
+	return glm::translate(glm::mat4(1.0f), vector);
 }
 void Sprite::Init(Shader& shader, float colour[3], std::string filename)
 {

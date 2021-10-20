@@ -58,7 +58,8 @@ void display()
 	ViewMatrix = glm::translate(glm::mat4(1.0), glm::vec3(0.0, 0.0, 0.0));
 
 	glEnable(GL_BLEND);
-	glm::mat4 ModelViewMatrix = glm::translate(ViewMatrix, glm::vec3(mySquare.GetXPos(), mySquare.GetYPos(), 0.0));
+	glm::mat4 ModelViewMatrix = mySquare.transform(0.1f, 0);
+	//glm::mat4 ModelViewMatrix = glm::translate(ViewMatrix, glm::vec3(mySquare.GetXPos(), mySquare.GetYPos(), 0.0));
 	mySquare.Render(shader, ModelViewMatrix, ProjectionMatrix);
 	glDisable(GL_BLEND);
 
@@ -130,11 +131,13 @@ void processKeys()
 {
 	if (Left)
 	{
-		mySquare.IncPos(-0.1f, 0.0f);
+		mySquare.transform(1, 0);
+		//mySquare.IncPos(-0.1f, 0.0f);
 	}
 	if (Right)
 	{
-		mySquare.IncPos(0.1f, 0.0f);
+		mySquare.transform(1, 1);
+		//mySquare.IncPos(0.1f, 0.0f);
 	}
 	if (Up)
 	{

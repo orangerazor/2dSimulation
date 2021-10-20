@@ -22,6 +22,7 @@ private:
 	//position of the sprite
 	float m_xpos;
 	float m_ypos;
+	glm::mat4 objectRotation;
 
 	GLuint m_TexName; //identifier for the texture
 
@@ -34,10 +35,11 @@ public:
 	void SetHeight(float size);
 	void SetXpos(float x);
 	void SetYpos(float y);
+	void setMatrix(glm::mat4 matrix);
 	float GetXPos();
 	float GetYPos();
 	void IncPos(float x, float y);
-	void transform(glm::mat4 objectRotation);
+	glm::mat4 transform(float speed, int direction);
 	void Render(Shader& shader, glm::mat4& ModelViewMatrix, glm::mat4& ProjectionMatrix);
 	OBB& GetOBB();
 	bool IsInCollision(OBB &anotherOBB);
