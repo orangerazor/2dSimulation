@@ -16,6 +16,18 @@
     <ClCompile Include="OBB.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="TrafficLight.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Car.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Junction.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ImageLoading.h">
@@ -28,6 +40,15 @@
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="OBB.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Car.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Junction.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="TrafficLight.h">
       <Filter>Headers</Filter>
     </ClInclude>
   </ItemGroup>
