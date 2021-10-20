@@ -19,17 +19,24 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Car.h" />
     <ClInclude Include="ImageLoading.h" />
+    <ClInclude Include="Junction.h" />
     <ClInclude Include="OBB.h" />
     <ClInclude Include="shaders\Shader.h" />
     <ClInclude Include="Sprite.h" />
+    <ClInclude Include="TrafficLight.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Car.cpp" />
     <ClCompile Include="example.cpp" />
     <ClCompile Include="ImageLoading.cpp" />
+    <ClCompile Include="Junction.cpp" />
+    <ClCompile Include="main.cpp" />
     <ClCompile Include="OBB.cpp" />
     <ClCompile Include="shaders\Shader.cpp" />
     <ClCompile Include="Sprite.cpp" />
+    <ClCompile Include="TrafficLight.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="glslfiles\basicTexture.frag" />
