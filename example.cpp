@@ -15,6 +15,10 @@ using namespace std;
 #include "FreeImage.h"
 
 #include "Sprite.h"
+#include "Car.h"
+#include <chrono>
+#include <thread>
+
 
 #include <iostream>
 using namespace std;
@@ -28,9 +32,11 @@ bool Left = false;
 bool Right = false;
 bool Up = false;
 bool Down = false;
+int direction = 0;
 
 Shader shader;
-Sprite mySquare;
+Car mySquare = Car::Car(glm::mat4(1.0f));
+
 
 //OPENGL FUNCTION PROTOTYPES
 void display();				//used as callback in glut for display.
@@ -50,20 +56,25 @@ void reshape(int width, int height)		// Resize the OpenGL window
 }
 
 
-void display()									
+void display()
+
 {
+	std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
 	//clear the colour and depth buffers
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	ViewMatrix = glm::translate(glm::mat4(1.0), glm::vec3(0.0, 0.0, 0.0));
 
 	glEnable(GL_BLEND);
-	glm::mat4 ModelViewMatrix = mySquare.transform(0.1f, 0);
+	glm::mat4 ModelViewMatrix = mySquare.turn(0.1f, direction);
 	//glm::mat4 ModelViewMatrix = glm::translate(ViewMatrix, glm::vec3(mySquare.GetXPos(), mySquare.GetYPos(), 0.0));
 	mySquare.Render(shader, ModelViewMatrix, ProjectionMatrix);
 	glDisable(GL_BLEND);
 
 	glutSwapBuffers();
+	std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+
+	std::this_thread::sleep_for(std::chrono::milliseconds((1000 / 30) - chrono::duration_cast<std::chrono::milliseconds>(end - begin).count()));
 
 }
 
@@ -83,7 +94,6 @@ void init()
 	mySquare.SetWidth(10.0f *(500 / 264.0f));
 	mySquare.SetHeight(10.0f);
 	float red[3] = { 1,0,0 };
-
 	mySquare.Init(shader, red, "textures/car.png");
 
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -142,10 +152,14 @@ void processKeys()
 	if (Up)
 	{
 		mySquare.IncPos(0.0f, 0.1f);
+		direction = -1;
+		
 	}
 	if (Down)
 	{
 		mySquare.IncPos(0.0f, -0.1f);
+		direction = 1;
+
 	}
 }
 
