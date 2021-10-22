@@ -1,4 +1,5 @@
 #include "Car.h"
+const double PI = 3.141592653589793238463;
 #include "glm/ext/matrix_transform.hpp"
 
 Car::Car(glm::mat4 rotation) {

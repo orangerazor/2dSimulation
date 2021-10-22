@@ -32,7 +32,7 @@ bool Left = false;
 bool Right = false;
 bool Up = false;
 bool Down = false;
-int direction = 0;
+int direction = 1;
 
 Shader shader;
 Car mySquare = Car::Car(glm::mat4(1.0f));
@@ -152,7 +152,8 @@ void processKeys()
 	if (Up)
 	{
 		mySquare.IncPos(0.0f, 0.1f);
-		direction = -1;
+		mySquare.SetYpos(0.0f);
+		mySquare.SetXpos(0.0f);
 		
 	}
 	if (Down)
