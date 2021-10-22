@@ -16,6 +16,7 @@ using namespace std;
 
 #include "Sprite.h"
 #include "Car.h"
+#include "Junction.h"
 #include <chrono>
 #include <thread>
 
@@ -32,10 +33,11 @@ bool Left = false;
 bool Right = false;
 bool Up = false;
 bool Down = false;
-int direction = 1;
+int direction = 0;
 
 Shader shader;
 Car mySquare = Car::Car(glm::mat4(1.0f));
+Junction junction = Junction::Junction("T", true, true, true, false, 0, glm::mat4(1.0f));
 
 
 //OPENGL FUNCTION PROTOTYPES
@@ -66,9 +68,17 @@ void display()
 	ViewMatrix = glm::translate(glm::mat4(1.0), glm::vec3(0.0, 0.0, 0.0));
 
 	glEnable(GL_BLEND);
+	
+	junction.Render(shader, glm::mat4(1.0f), ProjectionMatrix);
 	glm::mat4 ModelViewMatrix = mySquare.turn(0.1f, direction);
-	//glm::mat4 ModelViewMatrix = glm::translate(ViewMatrix, glm::vec3(mySquare.GetXPos(), mySquare.GetYPos(), 0.0));
 	mySquare.Render(shader, ModelViewMatrix, ProjectionMatrix);
+	if (mySquare.IsInCollision(junction.GetOBB())) {
+		direction = 1;
+	}
+	else {
+		direction = 0;
+	}
+	
 	glDisable(GL_BLEND);
 
 	glutSwapBuffers();
@@ -91,11 +101,16 @@ void init()
 	}
 
 	///This part commented is to scale the width of the sprite to match the dimensions of the car.png image.
-	mySquare.SetWidth(10.0f *(500 / 264.0f));
-	mySquare.SetHeight(10.0f);
+	mySquare.SetWidth(2.0f *(500 / 264.0f));
+	mySquare.SetHeight(2.0f);
+	junction.SetWidth(20.0f * (100 / 107.0f));
+	junction.SetHeight(20.0f);
+
 	float red[3] = { 1,0,0 };
 	mySquare.Init(shader, red, "textures/car.png");
-
+	junction.Init(shader, red, "textures/t-junction.png");
+	mySquare.SetXpos(junction.GetOBB().vertOriginal[0].x+(junction.getWidth()/2));
+	mySquare.SetYpos(junction.GetOBB().vertOriginal[0].y-(junction.getHeight()/2));
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 

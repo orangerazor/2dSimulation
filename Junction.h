@@ -23,6 +23,8 @@ private:
     glm::vec3 joinStart;
     glm::vec3 joinDirection;
 public:
+
+
     Junction(std::string name, bool left, bool right, bool forward, bool backward, int speedLimit, glm::mat4 rotation);
 
     inline std::array<bool, 4> getTurnings(){

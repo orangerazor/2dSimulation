@@ -59,6 +59,28 @@ glm::mat4 Car::turn(float speed, int direction) {
 
 }
 
+glm::mat4 Car::rotate(float speed, int direction)
+{
+	switch (direction) {
+	case(-1):
+		objectRotation = glm::rotate(objectRotation, -0.01f, glm::vec3(0, 0, 1));
+		break;
+	case(0):
+		objectRotation = glm::rotate(objectRotation, 0.0f, glm::vec3(0, 0, 1));
+		break;
+	case(1):
+		objectRotation = glm::rotate(objectRotation, 0.01f, glm::vec3(0, 0, 1));
+		break;
+	default:
+		break;
+	}
+	m_xpos += objectRotation[2][0] * speed;
+	m_ypos += objectRotation[2][2] * speed;
+	glm::vec3 vector = glm::vec3(m_xpos, m_ypos, 0);
+	return glm::translate(glm::mat4(1.0f), vector);
+
+}
+
 
 glm::mat4 Car::moveJunction(Junction junction, int desiredTurning, glm::mat4 objectRotation, glm::vec3 pos, float speed) {
 	// Check if centre of the car has reached the mark to turn

@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Box.h" />
     <ClInclude Include="Car.h" />
     <ClInclude Include="ImageLoading.h" />
     <ClInclude Include="Junction.h" />
@@ -28,6 +29,7 @@
     <ClInclude Include="TrafficLight.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Box.cpp" />
     <ClCompile Include="Car.cpp" />
     <ClCompile Include="example.cpp" />
     <ClCompile Include="ImageLoading.cpp" />

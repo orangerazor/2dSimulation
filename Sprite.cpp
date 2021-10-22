@@ -52,6 +52,14 @@ float Sprite::GetYPos()
 	return m_ypos;
 }
 
+float Sprite::getWidth() {
+	return m_Width;
+}
+
+float Sprite::getHeight() {
+	return m_Height;
+}
+
 void Sprite::IncPos(float x, float y)
 {
 	m_xpos += x;
@@ -98,6 +106,7 @@ void Sprite::Init(Shader& shader, float colour[3], std::string filename)
 		std::cout << "Image loaded " << std::endl;
 	}
 	
+
 
 	
 

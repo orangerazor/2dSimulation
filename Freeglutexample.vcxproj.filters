@@ -28,6 +28,9 @@
     <ClCompile Include="main.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="Box.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ImageLoading.h">
@@ -49,6 +52,9 @@
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="TrafficLight.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Box.h">
       <Filter>Headers</Filter>
     </ClInclude>
   </ItemGroup>
