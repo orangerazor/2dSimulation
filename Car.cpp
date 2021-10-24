@@ -4,7 +4,9 @@ const double PI = 3.141592653589793238463;
 
 Car::Car(glm::mat4 rotation) {
 	rayStart = glm::vec3(0, 0, 0);
-	rayDirection = glm::vec3(0, 0, 0);
+	rayDirection = glm::vec3(0, 1, 0);
+	float angle = 1.5708;
+
 
 
 	//// Calculate starting point for the car
@@ -38,25 +40,82 @@ glm::mat4 Car::move(glm::mat4& objectRotation, glm::vec3& pos, float& speed) {
 }
 
 glm::mat4 Car::turn(float speed, int direction) {
-	//called when arriving at a junction
-	switch (direction){
-	case(-1):
-		objectRotation = glm::rotate(objectRotation, -0.01f, glm::vec3(0, 1, 0));
-		break;
-	case(0):
-		objectRotation = glm::rotate(objectRotation, 0.0f, glm::vec3(0, 1, 0));
-		break;
-	case(1):
-		objectRotation = glm::rotate(objectRotation, 0.01f, glm::vec3(0, 1, 0));
-		break;
-	default:
-		break;
-	}
-	m_xpos += objectRotation[2][0] * speed;
-	m_ypos += objectRotation[2][2] * speed;
-	glm::vec3 vector = glm::vec3(m_xpos, m_ypos, 0);
-	return glm::translate(glm::mat4(1.0f), vector);
+	objectRotation = glm::rotate(objectRotation, -0.01f, glm::vec3(0, 0, 1));
+	//std::cout << speed << std::endl;
+	return objectRotation;
+	//return glm::translate(objectRotation, glm::vec3(0,speed,0));
 
+
+
+
+	//called when arriving at a junction
+	//std::cout << m_xpos << ", " << m_ypos << std::endl;
+	//glm::mat4 matrix = glm::mat4(1.0f);
+	//float x = m_xpos;
+	//float y = m_ypos;
+	//x += speed;
+	//y += speed;
+	//float x2 = x;
+	//float y2 = y;
+	//x = (cos(-0.01f) * x2) - (sin(-0.01) * y2);
+	//y = (sin(-0.01f) * x2) + (cos(-0.01) * y2);
+	//m_xpos = x;
+	//m_ypos = y;
+	//std::cout << m_xpos << ", " << m_ypos << "\n" << std::endl;
+
+	//for (int i = 0; i < NUMVERTS; i++) {
+	//	//std::cout << obb.vertOriginal[i].x << ", " << obb.vertOriginal[i].y << std::endl;
+	//	float vertX = obb.vertOriginal[i].x;
+	//	float vertY = obb.vertOriginal[i].y;
+	//	vertX += speed;
+	//	vertY += speed;
+	//	float vertX2 = vertX;
+	//	float vertY2 = vertY;
+	//	vertX = (cos(-0.01f) * vertX2) - (sin(-0.01) * vertY2);
+	//	vertY = (sin(-0.01f) * vertX2) + (cos(-0.01) * vertY2);
+	//	obb.vertOriginal[i].x = vertX;
+	//	obb.vertOriginal[i].y = vertY;
+	//	//std::cout << obb.vertOriginal[i].x << ", " << obb.vertOriginal[i].y << "\n" << std::endl;
+	//}
+	//glm::vec3 vector = glm::vec3(m_xpos, m_ypos, 0);
+	//matrix = glm::translate(matrix, vector);
+	//return glm::rotate(matrix, -0.01f, glm::vec3(0,0,1));
+
+	//objectRotation = glm::rotate(objectRotation, -0.01f, glm::vec3(0, 0, 1));
+	//objectRotation = glm::rotate(objectRotation, 0.0f, glm::vec3(1, 0, 0));
+	//objectRotation = glm::rotate(objectRotation, 0.0f, glm::vec3(0, 1, 0));
+	//float x = m_xpos;
+	//float y = m_ypos;
+	//m_xpos += (objectRotation[0][0] * x * speed) + ((objectRotation[0][1] * y * speed));
+	//m_ypos += (objectRotation[1][0] * x * speed) + ((objectRotation[1][1] * y * speed));
+	//for (int i = 0; i < 4;i++) {
+	//	for (int j = 0; j < 4; j++) {
+	//		std::cout << objectRotation[i][j] << ", ";
+	//	}
+	//	std::cout << "\n";
+	//}
+	//std::cout << "\n\n";
+	//std::cout << m_xpos << ", " << m_ypos << "\n" << std::endl;
+	//glm::vec3 vector = glm::vec3(m_xpos, m_ypos, 0);
+	//return glm::translate(glm::mat4(1.0f), vector);
+
+//	switch (direction){
+//	case(-1):
+//		objectRotation = glm::rotate(objectRotation, -0.01f, glm::vec3(0, 1, 0));
+//		break;
+//	case(0):
+//		objectRotation = glm::rotate(objectRotation, 0.0f, glm::vec3(0, 1, 0));
+//		break;
+//	case(1):
+//		objectRotation = glm::rotate(objectRotation, 0.01f, glm::vec3(0, 1, 0));
+//		break;
+//	default:
+//		break;
+//	}
+//	m_xpos += objectRotation[2][0] * speed;
+//	m_ypos += objectRotation[2][2] * speed;
+//	glm::vec3 vector = glm::vec3(m_xpos, m_ypos, 0);
+//	return glm::translate(glm::mat4(1.0f), vector);
 }
 
 glm::mat4 Car::rotate(float speed, int direction)
@@ -101,4 +160,128 @@ glm::mat4 Car::moveJunction(Junction junction, int desiredTurning, glm::mat4 obj
 	//}
 	//return objectRotation;
 	return glm::mat4();
+}
+glm::mat4 Car::drive(float speed, int direction, float angle) {
+	//switch (direction) {
+	//		case(-1):
+	//			angle -= 0.01;
+	//			break;
+	//		case(0):
+	//			angle = -PI / 2;
+	//			break;
+	//		case(1):
+	//			angle += 0.01;
+	//			break;
+	//		default:
+	//			break;
+	//		}
+
+	//return glm::translate(glm::mat4(1.0f), glm::vec3(m_xpos -m_xpos, m_ypos -m_ypos, 0));
+	glm::mat4 translateRotate = glm::mat4(1.0f);
+	//translateRotate[0][0] = cos(angle);
+	//translateRotate[1][0] = -sin(angle);
+	//translateRotate[3][0] = (cos(angle) * (-m_xpos)) + (sin(angle) * (-m_ypos));
+	//translateRotate[0][1] = sin(angle);
+	//translateRotate[1][1] = cos(angle);
+	//translateRotate[3][1] = (sin(angle) * (-m_xpos)) + (cos(angle) * (-m_ypos));
+	//translateRotate[3][0] = 0;
+	//translateRotate[3][1] = 0;
+	//for (int i = 0; i < 4;i++) {
+	//	for (int j = 0; j < 4; j++) {
+	//		std::cout << translateRotate[j][i] << ", ";
+	//	}
+	//	std::cout << "\n";
+	//}
+	//std::cout << "\n\n";
+	//return translateRotate;
+
+	float x = m_xpos;
+	float y = m_ypos;
+
+	rayStart = glm::vec3((m_xpos), (m_ypos), 0);
+	std::cout << m_xpos << ", " << m_ypos << std::endl;
+	glm::vec3 rayEnd = glm::vec3((m_xpos * cos(angle)) - ((m_ypos + 1) * sin(angle)), (m_xpos * sin(angle)) + ((m_ypos + 1) * cos(angle)), 0);
+	//rayStart = glm::vec3(0, 0, 0);
+	//glm::vec3 rayEnd = glm::vec3((0 * cos(angle)) - (0 + 1 * sin(angle)), (0 * sin(angle)) + (0 + 1 * cos(angle)), 0);
+	rayDirection = rayEnd - rayStart;
+	//std::cout << rayEnd.x << ", " << rayEnd.y << std::endl;
+	glm::mat4 matrix = glm::mat4(1.0f);
+	// Orbit order
+	matrix[0][0] = cos(angle);
+	matrix[1][0] = (sin(angle) * -1);
+	matrix[3][0] = m_xpos;
+	//matrix[3][0] = m_xpos + (rayStart.x + (speed * rayDirection.x));
+	matrix[0][1] = sin(angle);
+	matrix[1][1] = cos(angle);
+	matrix[3][1] = m_ypos;
+	//matrix[3][1] = m_ypos + (rayStart.y + (speed * rayDirection.y));
+	//std::cout << speed << std::endl;
+	//std::cout << rayStart.x + (speed * rayDirection.x) << ", " << rayStart.y + (speed * rayDirection.y) << "\n\n" << std::endl;
+
+	//m_xpos = rayStart.x + (speed * rayDirection.x);
+	//m_ypos = rayStart.y + (speed * rayDirection.y);
+	//m_xpos += 0.001f;
+	glBegin(GL_TRIANGLES);
+		glVertex2f(0, 0);
+		glVertex2f(0.6, 0.6);
+		glVertex2f(0, 0.2);
+		//glVertex2f(rayStart.x, rayStart.y);
+		//glVertex2f(rayEnd.x, rayEnd.y);
+	glEnd();
+
+	//glm::vec3 fuck = matrix * glm::vec4(rayStart, 1);
+	//glm::vec3 off = matrix * glm::vec4(m_xpos, m_ypos + 1, 0, 1);
+
+	//m_xpos = fuck.x + (speed * off.x);
+	//m_ypos = fuck.y + (speed * off.y);
+
+	//std::cout << matrix[3][0] << ", " << matrix[3][1] << std::endl;
+	//m_xpos += matrix[3][0];
+	//m_ypos += matrix[3][1];
+	//m_xpos += speed / 400 * rayEnd.x;
+	//m_ypos += speed / 400 * rayEnd.y;
+	//m_xpos = (x * cos(angle)) - (y * sin(angle));
+	//m_ypos = (x * sin(angle)) + (y * cos(angle));
+
+	// Other order
+	//matrix[0][0] = cos(angle);
+	//matrix[1][0] = -sin(angle);
+	//matrix[3][0] = (cos(angle) * (rayStart.x + (speed * rayDirection.x))) + ( (sin(angle) * -1) * (rayStart.y + (speed * rayDirection.y)) );
+	//matrix[0][1] = sin(angle);
+	//matrix[1][1] = cos(angle);
+	//matrix[3][1] = (sin(angle) * (rayStart.x + (speed * rayDirection.x))) + (cos(angle) * (rayStart.y + (speed * rayDirection.y)));
+
+	//Translate back then forward
+	//matrix[0][0] = cos(angle);
+	//matrix[1][0] = -sin(angle);
+	//matrix[3][0] = (-cos(angle) * -m_xpos) + (sin(angle) * -m_ypos) + m_xpos + (rayStart.x + (speed * rayDirection.x));
+	//matrix[0][1] = sin(angle);
+	//matrix[1][1] = cos(angle);
+	//matrix[3][1] = (-sin(angle) * -m_xpos) - (cos(angle) * -m_ypos) + m_ypos + (rayStart.y + (speed * rayDirection.y));
+
+
+	//for (int i = 0; i < 4;i++) {
+	//	for (int j = 0; j < 4; j++) {
+	//		std::cout << matrix[j][i] << ", ";
+	//	}
+	//	std::cout << "\n";
+	//}
+	//std::cout << "\n\n";
+
+	//std::cout << (matrix[0][0] * x) << ", " << (matrix[1][0] * y) << ", " << (matrix[3][0]) << std::endl;
+	//std::cout << (matrix[0][1] * x) << ", " << (matrix[1][1] * y) << ", " << (matrix[3][1]) << std::endl;
+	//std::cout << (matrix[0][1] * x) + (matrix[1][1] * y) + (matrix[3][1]) << std::endl;
+
+	//m_xpos = (matrix[0][0] * x) + (matrix[1][0] * y) +(matrix[3][0]);
+	//m_ypos = (matrix[0][1] * x) + (matrix[1][1] * y) +(matrix[3][1]);
+	//return glm::translate(glm::mat4(1.0f), glm::vec3(0, speed * rayDirection.y, 0));
+
+	//glm::mat4 test = glm::mat4(1.0f);
+	//test = glm::translate(test, glm::vec3(-m_xpos, -m_ypos, 0));
+	//test = glm::rotate(test, angle, glm::vec3(0, 0, 1));
+	//test = glm::translate(test, glm::vec3(m_xpos, m_ypos, 0));
+	//test = glm::translate(test, glm::vec3((rayStart.x + (speed * rayDirection.x)), (rayStart.y + (speed * rayDirection.y)), 0));
+	//return test;
+
+	return matrix;
 }

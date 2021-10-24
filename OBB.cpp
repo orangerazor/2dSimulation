@@ -25,7 +25,24 @@ void OBB::transformPoints(glm::mat4 matrix)
 	{
 		vert[i] = matrix*vertOriginal[i]; 
 		vert[i] = matrix*vertOriginal[i];
+		//std::cout << vert[i].x << ", " << vert[i].y << std::endl;
 	}
+}
+
+float OBB::xCentre(glm::mat4 matrix) {
+	float average = 0;
+	for (int i = 0; i < NUMVERTS; i++) {
+		average += vert[i].x;
+	}
+	return average / NUMVERTS;
+}
+
+float OBB::yCentre(glm::mat4 matrix) {
+	float average = 0;
+	for (int i = 0; i < NUMVERTS; i++) {
+		average += vert[i].y;
+	}
+	return average / NUMVERTS;
 }
 
 bool OBB::SAT2D(OBB& p2) 

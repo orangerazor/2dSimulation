@@ -19,6 +19,8 @@ public:
 
 	//member functions
 	void transformPoints(glm::mat4 matrix);
+	float xCentre(glm::mat4 matrix);
+	float yCentre(glm::mat4 matrix);
 	bool SAT2D(OBB& p2);
 	bool SATtest(float proj[4], float len);
 };

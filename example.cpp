@@ -34,6 +34,8 @@ bool Right = false;
 bool Up = false;
 bool Down = false;
 int direction = 0;
+float speed = 0;
+float angle = 0;
 
 Shader shader;
 Car mySquare = Car::Car(glm::mat4(1.0f));
@@ -70,10 +72,15 @@ void display()
 	glEnable(GL_BLEND);
 	
 	junction.Render(shader, glm::mat4(1.0f), ProjectionMatrix);
-	glm::mat4 ModelViewMatrix = mySquare.turn(0.1f, direction);
+	//glm::mat4 ModelViewMatrix = mySquare.turn(speed, direction);
+	//std::cout << mySquare.GetXPos() << ", " << mySquare.GetYPos() << std::endl;
+	//mySquare.IncPos(0, 0.01f);
+	glm::mat4 ModelViewMatrix = mySquare.drive(speed, direction, angle) * ViewMatrix;
+	//speed += 0.03f;
+	ModelViewMatrix = glm::rotate(ModelViewMatrix, -1.5708f, glm::vec3(0, 0, 1));
 	mySquare.Render(shader, ModelViewMatrix, ProjectionMatrix);
 	if (mySquare.IsInCollision(junction.GetOBB())) {
-		direction = 1;
+		direction = -1;
 	}
 	else {
 		direction = 0;
@@ -108,9 +115,11 @@ void init()
 
 	float red[3] = { 1,0,0 };
 	mySquare.Init(shader, red, "textures/car.png");
-	junction.Init(shader, red, "textures/t-junction.png");
-	mySquare.SetXpos(junction.GetOBB().vertOriginal[0].x+(junction.getWidth()/2));
-	mySquare.SetYpos(junction.GetOBB().vertOriginal[0].y-(junction.getHeight()/2));
+	//junction.Init(shader, red, "textures/t-junction.png");
+	//mySquare.SetXpos(junction.GetOBB().vertOriginal[0].x+(junction.getWidth()/2));
+	//mySquare.SetYpos(junction.GetOBB().vertOriginal[0].y-(junction.getHeight()/2));
+	mySquare.SetXpos(0);
+	mySquare.SetYpos(4);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
@@ -156,25 +165,30 @@ void processKeys()
 {
 	if (Left)
 	{
-		mySquare.transform(1, 0);
+		angle += 0.01f;
+		speed = 0;
+		//mySquare.transform(1, 0);
 		//mySquare.IncPos(-0.1f, 0.0f);
 	}
 	if (Right)
 	{
-		mySquare.transform(1, 1);
+		angle -= 0.01f;
+		//mySquare.transform(1, 1);
 		//mySquare.IncPos(0.1f, 0.0f);
 	}
 	if (Up)
 	{
-		mySquare.IncPos(0.0f, 0.1f);
-		mySquare.SetYpos(0.0f);
-		mySquare.SetXpos(0.0f);
+		speed += 0.03f;
+		//mySquare.IncPos(0.0f, 0.1f);
+		//mySquare.SetYpos(0.0f);
+		//mySquare.SetXpos(0.0f);
 		
 	}
 	if (Down)
 	{
-		mySquare.IncPos(0.0f, -0.1f);
-		direction = 1;
+		speed -= 0.03f;
+		//mySquare.IncPos(0.0f, -0.1f);
+		//direction = 1;
 
 	}
 }
