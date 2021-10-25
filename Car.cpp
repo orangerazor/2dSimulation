@@ -1,6 +1,8 @@
 #include "Car.h"
 const double PI = 3.141592653589793238463;
 #include "glm/ext/matrix_transform.hpp"
+#include <vector>
+#include <random>
 
 Car::Car(glm::mat4 rotation) {
 	rayStart = glm::vec3(0, 0, 0);
@@ -134,15 +136,26 @@ glm::mat4 Car::rotate(float speed, int direction, Junction junction)
 			yVert = (junction.GetOBB().vertOriginal[i].y + junction.GetOBB().vertOriginal[0].y) / 2;
 		}
 		float distanceFromEdge = ( (m_xpos - xVert) * (m_xpos - xVert)) + ( (m_ypos - yVert) * (m_ypos - yVert));
-		if (bestDist = -1 || distanceFromEdge < bestDist) {
+		if (bestDist == -1 || distanceFromEdge < bestDist) {
 			bestDist = distanceFromEdge;
 			entryPoint = i;
 		}
 	}
 
+	int numTurns = junction.getTurnings().size();
+	std::vector<int> possibleTurnings;
+	for (int i = 0; i < numTurns; i++) {
+		if (junction.getTurning(i) == true) {
+			possibleTurnings.push_back(i);
+		}
+	}
+	srand(time(NULL));
+	int random = rand() % possibleTurnings.size();
+	std::cout << random << std::endl;
+
 	switch (direction) {
 	case(-1):
-		objectRotation = glm::rotate(objectRotation, -0.01f, glm::vec3(0, 1, 0));
+		objectRotation = glm::rotate(objectRotation, -0.011f, glm::vec3(0, 1, 0));
 		break;
 	case(0):
 		objectRotation = glm::rotate(objectRotation, 0.0f, glm::vec3(0, 1, 0));
