@@ -42,9 +42,18 @@ glm::mat4 Car::move(glm::mat4& objectRotation, glm::vec3& pos, float& speed) {
 }
 
 glm::mat4 Car::turn(float speed, int direction) {
-	objectRotation = glm::rotate(objectRotation, -0.01f, glm::vec3(0, 0, 1));
+	
+	glm::mat4 matrix = glm::rotate(glm::mat4(1.0f), angle, glm::vec3(0.0f,0.0f,1.0f));
+	
+	forVec *= matrix;
+
+	m_xpos += forVec.x;	
+	m_ypos += forVec.y;
+
+
+	//objectRotation = glm::rotate(objectRotation, -0.01f, glm::vec3(0, 0, 1));
 	//std::cout << speed << std::endl;
-	return objectRotation;
+	//return objectRotation;
 	//return glm::translate(objectRotation, glm::vec3(0,speed,0));
 
 
@@ -120,9 +129,12 @@ glm::mat4 Car::turn(float speed, int direction) {
 //	return glm::translate(glm::mat4(1.0f), vector);
 }
 
-glm::mat4 Car::rotate(float speed, int direction, Junction junction)
+int Car::entryPoint(Junction junction)
 {
-	int entryPoint = 0;
+	if (currentJunction == junction.getName()) {
+		return entryTurning;
+	}
+	int entryPoint2 = 0;
 	float bestDist = -1;
 	for (int i = 0; i < 4; i++) {
 		float xVert = INT_MAX;
@@ -135,24 +147,108 @@ glm::mat4 Car::rotate(float speed, int direction, Junction junction)
 			xVert = (junction.GetOBB().vertOriginal[i].x + junction.GetOBB().vertOriginal[0].x) / 2;
 			yVert = (junction.GetOBB().vertOriginal[i].y + junction.GetOBB().vertOriginal[0].y) / 2;
 		}
-		float distanceFromEdge = ( (m_xpos - xVert) * (m_xpos - xVert)) + ( (m_ypos - yVert) * (m_ypos - yVert));
+		//std::cout << xVert << ", " << yVert << std::endl;
+		float distanceFromEdge = ((m_xpos - xVert) * (m_xpos - xVert)) + ((m_ypos - yVert) * (m_ypos - yVert));
 		if (bestDist == -1 || distanceFromEdge < bestDist) {
 			bestDist = distanceFromEdge;
-			entryPoint = i;
+			if (i == 3) {
+				entryPoint2 = 0;
+			}
+			else if (i == 0) {
+				entryPoint2 = 3;
+			}
+			else {
+				entryPoint2 = i;
+			}
 		}
 	}
+	entryTurning = entryPoint2;
+	return entryPoint2;
+}
 
+int Car::decideDirection(Junction junction, int entryPoint) {
+	if (currentJunction == junction.getName()) {
+		return exit;
+	}
 	int numTurns = junction.getTurnings().size();
 	std::vector<int> possibleTurnings;
 	for (int i = 0; i < numTurns; i++) {
+		if (i == entryPoint) {
+			continue;
+		}
 		if (junction.getTurning(i) == true) {
+			std::cout << "i = " << i << std::endl;
 			possibleTurnings.push_back(i);
 		}
 	}
 	srand(time(NULL));
 	int random = rand() % possibleTurnings.size();
-	std::cout << random << std::endl;
 
+	currentJunction = junction.getName();
+	random = possibleTurnings.at(random);
+	std::cout << entryPoint << std::endl;
+	std::cout << random << std::endl;
+	switch (entryPoint) {
+	case(0):
+		switch (random) {
+		case(1):
+			random = 0;
+			break;
+		case(2):
+			random = -1;
+			break;
+		case(3):
+			random = 1;
+			break;
+		}
+		break;
+	case(1):
+		switch (random) {
+		case(0):
+			random = 0;
+			break;
+		case(2):
+			random = 1;
+			break;
+		case(3):
+			random = -1;
+			break;
+		}
+		break;
+	case(2):
+		switch (random) {
+		case(0):
+			random = 1;
+			break;
+		case(1):
+			random = -1;
+			break;
+		case(3):
+			random = 0;
+			break;
+		}
+		break;
+	case(3):
+		switch (random) {
+		case(0):
+			random = -1;
+			break;
+		case(1):
+			random = 1;
+			break;
+		case(2):
+			random = 0;
+			break;
+		}
+		break;
+	}
+	std::cout << random << std::endl;
+	exit = random;
+	return random;
+}
+
+glm::mat4 Car::rotate(float speed, int direction, int entryPoint, Junction junction)
+{
 	switch (direction) {
 	case(-1):
 		objectRotation = glm::rotate(objectRotation, -0.011f, glm::vec3(0, 1, 0));
@@ -336,4 +432,12 @@ glm::mat4 Car::drive(float speed, int direction, float angle) {
 	//return test;
 
 	return matrix;
+}
+
+void Car::setCurrentJunction(std::string name) {
+	currentJunction = name;
+}
+
+std::string Car::getCurrentJunction() {
+	return currentJunction;
 }

@@ -40,7 +40,7 @@ float angle = 0;
 
 Shader shader;
 Car mySquare = Car::Car(glm::mat4(1.0f));
-Junction junction = Junction::Junction("T", true, true, true, false, 0, glm::mat4(1.0f));
+Junction junction = Junction::Junction("T", true, true, false, true, 0, glm::mat4(1.0f));
 
 
 //OPENGL FUNCTION PROTOTYPES
@@ -78,14 +78,18 @@ void display()
 	//mySquare.IncPos(0, 0.01f);
 	/*glm::mat4 modelviewmatrix = mysquare.drive(speed, direction, angle) * viewmatrix;*/
 
-	glm::mat4 ModelViewMatrix = mySquare.rotate(0.1f, direction, junction);
+	int entryPoint = mySquare.entryPoint(junction);
+	int direction = mySquare.decideDirection(junction, entryPoint);
+	glm::mat4 ModelViewMatrix = glm::mat4(1.0f);
+	if (mySquare.IsInCollision(junction.GetOBB())) {
+		ModelViewMatrix = mySquare.rotate(0.1f, direction, entryPoint, junction);
+	}
+	else {
+		ModelViewMatrix = mySquare.rotate(0.1f, 0, entryPoint, junction);
+	}
 	//speed += 0.03f;
 	/*ModelViewMatrix = glm::rotate(ModelViewMatrix, -1.5708f, glm::vec3(0, 0, 1));*/
 	mySquare.Render(shader, ModelViewMatrix, ProjectionMatrix);
-
-	if (mySquare.IsInCollision(junction.GetOBB())) {
-		mySquare.rotate(0.1f, 0, junction);
-	}
 	
 	glDisable(GL_BLEND);
 
@@ -117,13 +121,22 @@ void init()
 	float red[3] = { 1,0,0 };
 	mySquare.Init(shader, red, "textures/car.png");
 	junction.Init(shader, red, "textures/t-junction.png");
+	//top
+	//mySquare.SetXpos(junction.GetOBB().vertOriginal[0].x+(junction.getWidth()*3/8));
+	//mySquare.SetYpos(junction.GetOBB().vertOriginal[3].y+(junction.getHeight()/2));
+	//mySquare.setMatrix(glm::rotate(mySquare.getMatrix(), glm::radians(180.0f), glm::vec3(0, 1, 0)));
 	//bottom
-	/*mySquare.SetXpos(junction.GetOBB().vertOriginal[0].x+(junction.getWidth()*3/8));
-	mySquare.SetYpos(junction.GetOBB().vertOriginal[0].y-(junction.getHeight()/2));*/
+	mySquare.SetXpos(junction.GetOBB().vertOriginal[0].x+(junction.getWidth()*3/8));
+	mySquare.SetYpos(junction.GetOBB().vertOriginal[0].y-(junction.getHeight()/2));
 	//left
-	mySquare.SetXpos(junction.GetOBB().vertOriginal[0].x - (junction.getWidth() * 3 / 8));
+	/*mySquare.SetXpos(junction.GetOBB().vertOriginal[0].x - (junction.getWidth() * 3 / 8));
 	mySquare.SetYpos(junction.GetOBB().vertOriginal[0].y + (junction.getHeight() * 5/8));
-	mySquare.setMatrix(glm::rotate(mySquare.getMatrix(), glm::radians(90.0f), glm::vec3(0, 1, 0)));
+	mySquare.setMatrix(glm::rotate(mySquare.getMatrix(), glm::radians(90.0f), glm::vec3(0, 1, 0)));*/
+	//right
+	/*mySquare.SetXpos(junction.GetOBB().vertOriginal[1].x + (junction.getWidth() * 3 / 8));
+	mySquare.SetYpos(junction.GetOBB().vertOriginal[1].y + (junction.getHeight() * 5/8));
+	mySquare.setMatrix(glm::rotate(mySquare.getMatrix(), glm::radians(270.0f), glm::vec3(0, 1, 0)));*/
+
 	//mySquare.SetXpos(0);
 	//mySquare.SetYpos(4);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
