@@ -122,13 +122,13 @@ glm::mat4 Car::rotate(float speed, int direction)
 {
 	switch (direction) {
 	case(-1):
-		objectRotation = glm::rotate(objectRotation, -0.01f, glm::vec3(0, 1, 0));
+		objectRotation = glm::rotate(objectRotation, -0.011f, glm::vec3(0, 1, 0));
 		break;
 	case(0):
 		objectRotation = glm::rotate(objectRotation, 0.0f, glm::vec3(0, 1, 0));
 		break;
 	case(1):
-		objectRotation = glm::rotate(objectRotation, 0.01f, glm::vec3(0, 1, 0));
+		objectRotation = glm::rotate(objectRotation, 0.011f, glm::vec3(0, 1, 0));
 		break;
 	default:
 		break;

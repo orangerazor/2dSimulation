@@ -80,11 +80,9 @@ void display()
 	//speed += 0.03f;
 	/*ModelViewMatrix = glm::rotate(ModelViewMatrix, -1.5708f, glm::vec3(0, 0, 1));*/
 	mySquare.Render(shader, ModelViewMatrix, ProjectionMatrix);
+
 	if (mySquare.IsInCollision(junction.GetOBB())) {
-		direction = -1;
-	}
-	else {
-		direction = 0;
+		mySquare.rotate(0.1f, 0);
 	}
 	
 	glDisable(GL_BLEND);
@@ -117,7 +115,7 @@ void init()
 	float red[3] = { 1,0,0 };
 	mySquare.Init(shader, red, "textures/car.png");
 	junction.Init(shader, red, "textures/t-junction.png");
-	mySquare.SetXpos(junction.GetOBB().vertOriginal[0].x+(junction.getWidth()/4));
+	mySquare.SetXpos(junction.GetOBB().vertOriginal[0].x+(junction.getWidth()*3/8));
 	mySquare.SetYpos(junction.GetOBB().vertOriginal[0].y-(junction.getHeight()/2));
 	//mySquare.SetXpos(0);
 	//mySquare.SetYpos(4);
