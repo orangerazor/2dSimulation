@@ -38,6 +38,7 @@ public:
 	void SetXpos(float x);
 	void SetYpos(float y);
 	void setMatrix(glm::mat4 matrix);
+	glm::mat4 getMatrix();
 	float GetXPos();
 	float GetYPos();
 	float getWidth();

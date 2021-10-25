@@ -35,6 +35,7 @@ bool Up = false;
 bool Down = false;
 int direction = 0;
 float speed = 0;
+const double PI = 3.141592653589793238463;
 float angle = 0;
 
 Shader shader;
@@ -76,13 +77,14 @@ void display()
 	//std::cout << mySquare.GetXPos() << ", " << mySquare.GetYPos() << std::endl;
 	//mySquare.IncPos(0, 0.01f);
 	/*glm::mat4 modelviewmatrix = mysquare.drive(speed, direction, angle) * viewmatrix;*/
+
 	glm::mat4 ModelViewMatrix = mySquare.rotate(0.1f, direction, junction);
 	//speed += 0.03f;
 	/*ModelViewMatrix = glm::rotate(ModelViewMatrix, -1.5708f, glm::vec3(0, 0, 1));*/
 	mySquare.Render(shader, ModelViewMatrix, ProjectionMatrix);
 
 	if (mySquare.IsInCollision(junction.GetOBB())) {
-		mySquare.rotate(0.1f, 0);
+		mySquare.rotate(0.1f, 0, junction);
 	}
 	
 	glDisable(GL_BLEND);
@@ -115,8 +117,13 @@ void init()
 	float red[3] = { 1,0,0 };
 	mySquare.Init(shader, red, "textures/car.png");
 	junction.Init(shader, red, "textures/t-junction.png");
-	mySquare.SetXpos(junction.GetOBB().vertOriginal[0].x+(junction.getWidth()*3/8));
-	mySquare.SetYpos(junction.GetOBB().vertOriginal[0].y-(junction.getHeight()/2));
+	//bottom
+	/*mySquare.SetXpos(junction.GetOBB().vertOriginal[0].x+(junction.getWidth()*3/8));
+	mySquare.SetYpos(junction.GetOBB().vertOriginal[0].y-(junction.getHeight()/2));*/
+	//left
+	mySquare.SetXpos(junction.GetOBB().vertOriginal[0].x - (junction.getWidth() * 3 / 8));
+	mySquare.SetYpos(junction.GetOBB().vertOriginal[0].y + (junction.getHeight() * 5/8));
+	mySquare.setMatrix(glm::rotate(mySquare.getMatrix(), glm::radians(90.0f), glm::vec3(0, 1, 0)));
 	//mySquare.SetXpos(0);
 	//mySquare.SetYpos(4);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
