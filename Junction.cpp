@@ -76,6 +76,10 @@ int Junction::getNumberTurnings(){
     return total;
 }
 
+std::string Junction::getName() {
+    return name;
+}
+
 //int main(){
 //    Junction* testJunction = new Junction("test", true, true, false, true, 60);
 //    std::cout << testJunction->getNumberTurnings();

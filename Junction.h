@@ -26,6 +26,7 @@ public:
 
 
     Junction(std::string name, bool left, bool right, bool forward, bool backward, int speedLimit, glm::mat4 rotation);
+    std::string getName();
 
     inline std::array<bool, 4> getTurnings(){
         return this->turnings;
