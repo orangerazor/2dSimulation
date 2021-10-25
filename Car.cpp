@@ -186,7 +186,6 @@ glm::mat4 Car::rotate(float speed, int direction, Junction junction)
 	}
 	m_xpos += objectRotation[2][0] * speed;
 	m_ypos += objectRotation[2][2] * speed;
-
 	glm::vec3 vector = glm::vec3(m_xpos, m_ypos, 0);
 	return glm::translate(glm::mat4(1.0f), vector);
 
