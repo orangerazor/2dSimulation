@@ -76,7 +76,7 @@ void display()
 	//std::cout << mySquare.GetXPos() << ", " << mySquare.GetYPos() << std::endl;
 	//mySquare.IncPos(0, 0.01f);
 	/*glm::mat4 modelviewmatrix = mysquare.drive(speed, direction, angle) * viewmatrix;*/
-	glm::mat4 ModelViewMatrix = mySquare.rotate(0.1f, direction);
+	glm::mat4 ModelViewMatrix = mySquare.rotate(0.1f, direction, junction);
 	//speed += 0.03f;
 	/*ModelViewMatrix = glm::rotate(ModelViewMatrix, -1.5708f, glm::vec3(0, 0, 1));*/
 	mySquare.Render(shader, ModelViewMatrix, ProjectionMatrix);

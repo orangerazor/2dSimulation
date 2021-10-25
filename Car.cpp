@@ -118,8 +118,28 @@ glm::mat4 Car::turn(float speed, int direction) {
 //	return glm::translate(glm::mat4(1.0f), vector);
 }
 
-glm::mat4 Car::rotate(float speed, int direction)
+glm::mat4 Car::rotate(float speed, int direction, Junction junction)
 {
+	int entryPoint = 0;
+	float bestDist = -1;
+	for (int i = 0; i < 4; i++) {
+		float xVert = INT_MAX;
+		float yVert = INT_MAX;
+		if (i < 3) {
+			xVert = (junction.GetOBB().vertOriginal[i].x + junction.GetOBB().vertOriginal[i + 1].x) / 2;
+			yVert = (junction.GetOBB().vertOriginal[i].y + junction.GetOBB().vertOriginal[i + 1].y) / 2;
+		}
+		else {
+			xVert = (junction.GetOBB().vertOriginal[i].x + junction.GetOBB().vertOriginal[0].x) / 2;
+			yVert = (junction.GetOBB().vertOriginal[i].y + junction.GetOBB().vertOriginal[0].y) / 2;
+		}
+		float distanceFromEdge = ( (m_xpos - xVert) * (m_xpos - xVert)) + ( (m_ypos - yVert) * (m_ypos - yVert));
+		if (bestDist = -1 || distanceFromEdge < bestDist) {
+			bestDist = distanceFromEdge;
+			entryPoint = i;
+		}
+	}
+
 	switch (direction) {
 	case(-1):
 		objectRotation = glm::rotate(objectRotation, -0.01f, glm::vec3(0, 1, 0));
@@ -128,7 +148,25 @@ glm::mat4 Car::rotate(float speed, int direction)
 		objectRotation = glm::rotate(objectRotation, 0.0f, glm::vec3(0, 1, 0));
 		break;
 	case(1):
-		objectRotation = glm::rotate(objectRotation, 0.01f, glm::vec3(0, 1, 0));
+		switch (entryPoint) {
+		case(0):
+			if (m_xpos >= junction.GetXPos()) {
+				objectRotation = glm::rotate(objectRotation, 0.01f, glm::vec3(0, 1, 0));
+			}
+		case(1):
+			if (m_xpos <= junction.GetXPos()) {
+				objectRotation = glm::rotate(objectRotation, 0.01f, glm::vec3(0, 1, 0));
+			}
+		case(2):
+			if (m_ypos <= junction.GetYPos()) {
+				objectRotation = glm::rotate(objectRotation, 0.01f, glm::vec3(0, 1, 0));
+			}
+		case(3):
+			if (m_ypos >= junction.GetYPos()) {
+				objectRotation = glm::rotate(objectRotation, 0.01f, glm::vec3(0, 1, 0));
+			}
+		}
+		//objectRotation = glm::rotate(objectRotation, 0.01f, glm::vec3(0, 1, 0));
 		break;
 	default:
 		break;
