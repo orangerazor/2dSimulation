@@ -43,6 +43,11 @@ void Sprite::SetYpos(float y)
 void Sprite::setMatrix(glm::mat4 matrix) {
 	objectRotation = matrix;
 }
+
+glm::mat4 Sprite::getMatrix() {
+	return objectRotation;
+}
+
 float Sprite::GetXPos()
 {
 	return m_xpos;
