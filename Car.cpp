@@ -266,7 +266,7 @@ int Car::decideDirection(Junction junction, int entryPoint) {
 	return random;
 }
 
-glm::mat4 Car::rotate(float speed, int direction, int entryPoint, Junction junction)
+glm::mat4 Car::rotate(float speed, int direction, int entryPoint, Junction junction, float fps)
 {
 	glm::vec3 forVec2 = forVec;
 	switch (direction) {
@@ -297,7 +297,7 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, Junction junct
 				//forVec2 = matrix * glm::vec4(forVec, 1.0f);
 				//m_xpos += forVec2.x * speed;
 				//m_ypos += forVec2.y * speed;
-				angle -= 0.01f;
+				angle -= 0.36f/fps;
 
 				//objectRotation = glm::rotate(objectRotation, 0.01f, glm::vec3(0, 1, 0));
 			}
@@ -314,7 +314,7 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, Junction junct
 
 				//m_xpos += forVec2.x * speed;
 				//m_ypos += forVec2.y * speed;
-				angle -= 0.012f;
+				angle -= 0.36f/fps;
 				
 				//objectRotation = glm::rotate(objectRotation, 0.01f, glm::vec3(0, 1, 0));
 			}
@@ -331,7 +331,7 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, Junction junct
 
 				//m_xpos += forVec2.x * speed;
 				//m_ypos += forVec2.y * speed;
-				angle -= 0.012f;
+				angle -= 0.36f/fps;
 
 				//objectRotation = glm::rotate(objectRotation, 0.01f, glm::vec3(0, 1, 0));
 			}
@@ -347,7 +347,7 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, Junction junct
 				//forVec2 = matrix * glm::vec4(forVec, 1.0f);
 				//m_xpos += forVec2.x * speed;
 				//m_ypos += forVec2.y * speed;
-				angle -= 0.012f;
+				angle -= 0.36f/fps;
 
 				//objectRotation = glm::rotate(objectRotation, 0.01f, glm::vec3(0, 1, 0));
 			}

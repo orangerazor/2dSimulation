@@ -23,7 +23,7 @@ using namespace std;
 
 #include <iostream>
 using namespace std;
-int fps = 30;
+int fps = 40;
 
 glm::mat4 ViewMatrix;  // matrix for the modelling and viewing
 glm::mat4 ProjectionMatrix; // matrix for the orthographic projection
@@ -83,10 +83,10 @@ void display()
 	int direction = mySquare.decideDirection(junction, entryPoint);
 	glm::mat4 ModelViewMatrix = glm::mat4(1.0f);
 	if (mySquare.IsInCollision(junction.GetOBB())) {
-		ModelViewMatrix = mySquare.rotate(0.1f, 1, entryPoint, junction);
+		ModelViewMatrix = mySquare.rotate(3.0f/fps, 1, entryPoint, junction, fps);
 	}
 	else {
-		ModelViewMatrix = mySquare.rotate(0.1f, 0, entryPoint, junction);
+		ModelViewMatrix = mySquare.rotate(3.0f/fps, 0, entryPoint, junction, fps);
 	}
 	//speed += 0.03f;
 	ModelViewMatrix = glm::rotate(ModelViewMatrix, -1.5708f, glm::vec3(0, 0, 1));
@@ -96,8 +96,11 @@ void display()
 
 	glutSwapBuffers();
 	std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+	//cout << (1000.0f/chrono::duration_cast<std::chrono::milliseconds>(end - begin).count()) << endl;
+	fps = 1000.0f / chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
+	cout << fps<<endl;
 
-	std::this_thread::sleep_for(std::chrono::milliseconds((1000 / fps) - chrono::duration_cast<std::chrono::milliseconds>(end - begin).count()));
+	//std::this_thread::sleep_for(std::chrono::milliseconds((1000 / fps) - chrono::duration_cast<std::chrono::milliseconds>(end - begin).count()));
 
 }
 
