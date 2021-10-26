@@ -97,7 +97,7 @@ void display()
 	glutSwapBuffers();
 	std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
 	//cout << (1000.0f/chrono::duration_cast<std::chrono::milliseconds>(end - begin).count()) << endl;
-	fps = 1000.0f / chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
+	fps = 1000000.0f / chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
 	cout << fps<<endl;
 
 	//std::this_thread::sleep_for(std::chrono::milliseconds((1000 / fps) - chrono::duration_cast<std::chrono::milliseconds>(end - begin).count()));
