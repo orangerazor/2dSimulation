@@ -98,7 +98,7 @@ void display()
 	std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
 	//cout << (1000.0f/chrono::duration_cast<std::chrono::milliseconds>(end - begin).count()) << endl;
 	fps = 1000000.0f / chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
-	cout << fps<<endl;
+	//cout << fps<<endl;
 
 	//std::this_thread::sleep_for(std::chrono::milliseconds((1000 / fps) - chrono::duration_cast<std::chrono::milliseconds>(end - begin).count()));
 
@@ -119,18 +119,18 @@ void init()
 	///This part commented is to scale the width of the sprite to match the dimensions of the car.png image.
 	mySquare.SetWidth(2.0f *(500 / 264.0f));
 	mySquare.SetHeight(2.0f);
-	junction.SetWidth(20.0f * (100 / 107.0f));
-	junction.SetHeight(20.0f);
+	junction.SetWidth(30.0f * (2481 / 2481.0f));
+	junction.SetHeight(30.0f);
 
 	float red[3] = { 1,0,0 };
 	mySquare.Init(shader, red, "textures/car.png");
-	junction.Init(shader, red, "textures/t-junction.png");
+	junction.Init(shader, red, "textures/Tjunction.png");
 	//top
 	//mySquare.SetXpos(junction.GetOBB().vertOriginal[0].x+(junction.getWidth()*3/8));
 	//mySquare.SetYpos(junction.GetOBB().vertOriginal[3].y+(junction.getHeight()/2));
 	//mySquare.setMatrix(glm::rotate(mySquare.getMatrix(), glm::radians(180.0f), glm::vec3(0, 1, 0)));
 	//bottom
-	mySquare.SetXpos(junction.GetOBB().vertOriginal[0].x+(junction.getWidth()*3/8));
+	mySquare.SetXpos(junction.GetOBB().vertOriginal[0].x+(junction.getWidth()*1/3));
 	mySquare.SetYpos(junction.GetOBB().vertOriginal[0].y-(junction.getHeight()/2));
 	//left
 	//mySquare.SetXpos(junction.GetOBB().vertOriginal[0].x - (junction.getWidth() * 3 / 8));
