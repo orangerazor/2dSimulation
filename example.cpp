@@ -23,6 +23,7 @@ using namespace std;
 
 #include <iostream>
 using namespace std;
+int fps = 30;
 
 glm::mat4 ViewMatrix;  // matrix for the modelling and viewing
 glm::mat4 ProjectionMatrix; // matrix for the orthographic projection
@@ -40,7 +41,7 @@ float angle = 0;
 
 Shader shader;
 Car mySquare = Car::Car(glm::mat4(1.0f));
-Junction junction = Junction::Junction("T", true, true, false, true, 0, glm::mat4(1.0f));
+Junction junction = Junction::Junction("T", true, true, false, true, 0, glm::mat4(1.0f), RoadType::T);
 
 
 //OPENGL FUNCTION PROTOTYPES
@@ -96,7 +97,7 @@ void display()
 	glutSwapBuffers();
 	std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
 
-	std::this_thread::sleep_for(std::chrono::milliseconds((1000 / 30) - chrono::duration_cast<std::chrono::milliseconds>(end - begin).count()));
+	std::this_thread::sleep_for(std::chrono::milliseconds((1000 / fps) - chrono::duration_cast<std::chrono::milliseconds>(end - begin).count()));
 
 }
 

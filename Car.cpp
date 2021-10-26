@@ -45,7 +45,7 @@ glm::mat4 Car::turn(float speed, int direction) {
 	
 	glm::mat4 matrix = glm::rotate(glm::mat4(1.0f), angle, glm::vec3(0.0f,0.0f,1.0f));
 	
-	forVec *= matrix;
+	forVec = matrix * glm::vec4(forVec, 1.0f);
 
 	m_xpos += forVec.x;	
 	m_ypos += forVec.y;
@@ -127,6 +127,7 @@ glm::mat4 Car::turn(float speed, int direction) {
 //	m_ypos += objectRotation[2][2] * speed;
 //	glm::vec3 vector = glm::vec3(m_xpos, m_ypos, 0);
 //	return glm::translate(glm::mat4(1.0f), vector);
+	return glm::mat4(1.0f);
 }
 
 int Car::entryPoint(Junction junction)

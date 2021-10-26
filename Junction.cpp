@@ -6,13 +6,19 @@
 
 
 
-Junction::Junction(std::string name, bool left, bool right, bool forward, bool backward, int speedLimit, glm::mat4 rotation) {
+Junction::Junction(std::string name, bool left, bool right, bool forward, bool backward, int speedLimit, glm::mat4 rotation, RoadType type) {
     this->name = name;
     this->turnings[0] = left;
     this->turnings[1] = right;
     this->turnings[2] = forward;
     this->turnings[3] = backward;
     this->speedLimit = speedLimit;
+    for (int i = 0; i < this->turnings.size(); i++) {
+        if (this->turnings[i]) {
+            this->trafficLights[i] = TrafficLight::TrafficLight(2);
+        }
+    }
+
 
     //model.calcCentrePoint();
     //// Find coordinate inbetween centre and edge of junction
@@ -66,6 +72,10 @@ Junction::Junction(std::string name, bool left, bool right, bool forward, bool b
     /*cout << roadDirection.x << "," << roadDirection.y << "," << roadDirection.z << endl;*/
 }
 
+Junction::~Junction()
+{
+}
+
 int Junction::getNumberTurnings(){
     int total=0;
     for(int i=0;i<turnings.size();i++){
@@ -79,6 +89,7 @@ int Junction::getNumberTurnings(){
 std::string Junction::getName() {
     return name;
 }
+
 
 //int main(){
 //    Junction* testJunction = new Junction("test", true, true, false, true, 60);

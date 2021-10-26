@@ -14,6 +14,22 @@ TrafficLight::TrafficLight(int green_duration){
     this->seconds_other = 0;
 }
 
+TrafficLight::TrafficLight() {
+    this->lights = { 1,0,0 };
+    this->current_phase = 0;
+    this->num_of_phases = 4;
+    this->green_duration = 2;
+    this->seconds_green = 0;
+    this->other_duration = 2;
+    this->seconds_other = 0;
+}
+
+TrafficLight::~TrafficLight()
+{
+
+}
+
+
 std::array<bool, 3> TrafficLight::getLights() {
     switch (this->current_phase) {
         case 0:
