@@ -83,13 +83,13 @@ void display()
 	int direction = mySquare.decideDirection(junction, entryPoint);
 	glm::mat4 ModelViewMatrix = glm::mat4(1.0f);
 	if (mySquare.IsInCollision(junction.GetOBB())) {
-		ModelViewMatrix = mySquare.rotate(0.1f, direction, entryPoint, junction);
+		ModelViewMatrix = mySquare.rotate(0.1f, 1, entryPoint, junction);
 	}
 	else {
 		ModelViewMatrix = mySquare.rotate(0.1f, 0, entryPoint, junction);
 	}
 	//speed += 0.03f;
-	/*ModelViewMatrix = glm::rotate(ModelViewMatrix, -1.5708f, glm::vec3(0, 0, 1));*/
+	ModelViewMatrix = glm::rotate(ModelViewMatrix, -1.5708f, glm::vec3(0, 0, 1));
 	mySquare.Render(shader, ModelViewMatrix, ProjectionMatrix);
 	
 	glDisable(GL_BLEND);
@@ -130,13 +130,13 @@ void init()
 	mySquare.SetXpos(junction.GetOBB().vertOriginal[0].x+(junction.getWidth()*3/8));
 	mySquare.SetYpos(junction.GetOBB().vertOriginal[0].y-(junction.getHeight()/2));
 	//left
-	/*mySquare.SetXpos(junction.GetOBB().vertOriginal[0].x - (junction.getWidth() * 3 / 8));
-	mySquare.SetYpos(junction.GetOBB().vertOriginal[0].y + (junction.getHeight() * 5/8));
-	mySquare.setMatrix(glm::rotate(mySquare.getMatrix(), glm::radians(90.0f), glm::vec3(0, 1, 0)));*/
+	//mySquare.SetXpos(junction.GetOBB().vertOriginal[0].x - (junction.getWidth() * 3 / 8));
+	//mySquare.SetYpos(junction.GetOBB().vertOriginal[0].y + (junction.getHeight() * 5/8));
+	//mySquare.setMatrix(glm::rotate(mySquare.getMatrix(), glm::radians(90.0f), glm::vec3(0, 1, 0)));
 	//right
-	/*mySquare.SetXpos(junction.GetOBB().vertOriginal[1].x + (junction.getWidth() * 3 / 8));
-	mySquare.SetYpos(junction.GetOBB().vertOriginal[1].y + (junction.getHeight() * 5/8));
-	mySquare.setMatrix(glm::rotate(mySquare.getMatrix(), glm::radians(270.0f), glm::vec3(0, 1, 0)));*/
+	//mySquare.SetXpos(junction.GetOBB().vertOriginal[1].x + (junction.getWidth() * 3 / 8));
+	//mySquare.SetYpos(junction.GetOBB().vertOriginal[1].y + (junction.getHeight() * 5/8));
+	//mySquare.setMatrix(glm::rotate(mySquare.getMatrix(), glm::radians(270.0f), glm::vec3(0, 1, 0)));
 
 	//mySquare.SetXpos(0);
 	//mySquare.SetYpos(4);
@@ -186,7 +186,7 @@ void processKeys()
 	if (Left)
 	{
 		angle += 0.01f;
-		speed = 0;
+		//speed = 0;
 		//mySquare.transform(1, 0);
 		//mySquare.IncPos(-0.1f, 0.0f);
 	}
