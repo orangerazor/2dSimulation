@@ -33,6 +33,8 @@ private:
     glm::vec3 roadDirection;
     glm::vec3 joinStart;
     glm::vec3 joinDirection;
+    RoadType type;
+    bool state;
     
 public:
 
@@ -40,6 +42,7 @@ public:
     Junction(std::string name, bool left, bool right, bool forward, bool backward, int speedLimit, glm::mat4 rotation, RoadType type);
     ~Junction();
     std::string getName();
+    void trafficLightFlow();
 
     inline std::array<bool, 4> getTurnings(){
         return this->turnings;

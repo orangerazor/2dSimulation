@@ -23,6 +23,7 @@ public:
     TrafficLight(int green_duration);
     TrafficLight();
     ~TrafficLight();
+    bool isRed();
 
     void nextLight();
     std::array<bool, 3> getLights();
@@ -36,6 +37,10 @@ public:
 
     inline void setLights(std::array<bool, 3> lights){
         this->lights = lights;
+    }
+
+    inline int getTimeLeftInState() {
+        return this->other_duration-this->seconds_other;
     }
 };
 

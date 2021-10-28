@@ -30,6 +30,7 @@ glm::mat4 ProjectionMatrix; // matrix for the orthographic projection
 int screenWidth = 480, screenHeight = 480;
 
 //booleans to handle when the arrow keys are pressed or released.
+int secondElapsed = 0;
 bool Left = false;
 bool Right = false;
 bool Up = false;
@@ -72,6 +73,13 @@ void display()
 	ViewMatrix = glm::translate(glm::mat4(1.0), glm::vec3(0.0, 0.0, 0.0));
 
 	glEnable(GL_BLEND);
+	if (secondElapsed >= 1000000) {
+		junction.trafficLightFlow();
+		cout << "left" << junction.getTrafficLights()[0].getLights()[0] << junction.getTrafficLights()[0].getLights()[1] << junction.getTrafficLights()[0].getLights()[2] << endl;
+		cout << "right" << junction.getTrafficLights()[1].getLights()[0] << junction.getTrafficLights()[1].getLights()[1] << junction.getTrafficLights()[1].getLights()[2] << endl;
+		cout << "back" << junction.getTrafficLights()[3].getLights()[0] << junction.getTrafficLights()[3].getLights()[1] << junction.getTrafficLights()[3].getLights()[2] << endl;
+		secondElapsed = 0;
+	}
 	
 	junction.Render(shader, glm::mat4(1.0f), ProjectionMatrix);
 	//glm::mat4 ModelViewMatrix = mySquare.turn(speed, direction);
@@ -96,6 +104,7 @@ void display()
 
 	glutSwapBuffers();
 	std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+	secondElapsed += chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
 	//cout << (1000.0f/chrono::duration_cast<std::chrono::milliseconds>(end - begin).count()) << endl;
 	fps = 1000000.0f / chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
 	//cout << fps<<endl;

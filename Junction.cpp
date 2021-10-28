@@ -13,6 +13,8 @@ Junction::Junction(std::string name, bool left, bool right, bool forward, bool b
     this->turnings[2] = forward;
     this->turnings[3] = backward;
     this->speedLimit = speedLimit;
+    this->type = type;
+    this->state = true;
     for (int i = 0; i < this->turnings.size(); i++) {
         if (this->turnings[i]) {
             this->trafficLights[i] = TrafficLight::TrafficLight(2);
@@ -88,6 +90,35 @@ int Junction::getNumberTurnings(){
 
 std::string Junction::getName() {
     return name;
+}
+
+void Junction::trafficLightFlow() {
+
+    switch (type) {
+    case(RoadType::T):
+        if (state) {
+
+            trafficLights[0].nextLight();
+            trafficLights[1].nextLight();
+            /*std::cout << trafficLights[0].getLights()[0] << trafficLights[0].getLights()[1] << std::endl;*/
+            if (trafficLights[0].isRed() && trafficLights[1].isRed() && trafficLights[0].getTimeLeftInState()==0 && trafficLights[1].getTimeLeftInState() == 0) {
+                //std::cout << "test";
+                //trafficLights[3].nextLight();
+                state = false;
+            }
+        }
+        else {
+            trafficLights[3].nextLight();
+            if (trafficLights[3].isRed() && trafficLights[3].getTimeLeftInState() == 0) {
+                //trafficLights[0].nextLight();
+                //trafficLights[1].nextLight();
+                state = true;
+            }
+        }
+        break;
+
+        
+    }
 }
 
 
