@@ -101,24 +101,42 @@ void Junction::trafficLightFlow() {
             trafficLights[0].nextLight();
             trafficLights[1].nextLight();
             /*std::cout << trafficLights[0].getLights()[0] << trafficLights[0].getLights()[1] << std::endl;*/
-            if (trafficLights[0].isRed() && trafficLights[1].isRed() && trafficLights[0].getTimeLeftInState()==0 && trafficLights[1].getTimeLeftInState() == 0) {
-                //std::cout << "test";
+            if (trafficLights[0].getLights()[0] && !trafficLights[0].getLights()[1] && trafficLights[0].getLights()[0] && !trafficLights[0].getLights()[1] && trafficLights[0].getTimeLeftInState()==0 && trafficLights[1].getTimeLeftInState() == 0) {
+
+                //std::cout << "test"<<std::endl;
                 //trafficLights[3].nextLight();
-                state = false;
+                this->state = false;
             }
         }
         else {
             trafficLights[3].nextLight();
-            if (trafficLights[3].isRed() && trafficLights[3].getTimeLeftInState() == 0) {
+            if (trafficLights[3].getLights()[0] && !trafficLights[3].getLights()[1] && trafficLights[3].getTimeLeftInState() == 0) {
                 //trafficLights[0].nextLight();
                 //trafficLights[1].nextLight();
-                state = true;
+                this->state = true;
             }
         }
         break;
+    case(RoadType::X):
+        if (state) {
 
-        
+            trafficLights[0].nextLight();
+            trafficLights[1].nextLight();
+            if (trafficLights[0].getLights()[0] && !trafficLights[0].getLights()[1] && trafficLights[0].getLights()[0] && !trafficLights[0].getLights()[1] && trafficLights[0].getTimeLeftInState() == 0 && trafficLights[1].getTimeLeftInState() == 0) {
+                this->state = false;
+            }
+        }
+        else {
+            trafficLights[2].nextLight();
+            trafficLights[3].nextLight();
+            if (trafficLights[2].getLights()[0] && !trafficLights[2].getLights()[1] && trafficLights[3].getLights()[0] && !trafficLights[3].getLights()[1] && trafficLights[2].getTimeLeftInState() == 0 && trafficLights[3].getTimeLeftInState() == 0) {
+                this->state = true;
+            }
+        }
+        break;
     }
+    
+
 }
 
 

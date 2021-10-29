@@ -30,7 +30,7 @@ TrafficLight::~TrafficLight()
 }
 
 bool TrafficLight::isRed() {
-    if (this->lights[0]&& !this->lights[1]) {
+    if (this->lights[0] && !this->lights[1]) {
         return true;
     }
     return false;
