@@ -9,6 +9,7 @@ private:
 	std::string currentJunction;
 	int entryTurning;
 	int exit;
+	float angle;
 public:
 	Car(glm::mat4 rotation);
 	glm::mat4 turn(float speed, int direction);
@@ -26,5 +27,8 @@ public:
 	glm::vec3 rayStart;
 	glm::vec3 rayDirection;
 	glm::vec3 forVec = glm::vec3(-1.0f, 0.0f, 0.0f);
-	float angle;
+
+	inline void setAngle(float angle) {
+		this->angle = angle;
+	}
 };
