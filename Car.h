@@ -8,6 +8,7 @@ class Car : public Sprite
 private:
 	std::string currentJunction;
 	int entryTurning;
+	int exitTurning;
 	int exit;
 	float angle;
 public:
@@ -20,6 +21,8 @@ public:
 
 	int entryPoint(Junction junction);
 	int decideDirection(Junction junction, int entryPoint);
+	void respawn(Junction junction);
+	int setSpawn(Junction junction);
 
 	void setCurrentJunction(std::string name);
 	std::string getCurrentJunction();
