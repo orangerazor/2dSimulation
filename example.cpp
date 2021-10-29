@@ -43,6 +43,8 @@ float angle = 0;
 Shader shader;
 Car mySquare = Car::Car(glm::mat4(1.0f));
 Junction junction = Junction::Junction("T", true, true, false, true, 0, glm::mat4(1.0f), RoadType::T);
+Junction crossJunction = Junction::Junction("X", true, true, true, true, 0, glm::mat4(1.0f), RoadType::X);
+float coordinates[3][3];
 
 
 //OPENGL FUNCTION PROTOTYPES
@@ -85,20 +87,30 @@ void display()
 	//glm::mat4 ModelViewMatrix = mySquare.turn(speed, direction);
 	//std::cout << mySquare.GetXPos() << ", " << mySquare.GetYPos() << std::endl;
 	//mySquare.IncPos(0, 0.01f);
-	/*glm::mat4 modelviewmatrix = mysquare.drive(speed, direction, angle) * viewmatrix;*/
-
-	int entryPoint = mySquare.entryPoint(junction);
-	int direction = mySquare.decideDirection(junction, entryPoint);
 	glm::mat4 ModelViewMatrix = glm::mat4(1.0f);
-	//if (mySquare.IsInCollision(junction.GetOBB())) {
-	if(mySquare.GetYPos() > junction.getYBotSquare()){
+	/*glm::mat4 modelviewmatrix = mysquare.drive(speed, direction, angle) * viewmatrix;*/
+	if (mySquare.IsInCollision(junction.GetOBB())) {
+		int entryPoint = mySquare.entryPoint(junction);
+		int direction = mySquare.decideDirection(junction, entryPoint);
+		//if (mySquare.IsInCollision(junction.GetOBB())) {
+		if (mySquare.GetYPos() > junction.getYBotSquare()) {
 			ModelViewMatrix = mySquare.rotate(3.0f / fps, -1, entryPoint, junction, fps);
+		}
+		else {
+			ModelViewMatrix = mySquare.rotate(3.0f / fps, 0, entryPoint, junction, fps);
+		}
+		//speed += 0.03f;
+		ModelViewMatrix = glm::rotate(ModelViewMatrix, -1.5708f, glm::vec3(0, 0, 1));
 	}
 	else {
-		ModelViewMatrix = mySquare.rotate(3.0f/fps, 0, entryPoint, junction, fps);
+		mySquare.SetXpos(0);
+		mySquare.SetYpos(0);
+		ModelViewMatrix = glm::rotate(ModelViewMatrix, glm::radians(coordinates[0][2]), glm::vec3(0, 0, 1));
+
+		
 	}
-	//speed += 0.03f;
-	ModelViewMatrix = glm::rotate(ModelViewMatrix, -1.5708f, glm::vec3(0, 0, 1));
+
+	
 	mySquare.Render(shader, ModelViewMatrix, ProjectionMatrix);
 	
 	glDisable(GL_BLEND);
@@ -136,12 +148,30 @@ void init()
 	float red[3] = { 1,0,0 };
 	mySquare.Init(shader, red, "textures/car.png");
 	junction.Init(shader, red, "textures/Tjunction.png");
+
+	//left
+	coordinates[0][0] = junction.GetOBB().vertOriginal[0].x;
+	coordinates[0][1] = junction.GetOBB().vertOriginal[0].y + (junction.getHeight()*7/12);
+	coordinates[0][2] = 90.0f;
+	//right
+	coordinates[1][0] = junction.GetOBB().vertOriginal[0].x+(junction.getWidth());
+	coordinates[1][1] = junction.GetOBB().vertOriginal[0].y + (junction.getHeight() * 7 / 12);
+	coordinates[1][2] = 270.0f;
 	//top
-	//mySquare.SetXpos(junction.GetOBB().vertOriginal[0].x+(junction.getWidth()*3/8));
-	//mySquare.SetYpos(junction.GetOBB().vertOriginal[3].y+(junction.getHeight()/2));
-	//mySquare.setMatrix(glm::rotate(mySquare.getMatrix(), glm::radians(180.0f), glm::vec3(0, 1, 0)));
+	coordinates[2][0] = junction.GetOBB().vertOriginal[0].x + (junction.getWidth() * 7 / 12);
+	coordinates[2][1] = junction.GetOBB().vertOriginal[0].y + (junction.getHeight());
+	coordinates[2][2] = 180.0f;
 	//bottom
-	mySquare.SetXpos(junction.GetOBB().vertOriginal[0].x + ((junction.getWidth() * 1 / 2) -(junction.getWidth() * 1 / 12)));
+	coordinates[3][0] = junction.GetOBB().vertOriginal[0].x + ((junction.getWidth() * 5 / 12));
+	coordinates[3][1] = junction.GetOBB().vertOriginal[0].y;
+	coordinates[3][2] = 0.0f;
+
+
+
+	//top
+	
+	//bottom
+	mySquare.SetXpos(junction.GetOBB().vertOriginal[0].x + ((junction.getWidth() * 5 / 12)));
 	mySquare.SetYpos(junction.GetOBB().vertOriginal[0].y);// -(junction.getHeight() / 2));
 	//left
 	//mySquare.SetXpos(junction.GetOBB().vertOriginal[0].x - (junction.getWidth() * 3 / 8));
