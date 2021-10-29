@@ -329,6 +329,9 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, Junction junct
 	m_ypos += forVec2.y * speed;
 	glm::vec3 vector = glm::vec3(m_xpos, m_ypos, 0);
 	glm::mat4 transform = glm::translate(glm::mat4(1.0f), vector);
+	if (angle > 360) {
+		angle -= 360;
+	}
 	return glm::rotate(transform, angle, glm::vec3(0, 0, 1));
 
 }
