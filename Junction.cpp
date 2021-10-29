@@ -21,7 +21,6 @@ Junction::Junction(std::string name, bool left, bool right, bool forward, bool b
         }
     }
 
-
     //model.calcCentrePoint();
     //// Find coordinate inbetween centre and edge of junction
     //float coordinateX = model.theBBox.centrePoint.x + (model.theBBox.centrePoint.x + (model.theBBox.boxWidthX / 2));
@@ -121,6 +120,10 @@ void Junction::trafficLightFlow() {
     }
 }
 
+void Junction::calculateLines() {
+    yBotSquare = m_ypos - (m_Height * 1 / 6);
+    yTopSquare = m_ypos + (m_Height * 1 / 6);
+}
 
 //int main(){
 //    Junction* testJunction = new Junction("test", true, true, false, true, 60);

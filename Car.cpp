@@ -271,12 +271,20 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, Junction junct
 	glm::vec3 forVec2 = forVec;
 	switch (direction) {
 	case(-1):
+		switch (entryPoint) {
+		case(0):
+			break;
+		case(3):
+			if (m_ypos > junction.getYBotSquare()) {
+				angle += 0.6f / fps;
+			}
+		}
 		//glm::mat4 matrix = glm::rotate(glm::mat4(1.0f), angle, glm::vec3(0.0f, 0.0f, 1.0f));
 
 		//forVec2 = matrix * glm::vec4(forVec, 1.0f);
 		//m_xpos += forVec2.x * speed;
 		//m_ypos += forVec2.y * speed;
-		angle += 0.01f;
+		//angle += 0.6f/fps;
 		 
 		//objectRotation = glm::rotate(objectRotation, -0.011f, glm::vec3(0, 1, 0));
 		break;
@@ -297,7 +305,7 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, Junction junct
 				//forVec2 = matrix * glm::vec4(forVec, 1.0f);
 				//m_xpos += forVec2.x * speed;
 				//m_ypos += forVec2.y * speed;
-				angle -= 0.36f/fps;
+				angle -= 0.60f/fps;
 
 				//objectRotation = glm::rotate(objectRotation, 0.01f, glm::vec3(0, 1, 0));
 			}
@@ -314,7 +322,7 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, Junction junct
 
 				//m_xpos += forVec2.x * speed;
 				//m_ypos += forVec2.y * speed;
-				angle -= 0.36f/fps;
+				angle -= 0.6f/fps;
 				
 				//objectRotation = glm::rotate(objectRotation, 0.01f, glm::vec3(0, 1, 0));
 			}
@@ -331,7 +339,7 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, Junction junct
 
 				//m_xpos += forVec2.x * speed;
 				//m_ypos += forVec2.y * speed;
-				angle -= 0.36f/fps;
+				angle -= 0.6f/fps;
 
 				//objectRotation = glm::rotate(objectRotation, 0.01f, glm::vec3(0, 1, 0));
 			}
@@ -347,7 +355,7 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, Junction junct
 				//forVec2 = matrix * glm::vec4(forVec, 1.0f);
 				//m_xpos += forVec2.x * speed;
 				//m_ypos += forVec2.y * speed;
-				angle -= 0.36f/fps;
+				angle -= 0.6f/fps;
 
 				//objectRotation = glm::rotate(objectRotation, 0.01f, glm::vec3(0, 1, 0));
 			}

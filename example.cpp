@@ -90,8 +90,9 @@ void display()
 	int entryPoint = mySquare.entryPoint(junction);
 	int direction = mySquare.decideDirection(junction, entryPoint);
 	glm::mat4 ModelViewMatrix = glm::mat4(1.0f);
-	if (mySquare.IsInCollision(junction.GetOBB())) {
-		ModelViewMatrix = mySquare.rotate(3.0f/fps, 1, entryPoint, junction, fps);
+	//if (mySquare.IsInCollision(junction.GetOBB())) {
+	if(mySquare.GetYPos() > junction.getYBotSquare()){
+			ModelViewMatrix = mySquare.rotate(3.0f / fps, -1, entryPoint, junction, fps);
 	}
 	else {
 		ModelViewMatrix = mySquare.rotate(3.0f/fps, 0, entryPoint, junction, fps);
@@ -126,10 +127,11 @@ void init()
 	}
 
 	///This part commented is to scale the width of the sprite to match the dimensions of the car.png image.
-	mySquare.SetWidth(2.0f *(500 / 264.0f));
-	mySquare.SetHeight(2.0f);
-	junction.SetWidth(30.0f * (2481 / 2481.0f));
-	junction.SetHeight(30.0f);
+	mySquare.SetWidth(4.0f *(500 / 264.0f));
+	mySquare.SetHeight(4.0f);
+	junction.SetWidth(60.0f * (2481 / 2481.0f));
+	junction.SetHeight(60.0f);
+	junction.calculateLines();
 
 	float red[3] = { 1,0,0 };
 	mySquare.Init(shader, red, "textures/car.png");
@@ -139,8 +141,8 @@ void init()
 	//mySquare.SetYpos(junction.GetOBB().vertOriginal[3].y+(junction.getHeight()/2));
 	//mySquare.setMatrix(glm::rotate(mySquare.getMatrix(), glm::radians(180.0f), glm::vec3(0, 1, 0)));
 	//bottom
-	mySquare.SetXpos(junction.GetOBB().vertOriginal[0].x+(junction.getWidth()*1/3));
-	mySquare.SetYpos(junction.GetOBB().vertOriginal[0].y-(junction.getHeight()/2));
+	mySquare.SetXpos(junction.GetOBB().vertOriginal[0].x + ((junction.getWidth() * 1 / 2) -(junction.getWidth() * 1 / 12)));
+	mySquare.SetYpos(junction.GetOBB().vertOriginal[0].y);// -(junction.getHeight() / 2));
 	//left
 	//mySquare.SetXpos(junction.GetOBB().vertOriginal[0].x - (junction.getWidth() * 3 / 8));
 	//mySquare.SetYpos(junction.GetOBB().vertOriginal[0].y + (junction.getHeight() * 5/8));

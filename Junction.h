@@ -35,7 +35,13 @@ private:
     glm::vec3 joinDirection;
     RoadType type;
     bool state;
-    
+    float yBotSquare;
+    float yTopSquare;
+    float xLeftSquare;
+    float xRightSquare;
+    float ySideCentre;
+    float xVerticalCentre;
+
 public:
 
     
@@ -43,6 +49,7 @@ public:
     ~Junction();
     std::string getName();
     void trafficLightFlow();
+    void calculateLines();
 
     inline std::array<bool, 4> getTurnings(){
         return this->turnings;
@@ -69,6 +76,9 @@ public:
     }
     inline glm::vec3 getRoadStart() {
         return this->roadStart;
+    }
+    inline float getYBotSquare() {
+        return this->yBotSquare;
     }
 
     inline std::array<TrafficLight, 4> getTrafficLights() {
