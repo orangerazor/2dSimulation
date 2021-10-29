@@ -141,6 +141,8 @@ void Junction::trafficLightFlow() {
 void Junction::calculateLines() {
     yBotSquare = m_ypos - (m_Height * 1 / 6);
     yTopSquare = m_ypos + (m_Height * 1 / 6);
+    xLeftSquare = m_xpos - (m_Width * 1 / 6);
+    xRightSquare = m_xpos + (m_Width * 1 / 6);
 }
 
 //int main(){

@@ -80,6 +80,15 @@ public:
     inline float getYBotSquare() {
         return this->yBotSquare;
     }
+    inline float getXLeftSquare() {
+        return this->xLeftSquare;
+    }
+    inline float getYTopSquare() {
+        return this->yTopSquare;
+    }
+    inline float getXRightSquare() {
+        return this->xRightSquare;
+    }
 
     inline std::array<TrafficLight, 4> getTrafficLights() {
         return this->trafficLights;

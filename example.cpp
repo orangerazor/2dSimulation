@@ -92,7 +92,7 @@ void display()
 	glm::mat4 ModelViewMatrix = glm::mat4(1.0f);
 	//if (mySquare.IsInCollision(junction.GetOBB())) {
 	if(mySquare.GetYPos() > junction.getYBotSquare()){
-			ModelViewMatrix = mySquare.rotate(3.0f / fps, -1, entryPoint, junction, fps);
+			ModelViewMatrix = mySquare.rotate(3.0f / fps, 1, entryPoint, junction, fps);
 	}
 	else {
 		ModelViewMatrix = mySquare.rotate(3.0f/fps, 0, entryPoint, junction, fps);

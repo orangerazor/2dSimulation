@@ -273,99 +273,52 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, Junction junct
 	case(-1):
 		switch (entryPoint) {
 		case(0):
-			break;
-		case(3):
-			if (m_ypos > junction.getYBotSquare()) {
+			if (m_xpos >= junction.getXLeftSquare() && m_ypos <= junction.getYTopSquare()) {
 				angle += 0.6f / fps;
 			}
+			break;
+		case(1):
+			if (m_xpos <= junction.getXRightSquare() && m_ypos >= junction.getYBotSquare()) {
+				angle += 0.6f / fps;
+			}
+			break;
+		case(2):
+			if (m_ypos >= junction.getYTopSquare() && m_xpos <= junction.getXRightSquare()) {
+				angle += 0.6f / fps;
+			}
+		case(3):
+			if (m_ypos > junction.getYBotSquare() && m_xpos >= junction.getXLeftSquare()) {
+				angle += 0.6f / fps;
+			}
+			break;
 		}
-		//glm::mat4 matrix = glm::rotate(glm::mat4(1.0f), angle, glm::vec3(0.0f, 0.0f, 1.0f));
-
-		//forVec2 = matrix * glm::vec4(forVec, 1.0f);
-		//m_xpos += forVec2.x * speed;
-		//m_ypos += forVec2.y * speed;
-		//angle += 0.6f/fps;
-		 
-		//objectRotation = glm::rotate(objectRotation, -0.011f, glm::vec3(0, 1, 0));
 		break;
 	case(0):
-		//objectRotation = glm::rotate(objectRotation, 0.0f, glm::vec3(0, 1, 0));
-		//matrix = glm::rotate(glm::mat4(1.0f), (float)(PI / 47), glm::vec3(0.0f, 0.0f, 1.0f));
-		//forVec = matrix * glm::vec4(forVec, 1.0f);
-
-		//m_xpos += forVec.x * speed;
-		//m_ypos += forVec.y * speed;
 		break;
 	case(1):
 		switch (entryPoint) {
 		case(0):
-			if (m_xpos >= junction.GetXPos()) {
-				//glm::mat4 matrix = glm::rotate(glm::mat4(1.0f), angle, glm::vec3(0.0f, 0.0f, 1.0f));
-
-				//forVec2 = matrix * glm::vec4(forVec, 1.0f);
-				//m_xpos += forVec2.x * speed;
-				//m_ypos += forVec2.y * speed;
-				angle -= 0.60f/fps;
-
-				//objectRotation = glm::rotate(objectRotation, 0.01f, glm::vec3(0, 1, 0));
-			}
-			else {
-				//m_xpos += forVec.x * speed;
-				//m_ypos += forVec.y * speed;
+			if (m_xpos >= junction.GetXPos() && m_ypos >= junction.getYBotSquare()) {
+				angle -= 0.6f/fps;
 			}
 			break;
 		case(1):
-			if (m_xpos <= junction.GetXPos()) {
-				//glm::mat4 matrix = glm::rotate(glm::mat4(1.0f), angle, glm::vec3(0.0f, 0.0f, 1.0f));
-
-				//forVec2 = matrix * glm::vec4(forVec, 1.0f);
-
-				//m_xpos += forVec2.x * speed;
-				//m_ypos += forVec2.y * speed;
-				angle -= 0.6f/fps;
-				
-				//objectRotation = glm::rotate(objectRotation, 0.01f, glm::vec3(0, 1, 0));
-			}
-			else {
-				//m_xpos += forVec.x * speed;
-				//m_ypos += forVec.y * speed;
+			if (m_xpos <= junction.GetXPos() && m_ypos <= junction.getYTopSquare()) {
+				angle -= 0.6f/fps;		
 			}
 			break;
 		case(2):
-			if (m_ypos <= junction.GetYPos()) {
-				//glm::mat4 matrix = glm::rotate(glm::mat4(1.0f), angle, glm::vec3(0.0f, 0.0f, 1.0f));
-
-				//forVec2 = matrix * glm::vec4(forVec, 1.0f);
-
-				//m_xpos += forVec2.x * speed;
-				//m_ypos += forVec2.y * speed;
+			if (m_ypos <= junction.GetYPos() && m_xpos <= junction.GetXPos()) {
 				angle -= 0.6f/fps;
 
-				//objectRotation = glm::rotate(objectRotation, 0.01f, glm::vec3(0, 1, 0));
-			}
-			else {
-				//m_xpos += forVec.x * speed;
-				//m_ypos += forVec.y * speed;
 			}
 			break;
 		case(3):
-			if (m_ypos >= junction.GetYPos()) {
-				//glm::mat4 matrix = glm::rotate(glm::mat4(1.0f), angle, glm::vec3(0.0f, 0.0f, 1.0f));
-
-				//forVec2 = matrix * glm::vec4(forVec, 1.0f);
-				//m_xpos += forVec2.x * speed;
-				//m_ypos += forVec2.y * speed;
+			if (m_ypos >= junction.GetYPos() && m_xpos <= junction.GetXPos()) {
 				angle -= 0.6f/fps;
-
-				//objectRotation = glm::rotate(objectRotation, 0.01f, glm::vec3(0, 1, 0));
-			}
-			else {
-				//m_xpos += forVec.x * speed;
-				//m_ypos += forVec.y * speed;
 			}
 			break;
 		}
-		//objectRotation = glm::rotate(objectRotation, 0.01f, glm::vec3(0, 1, 0));
 		break;
 	default:
 		break;
