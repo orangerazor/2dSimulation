@@ -68,6 +68,7 @@ void reshape(int width, int height)		// Resize the OpenGL window
 void display()
 
 {
+	//std::cout << "x = " << mySquare.GetXPos() << "y = " << mySquare.GetYPos() << std::endl;
 	std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
 	//clear the colour and depth buffers
 	glClear(GL_COLOR_BUFFER_BIT);
@@ -77,9 +78,9 @@ void display()
 	glEnable(GL_BLEND);
 	if (secondElapsed >= 1000000) {
 		junction.trafficLightFlow();
-		cout << "left" << junction.getTrafficLights()[0].getLights()[0] << junction.getTrafficLights()[0].getLights()[1] << junction.getTrafficLights()[0].getLights()[2] << endl;
-		cout << "right" << junction.getTrafficLights()[1].getLights()[0] << junction.getTrafficLights()[1].getLights()[1] << junction.getTrafficLights()[1].getLights()[2] << endl;
-		cout << "back" << junction.getTrafficLights()[3].getLights()[0] << junction.getTrafficLights()[3].getLights()[1] << junction.getTrafficLights()[3].getLights()[2] << endl;
+		//cout << "left" << junction.getTrafficLights()[0].getLights()[0] << junction.getTrafficLights()[0].getLights()[1] << junction.getTrafficLights()[0].getLights()[2] << endl;
+		//cout << "right" << junction.getTrafficLights()[1].getLights()[0] << junction.getTrafficLights()[1].getLights()[1] << junction.getTrafficLights()[1].getLights()[2] << endl;
+		//cout << "back" << junction.getTrafficLights()[3].getLights()[0] << junction.getTrafficLights()[3].getLights()[1] << junction.getTrafficLights()[3].getLights()[2] << endl;
 		secondElapsed = 0;
 	}
 	
@@ -94,18 +95,37 @@ void display()
 		int direction = mySquare.decideDirection(junction, entryPoint);
 		//if (mySquare.IsInCollision(junction.GetOBB())) {
 		if (mySquare.GetYPos() > junction.getYBotSquare()) {
-			ModelViewMatrix = mySquare.rotate(3.0f / fps, -1, entryPoint, junction, fps);
+			ModelViewMatrix = mySquare.rotate(4.0f / fps, -1, entryPoint, junction, fps);
 		}
 		else {
-			ModelViewMatrix = mySquare.rotate(3.0f / fps, 0, entryPoint, junction, fps);
+			ModelViewMatrix = mySquare.rotate(4.0f / fps, 0, entryPoint, junction, fps);
 		}
 		//speed += 0.03f;
-		ModelViewMatrix = glm::rotate(ModelViewMatrix, -1.5708f, glm::vec3(0, 0, 1));
+		std::cout << "entry = " << entryPoint << std::endl;
+		switch (entryPoint) {
+		case(0):
+			ModelViewMatrix = glm::rotate(ModelViewMatrix, glm::radians(coordinates[0][2]), glm::vec3(0, 0, 1));
+			break;
+		case(1):
+			ModelViewMatrix = glm::rotate(ModelViewMatrix, glm::radians(coordinates[1][2]), glm::vec3(0, 0, 1));
+			break;
+		case(2):
+			ModelViewMatrix = glm::rotate(ModelViewMatrix, glm::radians(coordinates[2][2]), glm::vec3(0, 0, 1));
+			break;
+		case(3):
+			ModelViewMatrix = glm::rotate(ModelViewMatrix, glm::radians(coordinates[3][2]), glm::vec3(0, 0, 1));
+			break;
+		}
+
+
+		//ModelViewMatrix = glm::rotate(ModelViewMatrix, -1.5708f, glm::vec3(0, 0, 1));
 	}
 	else {
-		mySquare.SetXpos(0);
-		mySquare.SetYpos(0);
-		ModelViewMatrix = glm::rotate(ModelViewMatrix, glm::radians(coordinates[0][2]), glm::vec3(0, 0, 1));
+		//mySquare.SetXpos(0);
+		//mySquare.SetYpos(-8);
+
+		mySquare.setCurrentJunction("");
+		//ModelViewMatrix = glm::rotate(ModelViewMatrix, glm::radians(coordinates[0][2]), glm::vec3(0, 0, 1));
 
 		
 	}
@@ -152,19 +172,19 @@ void init()
 	//left
 	coordinates[0][0] = junction.GetOBB().vertOriginal[0].x;
 	coordinates[0][1] = junction.GetOBB().vertOriginal[0].y + (junction.getHeight()*7/12);
-	coordinates[0][2] = 90.0f;
+	coordinates[0][2] = 0.0f;
 	//right
 	coordinates[1][0] = junction.GetOBB().vertOriginal[0].x+(junction.getWidth());
 	coordinates[1][1] = junction.GetOBB().vertOriginal[0].y + (junction.getHeight() * 7 / 12);
-	coordinates[1][2] = 270.0f;
+	coordinates[1][2] = 180.0f;
 	//top
 	coordinates[2][0] = junction.GetOBB().vertOriginal[0].x + (junction.getWidth() * 7 / 12);
 	coordinates[2][1] = junction.GetOBB().vertOriginal[0].y + (junction.getHeight());
-	coordinates[2][2] = 180.0f;
+	coordinates[2][2] = 90.0f;
 	//bottom
 	coordinates[3][0] = junction.GetOBB().vertOriginal[0].x + ((junction.getWidth() * 5 / 12));
 	coordinates[3][1] = junction.GetOBB().vertOriginal[0].y;
-	coordinates[3][2] = 0.0f;
+	coordinates[3][2] = 270.0f;
 
 
 

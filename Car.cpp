@@ -196,7 +196,7 @@ int Car::decideDirection(Junction junction, int entryPoint) {
 			continue;
 		}
 		if (junction.getTurning(i) == true) {
-			std::cout << "i = " << i << std::endl;
+			//std::cout << "i = " << i << std::endl;
 			possibleTurnings.push_back(i);
 		}
 	}
@@ -205,7 +205,7 @@ int Car::decideDirection(Junction junction, int entryPoint) {
 
 	currentJunction = junction.getName();
 	random = possibleTurnings.at(random);
-	std::cout << entryPoint << std::endl;
+	//std::cout << entryPoint << std::endl;
 	//std::cout << random << std::endl;
 	switch (entryPoint) {
 	case(0):
@@ -261,7 +261,7 @@ int Car::decideDirection(Junction junction, int entryPoint) {
 		}
 		break;
 	}
-	std::cout << random << std::endl;
+	//std::cout << random << std::endl;
 	exit = random;
 	return random;
 }
