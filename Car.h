@@ -8,7 +8,7 @@ class Car : public Sprite
 private:
 	std::string currentJunction;
 	int entryTurning;
-	int exitTurning;
+	int exitTurning = -1;
 	int exit;
 	float angle;
 public:
@@ -20,6 +20,7 @@ public:
 	glm::mat4 drive(float speed, int direction, float angle);
 
 	int entryPoint(Junction junction);
+	glm::mat4 faceJunction(int entryPoint, glm::mat4);
 	int decideDirection(Junction junction, int entryPoint);
 	void respawn(Junction junction);
 	int setSpawn(Junction junction);
@@ -33,5 +34,8 @@ public:
 
 	inline void setAngle(float angle) {
 		this->angle = angle;
+	}
+	inline int getEntryTurning() {
+		return entryTurning;
 	}
 };

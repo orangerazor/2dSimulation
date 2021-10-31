@@ -42,6 +42,7 @@ float angle = 0;
 
 Shader shader;
 Car mySquare = Car::Car(glm::mat4(1.0f));
+Car car2 = Car::Car(glm::mat4(1.0f));
 Junction junction = Junction::Junction("T", true, true, false, true, 0, glm::mat4(1.0f), RoadType::T);
 Junction crossJunction = Junction::Junction("X", true, true, true, true, 0, glm::mat4(1.0f), RoadType::X);
 float coordinates[4][3];
@@ -116,11 +117,16 @@ void display()
 
 		junction.Render(shader, glm::mat4(1.0f), ProjectionMatrix);
 		glm::mat4 ModelViewMatrix = glm::mat4(1.0f);
-		int entryPoint = mySquare.entryPoint(junction);
-		int direction = mySquare.decideDirection(junction, entryPoint);
-		ModelViewMatrix = mySquare.rotate(12.0f / fps, direction, entryPoint, junction, fps);
-		ModelViewMatrix = glm::rotate(ModelViewMatrix, glm::radians(-90.0f), glm::vec3(0, 0, 1));
+
 		mySquare.respawn(junction);
+		//int entryPoint = mySquare.entryPoint(junction);
+		int direction = mySquare.decideDirection(junction, mySquare.getEntryTurning());
+		ModelViewMatrix = mySquare.rotate(12.0f / fps, direction, mySquare.getEntryTurning(), junction, fps);
+		//ModelViewMatrix = mySquare.faceJunction(entryPoint, ModelViewMatrix);
+		//ModelViewMatrix = glm::rotate(ModelViewMatrix, glm::radians(-90.0f), glm::vec3(0, 0, 1));
+		//mySquare.respawn(junction);
+		mySquare.Render(shader, ModelViewMatrix, ProjectionMatrix);
+
 	//}
 	//else {
 		//mySquare.SetXpos(0);
@@ -132,8 +138,15 @@ void display()
 		
 	//}
 
-	
-	mySquare.Render(shader, ModelViewMatrix, ProjectionMatrix);
+
+	car2.respawn(junction);
+	//int entryPoint2 = car2.entryPoint(junction);
+	int direction2 = car2.decideDirection(junction, car2.getEntryTurning());
+	ModelViewMatrix = car2.rotate(12.0f / fps, direction2, car2.getEntryTurning(), junction, fps);
+	//ModelViewMatrix = car2.faceJunction(entryPoint2, ModelViewMatrix);
+	//ModelViewMatrix = glm::rotate(ModelViewMatrix, glm::radians(-90.0f), glm::vec3(0, 0, 1));
+	//car2.respawn(junction);
+	car2.Render(shader, ModelViewMatrix, ProjectionMatrix);
 	
 	glDisable(GL_BLEND);
 
@@ -163,12 +176,16 @@ void init()
 	///This part commented is to scale the width of the sprite to match the dimensions of the car.png image.
 	mySquare.SetWidth(4.0f *(500 / 264.0f));
 	mySquare.SetHeight(4.0f);
+	car2.SetWidth(4.0f * (500 / 264.0f));
+	car2.SetHeight(4.0f);
+
 	junction.SetWidth(60.0f * (2481 / 2481.0f));
 	junction.SetHeight(60.0f);
 	junction.calculateLines();
 
 	float red[3] = { 1,0,0 };
 	mySquare.Init(shader, red, "textures/car.png");
+	car2.Init(shader, red, "textures/car.png");
 	junction.Init(shader, red, "textures/Tjunction.png");
 
 	//left
@@ -191,9 +208,11 @@ void init()
 	//top
 	
 	//bottom
-	mySquare.SetXpos(junction.GetOBB().vertOriginal[0].x + ((junction.getWidth() * 5 / 12)));
-	mySquare.SetYpos(junction.GetOBB().vertOriginal[0].y);// -(junction.getHeight() / 2));
+	//mySquare.SetXpos(junction.GetOBB().vertOriginal[0].x + ((junction.getWidth() * 5 / 12)));
+	//mySquare.SetYpos(junction.GetOBB().vertOriginal[0].y);
 	//left
+	//car2.SetXpos(junction.GetOBB().vertOriginal[0].x + 10);
+	//car2.SetYpos(junction.GetOBB().vertOriginal[0].y + (junction.getHeight() * 7 / 12));
 	//mySquare.SetXpos(junction.GetOBB().vertOriginal[0].x - (junction.getWidth() * 3 / 8));
 	//mySquare.SetYpos(junction.GetOBB().vertOriginal[0].y + (junction.getHeight() * 5/8));
 	//mySquare.setMatrix(glm::rotate(mySquare.getMatrix(), glm::radians(90.0f), glm::vec3(0, 1, 0)));

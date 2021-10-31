@@ -7,7 +7,7 @@ const double PI = 3.141592653589793238463;
 Car::Car(glm::mat4 rotation) {
 	rayStart = glm::vec3(0, 0, 0);
 	rayDirection = glm::vec3(0, 1, 0);
-	float angle = 1.5708;
+	float angle = 0;// 1.5708;
 	objectRotation = glm::rotate(glm::mat4(1.0f), -angle, glm::vec3(0,0,1));
 	forVec = objectRotation * glm::vec4(forVec, 1.0f);
 
@@ -167,22 +167,25 @@ int Car::entryPoint(Junction junction)
 		}
 	}
 	entryTurning = entryPoint2;
-	switch (entryPoint2) {
-	case(0):
-		//forVec = glm::vec3(1.0f,0.0f,0.0f);
-		break;
-	case(1):
-		//forVec = glm::vec3(-1.0f, 0.0f, 0.0f);
-		break;
-	case(2):
-		//forVec = glm::vec3(0.0f, -1.0f, 0.0f);
-		break;
-	case(3):
-		//forVec = glm::vec3(0.0f, 1.0f, 0.0f);
-		break;
-	}
 	std::cout << "entry = " << entryPoint2 << std::endl;
 	return entryPoint2;
+}
+
+glm::mat4 Car::faceJunction(int entrance, glm::mat4 ModelViewMatrix) {
+	switch (entrance) {
+	case(0):
+		return glm::rotate(ModelViewMatrix, glm::radians(-180.0f), glm::vec3(0.0, 0.0, 1.0));
+		break;
+	case(1):
+		return glm::rotate(ModelViewMatrix, glm::radians(-0.0f), glm::vec3(0.0, 0.0, 1.0));
+		break;
+	case(2):
+		return glm::rotate(ModelViewMatrix, glm::radians(-270.0f), glm::vec3(0.0, 0.0, 1.0));
+		break;
+	case(3):
+		return glm::rotate(ModelViewMatrix, glm::radians(-90.0f), glm::vec3(0.0, 0.0, 1.0));
+		break;
+	}
 }
 
 int Car::decideDirection(Junction junction, int entryPoint) {
@@ -268,11 +271,12 @@ int Car::decideDirection(Junction junction, int entryPoint) {
 }
 
 void Car::respawn(Junction junction) {
+	//std::cout << "exitTurning = " << exitTurning << std::endl;
 	switch (exitTurning) {
 	case(0):
 		if (m_xpos <= (junction.GetXPos() - (junction.getWidth() / 2))) {
 			std::cout << "reset time " << std::endl;
-			std::cout << "angle = " << angle << std::endl;
+			//std::cout << "angle = " << angle << std::endl;
 			int newSpawn = this->setSpawn(junction);
 			switch (newSpawn) {
 			case(0):
@@ -287,6 +291,7 @@ void Car::respawn(Junction junction) {
 				angle -= glm::radians(90.0f);
 				break;
 			}
+			entryTurning = newSpawn;
 		}
 		break;
 	case(1):
@@ -306,6 +311,7 @@ void Car::respawn(Junction junction) {
 				angle -= glm::radians(270.0f);
 				break;
 			}
+			entryTurning = newSpawn;
 		}
 		break;
 	case(2):
@@ -331,6 +337,24 @@ void Car::respawn(Junction junction) {
 				angle -= glm::radians(180.0f);
 				break;
 			}
+			entryTurning = newSpawn;
+		}
+		break;
+	default:
+		this->setSpawn(junction);
+		entryTurning = this->entryPoint(junction);
+		//int direction = this->decideDirection(junction, entryTurning);
+		switch (entryTurning) {
+		case(0):
+			angle += glm::radians(180.0f);
+			break;
+		case(1):
+			break;
+		case(2):
+			angle += glm::radians(90.0f);
+			break;
+		case(3):
+			angle += glm::radians(270.0f);
 		}
 		break;
 	}
