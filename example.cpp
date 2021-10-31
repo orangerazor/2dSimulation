@@ -118,7 +118,7 @@ void display()
 		glm::mat4 ModelViewMatrix = glm::mat4(1.0f);
 		int entryPoint = mySquare.entryPoint(junction);
 		int direction = mySquare.decideDirection(junction, entryPoint);
-		ModelViewMatrix = mySquare.rotate(6.0f / fps, direction, entryPoint, junction, fps);
+		ModelViewMatrix = mySquare.rotate(12.0f / fps, direction, entryPoint, junction, fps);
 		ModelViewMatrix = glm::rotate(ModelViewMatrix, glm::radians(-90.0f), glm::vec3(0, 0, 1));
 		mySquare.respawn(junction);
 	//}

@@ -272,6 +272,7 @@ void Car::respawn(Junction junction) {
 	case(0):
 		if (m_xpos <= (junction.GetXPos() - (junction.getWidth() / 2))) {
 			std::cout << "reset time " << std::endl;
+			std::cout << "angle = " << angle << std::endl;
 			int newSpawn = this->setSpawn(junction);
 			switch (newSpawn) {
 			case(0):
@@ -376,21 +377,21 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, Junction junct
 		switch (entryPoint) {
 		case(0):
 			if (m_xpos >= junction.getXLeftSquare() && m_ypos <= junction.getYTopSquare()) {
-				angle += 1.2f / fps;
+				angle += 2.4f / fps;
 			}
 			break;
 		case(1):
 			if (m_xpos <= junction.getXRightSquare() && m_ypos >= junction.getYBotSquare()) {
-				angle += 1.2f / fps;
+				angle += 2.4f / fps;
 			}
 			break;
 		case(2):
 			if (m_ypos >= junction.getYTopSquare() && m_xpos <= junction.getXRightSquare()) {
-				angle += 1.2f / fps;
+				angle += 2.4f / fps;
 			}
 		case(3):
 			if (m_ypos > junction.getYBotSquare() && m_xpos >= junction.getXLeftSquare()) {
-				angle += 1.2f / fps;
+				angle += 2.4f / fps;
 			}
 			break;
 		}
@@ -401,23 +402,23 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, Junction junct
 		switch (entryPoint) {
 		case(0):
 			if (m_xpos >= junction.GetXPos() && m_ypos >= junction.GetYPos()) {
-				angle -= 1.2f/fps;
+				angle -= 2.4f/fps;
 			}
 			break;
 		case(1):
 			if (m_xpos <= junction.GetXPos() && m_ypos <= junction.GetYPos()) {
-				angle -= 1.2f/fps;		
+				angle -= 2.4f/fps;		
 			}
 			break;
 		case(2):
 			if (m_ypos <= junction.GetYPos() && m_xpos <= junction.GetXPos()) {
-				angle -= 1.2f/fps;
+				angle -= 2.4f/fps;
 
 			}
 			break;
 		case(3):
 			if (m_ypos >= junction.GetYPos() && m_xpos <= junction.GetXPos()) {
-				angle -= 1.2f/fps;
+				angle -= 2.4f/fps;
 			}
 			break;
 		}
@@ -434,8 +435,86 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, Junction junct
 	if (angle > 360) {
 		angle -= 360;
 	}
+	// Use on left test to determine if the car has turned correctly
+	switch (exitTurning) {
+	case(0):
+		if (m_xpos <= junction.getXLeftSquare()) {
+			glm::vec3 target = glm::vec3(-1.0, 0.0, 0.0);
+			float area = (forVec2.x * target.y) - (target.x * forVec2.y);
+			if (area < 0) {
+				angle -= 1.2/fps;
+			}
+			if (area > 0) {
+				angle += 1.2 / fps;
+			}
+		}
+		break;
+	case(1):
+		if (m_xpos >= junction.getXRightSquare()) {
+			glm::vec3 target = glm::vec3(1.0, 0.0, 0.0);
+			float area = (forVec2.x * target.y) - (target.x * forVec2.y);
+			if (area < 0) {
+				angle -= 1.2 / fps;
+			}
+			if (area > 0) {
+				angle += 1.2 / fps;
+			}
+		}
+		break;
+	case(2):
+		if (m_ypos >= junction.getYTopSquare()) {
+			glm::vec3 target = glm::vec3(0.0, 1.0, 0.0);
+			float area = (forVec2.x * target.y) - (target.x * forVec2.y);
+			if (area < 0) {
+				angle -= 1.2 / fps;
+			}
+			if (area > 0) {
+				angle += 1.2 / fps;
+			}
+		}
+		break;
+	case(3):
+		if (m_ypos <= junction.getYBotSquare()) {
+			glm::vec3 target = glm::vec3(0.0, -1.0, 0.0);
+			float area = (forVec2.x * target.y) - (target.x * forVec2.y);
+			if (area < 0) {
+				angle -= 1.2 / fps;
+			}
+			if (area > 0) {
+				angle += 1.2 / fps;
+			}
+		}
+		break;
+	}
 	return glm::rotate(transform, angle, glm::vec3(0, 0, 1));
 
+	//switch (exitTurning) {
+	//case(0):
+	//	switch (direction) {
+	//	case(-1):
+	//		if (angle > glm::radians(90.0f) && m_xpos <= junction.getXLeftSquare()) {
+	//			angle = glm::radians(90.0f);
+	//		}
+	//		break;
+	//	case(0):
+	//		break;
+	//	case(1):
+	//		if (angle < glm::radians(90.0f) && m_xpos <= junction.getXLeftSquare()) {
+	//			angle = glm::radians(90.0f);
+	//		}
+	//		break;
+	//	}
+	//	break;
+	//case(1):
+	//	switch (direction) {
+	//	case(-1):
+	//		if (angle < glm::radians(90.0f) && m_xpos <= junction.getXLeftSquare()) {
+	//			angle = glm::radians(90.0f);
+	//		}
+	//		break;
+	//	}
+	//	break;
+	//}
 }
 
 
