@@ -9,6 +9,7 @@ Car::Car(glm::mat4 rotation) {
 	rayDirection = glm::vec3(0, 1, 0);
 	float angle = 0;// 1.5708;
 	objectRotation = glm::rotate(glm::mat4(1.0f), -angle, glm::vec3(0,0,1));
+	srand(time(0));
 	forVec = objectRotation * glm::vec4(forVec, 1.0f);
 
 
@@ -202,7 +203,7 @@ int Car::decideDirection(Junction junction, int entryPoint) {
 			possibleTurnings.push_back(i);
 		}
 	}
-	srand(time(NULL));
+	//srand(time(NULL));
 	int random = rand() % possibleTurnings.size();
 
 	currentJunction = junction.getName();
@@ -368,7 +369,7 @@ int Car::setSpawn(Junction junction) {
 			possibleTurnings.push_back(i);
 		}
 	}
-	srand(time(NULL));
+	
 	int random = rand() % possibleTurnings.size();
 	int turningIndex = possibleTurnings.at(random);
 	switch (turningIndex) {
@@ -390,6 +391,7 @@ int Car::setSpawn(Junction junction) {
 		break;
 	}
 	currentJunction = "";
+	
 	return turningIndex;
 }
 
