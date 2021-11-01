@@ -317,7 +317,21 @@ void Car::respawn(Junction junction) {
 	case(2):
 		if (m_ypos >= (junction.GetYPos() + (junction.getHeight() / 2))) {
 			std::cout << "reset time " << std::endl;
-			this->setSpawn(junction);
+			int newSpawn = this->setSpawn(junction);
+			switch (newSpawn) {
+			case(0):
+				angle -= glm::radians(90.0f);
+				break;
+			case(1):
+				angle -= glm::radians(270.0f);
+				break;
+			case(2):
+				angle -= glm::radians(180.0f);
+				break;
+			case(3):
+				break;
+			}
+			entryTurning = newSpawn;
 		}
 		break;
 	case(3):
@@ -410,7 +424,7 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, Junction junct
 			}
 			break;
 		case(2):
-			if (m_ypos >= junction.getYTopSquare() && m_xpos <= junction.getXRightSquare()) {
+			if (m_ypos <= junction.getYTopSquare() && m_xpos <= junction.getXRightSquare()) {
 				angle += 2.4f / fps;
 			}
 		case(3):

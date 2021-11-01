@@ -43,7 +43,7 @@ float angle = 0;
 Shader shader;
 Car mySquare = Car::Car(glm::mat4(1.0f));
 Car car2 = Car::Car(glm::mat4(1.0f));
-Junction junction = Junction::Junction("T", true, true, false, true, 0, glm::mat4(1.0f), RoadType::T);
+Junction junction = Junction::Junction("T", true, true, true, true, 0, glm::mat4(1.0f), RoadType::X);
 Junction crossJunction = Junction::Junction("X", true, true, true, true, 0, glm::mat4(1.0f), RoadType::X);
 float coordinates[4][3];
 
@@ -131,7 +131,6 @@ void display()
 	//else {
 		//mySquare.SetXpos(0);
 		//mySquare.SetYpos(-8);
-
 		//mySquare.setCurrentJunction("");
 		//ModelViewMatrix = glm::rotate(ModelViewMatrix, glm::radians(coordinates[0][2]), glm::vec3(0, 0, 1));
 
@@ -179,8 +178,8 @@ void init()
 	car2.SetWidth(4.0f * (500 / 264.0f));
 	car2.SetHeight(4.0f);
 
-	junction.SetWidth(60.0f * (2481 / 2481.0f));
-	junction.SetHeight(60.0f);
+	junction.SetWidth(40.0f * (2481 / 2481.0f));
+	junction.SetHeight(40.0f);
 	junction.calculateLines();
 
 	float red[3] = { 1,0,0 };

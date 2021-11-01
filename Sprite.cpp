@@ -219,7 +219,7 @@ void Sprite::Render(Shader& shader, glm::mat4& ModelViewMatrix, glm::mat4& Proje
 	//m_ypos = obb.yCentre(ModelViewMatrix);
 	//glm::vec4 vector = glm::vec4(m_xpos, m_ypos, 0.0f, 1.0f);
 	//vector = ModelViewMatrix * vector;
-	std::cout << m_xpos << ", " << m_ypos << std::endl;
+	//std::cout << m_xpos << ", " << m_ypos << std::endl;
 	//m_xpos = vector.x;
 	//m_ypos = vector.y;
 	/*******************************************************/
