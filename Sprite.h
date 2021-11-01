@@ -45,7 +45,7 @@ public:
 	float getHeight();
 	void IncPos(float x, float y);
 	glm::mat4 transform(float speed, int direction);
-	void Render(Shader& shader, glm::mat4& ModelViewMatrix, glm::mat4& ProjectionMatrix);
+	virtual void Render(Shader& shader, glm::mat4& ModelViewMatrix, glm::mat4& ProjectionMatrix);
 	OBB& GetOBB();
 	bool IsInCollision(OBB &anotherOBB);
 };

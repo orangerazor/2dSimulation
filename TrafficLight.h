@@ -19,12 +19,20 @@ class TrafficLight : public Sprite {
 private:
     std::array<bool, 3> lights; //[red, amber, green]
     int green_duration, num_of_phases, current_phase, seconds_green, seconds_other, other_duration;
+
+    static GLuint texRed;
+    static GLuint texRedAmb;
+    static GLuint texGreen;
+    static GLuint texAmb;
 public:
+    static void initTrafficTex();
+
     TrafficLight(int green_duration);
     TrafficLight(TrafficLight* old);
     TrafficLight();
     ~TrafficLight();
     bool isRed();
+    void Render(Shader& shader, glm::mat4& ModelViewMatrix, glm::mat4& ProjectionMatrix);
 
     void nextLight();
     std::array<bool, 3> getLights();

@@ -113,9 +113,6 @@ void Sprite::Init(Shader& shader, float colour[3], std::string filename)
 	}
 	
 
-
-	
-
 	//Create the geometry
 	m_NumberOfVerts = 6;
 	float vert[18];	// create a vertex array

@@ -218,8 +218,7 @@ void init()
 		//std::cout << junction.getTrafficLights()[i].getHeight() << std::endl;
 		junction.getTrafficLights()[i].Init(shader, red, "textures/blankTrafficLight.png");
 	}
-
-	
+	TrafficLight::initTrafficTex();
 
 	//left
 	coordinates[0][0] = junction.GetOBB().vertOriginal[0].x;
