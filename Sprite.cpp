@@ -6,6 +6,7 @@
 #include <string>
 
 #include <iostream>
+#include "TrafficLight.h"
 
 
 
@@ -94,7 +95,7 @@ void Sprite::Init(Shader& shader, float colour[3], std::string filename)
 	
 	//create the texture on the GPU
 	glGenTextures(1, &m_TexName);
-	glBindTexture(GL_TEXTURE_2D, m_TexName);
+	glBindTexture(GL_TEXTURE_2D,m_TexName);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);  //or use GL_CLAMP
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);

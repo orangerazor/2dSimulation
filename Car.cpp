@@ -414,41 +414,63 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, Junction junct
 	
 	glm::vec3 forVec2 = forVec;
 	std::cout << "green = " << junction.getTrafficLights()[entryPoint].getLights()[2] << std::endl;
+	switch (entryPoint) {
+	case(0):
+		if (m_xpos <= junction.getXLeftSquare() && m_xpos > (junction.getXLeftSquare() - (m_Height)) && !junction.getTrafficLights()[entryPoint].getLights()[2]) {
+			speed = 0;
+		}
+		break;
+	case(1):
+		if (m_xpos >= junction.getXRightSquare() && m_xpos < (junction.getXRightSquare() + (m_Height)) && !junction.getTrafficLights()[entryPoint].getLights()[2]) {
+			speed = 0;
+		}
+		break;
+	case(2):
+		if (m_ypos >= junction.getYTopSquare() && m_ypos < (junction.getYTopSquare() + (m_Height)) && !junction.getTrafficLights()[entryPoint].getLights()[2]) {
+			speed = 0;
+		}
+		break;
+	case(3):
+		if (m_ypos <= junction.getYBotSquare() && m_ypos > (junction.getYBotSquare() - (m_Height)) && !junction.getTrafficLights()[entryPoint].getLights()[2]) {
+			speed = 0;
+		}
+		break;
+	}
 	switch (direction) {
 	case(-1):
 		switch (entryPoint) {
 		case(0):
-			if (m_xpos <= junction.getXLeftSquare() && !junction.getTrafficLights()[entryPoint].getLights()[2]) {
-				speed = 0;
-				break;
-			}
+			//if (m_xpos <= junction.getXLeftSquare() && !junction.getTrafficLights()[entryPoint].getLights()[2]) {
+			//	speed = 0;
+			//	break;
+			//}
 			if (m_xpos >= junction.getXLeftSquare() && m_ypos <= junction.getYTopSquare()) {
 				angle += 2.4f / fps;
 			}
 			break;
 		case(1):
-			if (m_xpos >= junction.getXRightSquare() && !junction.getTrafficLights()[entryPoint].getLights()[2]) {
-				speed = 0;
-				break;
-			}
+			//if (m_xpos >= junction.getXRightSquare() && !junction.getTrafficLights()[entryPoint].getLights()[2]) {
+			//	speed = 0;
+			//	break;
+			//}
 			if (m_xpos <= junction.getXRightSquare() && m_ypos >= junction.getYBotSquare()) {
 				angle += 2.4f / fps;
 			}
 			break;
 		case(2):
-			if (m_ypos >= junction.getYTopSquare() && !junction.getTrafficLights()[entryPoint].getLights()[2]) {
-				speed = 0;
-				break;
-			}
+			//if (m_ypos >= junction.getYTopSquare() && !junction.getTrafficLights()[entryPoint].getLights()[2]) {
+			//	speed = 0;
+			//	break;
+			//}
 			if (m_ypos <= junction.getYTopSquare() && m_xpos <= junction.getXRightSquare()) {
 				angle += 2.4f / fps;
 			}
 			break;
 		case(3):
-			if (m_ypos <= junction.getYBotSquare() && !junction.getTrafficLights()[entryPoint].getLights()[2]) {
-				speed = 0;
-				break;
-			}
+			//if (m_ypos <= junction.getYBotSquare() && !junction.getTrafficLights()[entryPoint].getLights()[2]) {
+			//	speed = 0;
+			//	break;
+			//}
 			if (m_ypos >= junction.getYBotSquare() && m_xpos >= junction.getXLeftSquare()) {
 				angle += 2.4f / fps;
 			}
@@ -458,66 +480,66 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, Junction junct
 	case(0):
 		switch (entryPoint) {
 		case(0):
-			if (m_xpos <= junction.getXLeftSquare() && !junction.getTrafficLights()[entryPoint].getLights()[2]) {
-				speed = 0;
-				break;
-			}
+			//if (m_xpos <= junction.getXLeftSquare() && !junction.getTrafficLights()[entryPoint].getLights()[2]) {
+			//	speed = 0;
+			//	break;
+			//}
 			break;
 		case(1):
-			if (m_xpos >= junction.getXRightSquare() && !junction.getTrafficLights()[entryPoint].getLights()[2]) {
-				speed = 0;
-				break;
-			}
+			//if (m_xpos >= junction.getXRightSquare() && !junction.getTrafficLights()[entryPoint].getLights()[2]) {
+			//	speed = 0;
+			//	break;
+			//}
 			break;
 		case(2):
-			if (m_ypos >= junction.getYTopSquare() && !junction.getTrafficLights()[entryPoint].getLights()[2]) {
-				speed = 0;
-				break;
-			}
+			//if (m_ypos >= junction.getYTopSquare() && !junction.getTrafficLights()[entryPoint].getLights()[2]) {
+			//	speed = 0;
+			//	break;
+			//}
 			break;
 		case(3):
-			if (m_ypos <= junction.getYBotSquare() && !junction.getTrafficLights()[entryPoint].getLights()[2]) {
-				speed = 0;
-				break;
-			}
+			//if (m_ypos <= junction.getYBotSquare() && !junction.getTrafficLights()[entryPoint].getLights()[2]) {
+			//	speed = 0;
+			//	break;
+			//}
 			break;
 		}
 		break;
 	case(1):
 		switch (entryPoint) {
 		case(0):
-			if (m_xpos <= junction.getXLeftSquare() && !junction.getTrafficLights()[entryPoint].getLights()[2]) {
-				speed = 0;
-				break;
-			}
+			//if (m_xpos <= junction.getXLeftSquare() && !junction.getTrafficLights()[entryPoint].getLights()[2]) {
+			//	speed = 0;
+			//	break;
+			//}
 			if (m_xpos >= junction.GetXPos() && m_ypos >= junction.GetYPos()) {
 				angle -= 2.4f/fps;
 			}
 			break;
 		case(1):
-			if (m_xpos >= junction.getXRightSquare() && !junction.getTrafficLights()[entryPoint].getLights()[2]) {
-				speed = 0;
-				break;
-			}
+			//if (m_xpos >= junction.getXRightSquare() && !junction.getTrafficLights()[entryPoint].getLights()[2]) {
+			//	speed = 0;
+			//	break;
+			//}
 			if (m_xpos <= junction.GetXPos() && m_ypos <= junction.GetYPos()) {
 				angle -= 2.4f/fps;		
 			}
 			break;
 		case(2):
-			if (m_ypos >= junction.getYTopSquare() && !junction.getTrafficLights()[entryPoint].getLights()[2]) {
-				speed = 0;
-				break;
-			}
+			//if (m_ypos >= junction.getYTopSquare() && !junction.getTrafficLights()[entryPoint].getLights()[2]) {
+			//	speed = 0;
+			//	break;
+			//}
 			if (m_ypos <= junction.GetYPos() && m_xpos >= junction.GetXPos()) {
 				angle -= 2.4f/fps;
 
 			}
 			break;
 		case(3):
-			if (m_ypos <= junction.getYBotSquare() && !junction.getTrafficLights()[entryPoint].getLights()[2]) {
-				speed = 0;
-				break;
-			}
+			//if (m_ypos <= junction.getYBotSquare() && !junction.getTrafficLights()[entryPoint].getLights()[2]) {
+			//	speed = 0;
+			//	break;
+			//}
 			if (m_ypos >= junction.GetYPos() && m_xpos <= junction.GetXPos()) {
 				angle -= 2.4f / fps;
 			}

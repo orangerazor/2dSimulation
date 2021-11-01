@@ -6,7 +6,6 @@
 #include "ImageLoading.h"
 
 TrafficLight::TrafficLight(int green_duration){
-    TrafficLight::initTrafficTex();
     this->lights = {1,0,0};
     this->current_phase = 0;
     this->num_of_phases = 4;
@@ -27,7 +26,6 @@ TrafficLight::TrafficLight(TrafficLight* old) {
 }
 
 TrafficLight::TrafficLight() {
-    TrafficLight::initTrafficTex();
     this->lights = { 1,0,0 };
     this->current_phase = 0;
     this->num_of_phases = 4;
@@ -42,35 +40,35 @@ TrafficLight::~TrafficLight()
 
 }
 
-static void TrafficLight::initTrafficTex() {
-
-    //THis is for red
-    {
-        //load png image
-        int imageHeight = 0;
-        int imageWidth = 0;
-
-        //create the texture on the GPU
-        glGenTextures(1, &texRed);
-        glBindTexture(GL_TEXTURE_2D, texRed);
-
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);  //or use GL_CLAMP
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-
-        bool success = ImageLoading::loadImage("textures/redTrafficLight");
-        if (!success) {
-            std::cout << "Unable to load image file" << std::endl;
-            glDeleteTextures(1, &texRed);
-            return;
-        }
-        else
-        {
-            std::cout << "Image loaded " << std::endl;
-        }
-    }
-}
+//void TrafficLight::initTrafficTex() {
+//
+//    //THis is for red
+//    {
+//        //load png image
+//        int imageHeight = 0;
+//        int imageWidth = 0;
+//
+//        //create the texture on the GPU
+//        glGenTextures(1, &texRed);
+//        glBindTexture(GL_TEXTURE_2D, texRed);
+//
+//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);  //or use GL_CLAMP
+//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+//
+//        bool success = ImageLoading::loadImage("textures/redTrafficLight");
+//        if (!success) {
+//            std::cout << "Unable to load image file" << std::endl;
+//            glDeleteTextures(1, &texRed);
+//            return;
+//        }
+//        else
+//        {
+//            std::cout << "Image loaded " << std::endl;
+//        }
+//    }
+//}
 
 bool TrafficLight::isRed() {
     if (this->lights[0] && !this->lights[1]) {
@@ -121,47 +119,47 @@ void TrafficLight::nextLight() {
     }
 }
 
-void TrafficLight::Render(Shader& shader, glm::mat4& ModelViewMatrix, glm::mat4& ProjectionMatrix)
-{
-    //std::cout << this->getHeight() << std::endl;
-    /****UPDATE THE CORNER VALUES BASED ON TRANSFORMATION***/
-    //std::cout << "noot noot" << std::endl;
-    obb.transformPoints(ModelViewMatrix);
-    //m_xpos = obb.xCentre(ModelViewMatrix);
-    //m_ypos = obb.yCentre(ModelViewMatrix);
-    //glm::vec4 vector = glm::vec4(m_xpos, m_ypos, 0.0f, 1.0f);
-    //vector = ModelViewMatrix * vector;
-    //std::cout << m_xpos << ", " << m_ypos << std::endl;
-    //m_xpos = vector.x;
-    //m_ypos = vector.y;
-    /*******************************************************/
-
-    glUseProgram(shader.handle());  // use the shader
-
-    //set the DiffuseMap in GLSL to the texture unit 0.
-    glUniform1i(glGetUniformLocation(shader.handle(), "DiffuseMap"), 0);
-
-    if (lights[0] && !lights[1] && !lights[2]) {
-        glBindTexture(GL_TEXTURE_2D, texRed);
-    }
-    if (lights[0] && lights[1] && !lights[2]) {
-        glBindTexture(GL_TEXTURE_2D, texRedAmb);
-    }
-    //glBindTexture(GL_TEXTURE_2D, m_TexName);
-
-    //set the uniform for the projectionmatrix
-    glUniformMatrix4fv(glGetUniformLocation(shader.handle(), "ProjectionMatrix"), 1, GL_FALSE, &ProjectionMatrix[0][0]);
-
-    //pass the uniform for the ModelView matrix to the shader
-    glUniformMatrix4fv(glGetUniformLocation(shader.handle(), "ModelViewMatrix"), 1, GL_FALSE, &ModelViewMatrix[0][0]);
-
-    //Draw the object
-    glBindVertexArray(m_vaoID);		// select first VAO
-    glDrawArrays(GL_TRIANGLES, 0, m_NumberOfVerts);	// draw first object
-
-    glBindVertexArray(0); //unbind the vertex array object
-    glUseProgram(0); //turn off the current shader
-}
+//void TrafficLight::Render(Shader& shader, glm::mat4& ModelViewMatrix, glm::mat4& ProjectionMatrix)
+//{
+//    //std::cout << this->getHeight() << std::endl;
+//    /****UPDATE THE CORNER VALUES BASED ON TRANSFORMATION***/
+//    //std::cout << "noot noot" << std::endl;
+//    obb.transformPoints(ModelViewMatrix);
+//    //m_xpos = obb.xCentre(ModelViewMatrix);
+//    //m_ypos = obb.yCentre(ModelViewMatrix);
+//    //glm::vec4 vector = glm::vec4(m_xpos, m_ypos, 0.0f, 1.0f);
+//    //vector = ModelViewMatrix * vector;
+//    //std::cout << m_xpos << ", " << m_ypos << std::endl;
+//    //m_xpos = vector.x;
+//    //m_ypos = vector.y;
+//    /*******************************************************/
+//
+//    glUseProgram(shader.handle());  // use the shader
+//
+//    //set the DiffuseMap in GLSL to the texture unit 0.
+//    glUniform1i(glGetUniformLocation(shader.handle(), "DiffuseMap"), 0);
+//
+//    //if (lights[0] && !lights[1] && !lights[2]) {
+//    //    glBindTexture(GL_TEXTURE_2D, texRed);
+//    //}
+//    //if (lights[0] && lights[1] && !lights[2]) {
+//    //    glBindTexture(GL_TEXTURE_2D, texRedAmb);
+//    //}
+//    glBindTexture(GL_TEXTURE_2D, m_texName);
+//
+//    //set the uniform for the projectionmatrix
+//    glUniformMatrix4fv(glGetUniformLocation(shader.handle(), "ProjectionMatrix"), 1, GL_FALSE, &ProjectionMatrix[0][0]);
+//
+//    //pass the uniform for the ModelView matrix to the shader
+//    glUniformMatrix4fv(glGetUniformLocation(shader.handle(), "ModelViewMatrix"), 1, GL_FALSE, &ModelViewMatrix[0][0]);
+//
+//    //Draw the object
+//    glBindVertexArray(m_vaoID);		// select first VAO
+//    glDrawArrays(GL_TRIANGLES, 0, m_NumberOfVerts);	// draw first object
+//
+//    glBindVertexArray(0); //unbind the vertex array object
+//    glUseProgram(0); //turn off the current shader
+//}
 
 //int test(){
 //    TrafficLight* trafficLight = new TrafficLight(3);
