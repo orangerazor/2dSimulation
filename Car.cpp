@@ -462,21 +462,25 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, Junction junct
 				speed = 0;
 				break;
 			}
+			break;
 		case(1):
 			if (m_xpos >= junction.getXRightSquare() && !junction.getTrafficLights()[entryPoint].getLights()[2]) {
 				speed = 0;
 				break;
 			}
+			break;
 		case(2):
 			if (m_ypos >= junction.getYTopSquare() && !junction.getTrafficLights()[entryPoint].getLights()[2]) {
 				speed = 0;
 				break;
 			}
+			break;
 		case(3):
 			if (m_ypos <= junction.getYBotSquare() && !junction.getTrafficLights()[entryPoint].getLights()[2]) {
 				speed = 0;
 				break;
 			}
+			break;
 		}
 		break;
 	case(1):
