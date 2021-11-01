@@ -11,6 +11,7 @@ private:
 	int exitTurning = -1;
 	int exit;
 	float angle;
+	
 public:
 	Car(glm::mat4 rotation);
 	glm::mat4 turn(float speed, int direction);
