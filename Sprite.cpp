@@ -30,7 +30,6 @@ void Sprite::SetWidth(float size)
 void Sprite::SetHeight(float size)
 {
 	m_Height = size;
-	std::cout << m_Height << std::endl;
 }
 
 void Sprite::SetXpos(float x)

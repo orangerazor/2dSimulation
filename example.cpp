@@ -120,7 +120,7 @@ void display()
 	junction.Render(shader, glm::mat4(1.0f), ProjectionMatrix);
 	for (int i = 0; i < junction.getTrafficLights().size(); i++) {
 		junction.getTrafficLights()[i].SetHeight(1.0f);
-		std::cout << junction.getTrafficLights()[i].getHeight() << endl;
+		//std::cout << junction.getTrafficLights()[i].getHeight() << endl;
 		junction.getTrafficLights()[i].Render(shader, glm::mat4(1.0f), ProjectionMatrix);
 	}
 	glm::mat4 ModelViewMatrix = glm::mat4(1.0f);
@@ -128,6 +128,7 @@ void display()
 	mySquare.respawn(junction);
 	//int entryPoint = mySquare.entryPoint(junction);
 	int direction = mySquare.decideDirection(junction, mySquare.getEntryTurning());
+
 	ModelViewMatrix = mySquare.rotate(12.0f / fps, direction, mySquare.getEntryTurning(), junction, fps);
 	//ModelViewMatrix = mySquare.faceJunction(entryPoint, ModelViewMatrix);
 	//ModelViewMatrix = glm::rotate(ModelViewMatrix, glm::radians(-90.0f), glm::vec3(0, 0, 1));
