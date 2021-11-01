@@ -178,14 +178,14 @@ void init()
 	car2.SetWidth(4.0f * (500 / 264.0f));
 	car2.SetHeight(4.0f);
 
-	junction.SetWidth(40.0f * (2481 / 2481.0f));
-	junction.SetHeight(40.0f);
+	junction.SetWidth(60.0f * (2481 / 2481.0f));
+	junction.SetHeight(60.0f);
 	junction.calculateLines();
 
 	float red[3] = { 1,0,0 };
 	mySquare.Init(shader, red, "textures/car.png");
 	car2.Init(shader, red, "textures/car.png");
-	junction.Init(shader, red, "textures/Tjunction.png");
+	junction.Init(shader, red, "textures/Xjunction.png");
 
 	//left
 	coordinates[0][0] = junction.GetOBB().vertOriginal[0].x;
@@ -267,20 +267,20 @@ void processKeys()
 {
 	if (Left)
 	{
-		angle += 0.01f;
+		//angle += 0.01f;
 		//speed = 0;
 		//mySquare.transform(1, 0);
 		//mySquare.IncPos(-0.1f, 0.0f);
 	}
 	if (Right)
 	{
-		angle -= 0.01f;
+		//angle -= 0.01f;
 		//mySquare.transform(1, 1);
 		//mySquare.IncPos(0.1f, 0.0f);
 	}
 	if (Up)
 	{
-		speed += 0.03f;
+		//speed += 0.03f;
 		//mySquare.IncPos(0.0f, 0.1f);
 		//mySquare.SetYpos(0.0f);
 		//mySquare.SetXpos(0.0f);
@@ -288,7 +288,7 @@ void processKeys()
 	}
 	if (Down)
 	{
-		speed -= 0.03f;
+		//speed -= 0.03f;
 		//mySquare.IncPos(0.0f, -0.1f);
 		//direction = 1;
 
