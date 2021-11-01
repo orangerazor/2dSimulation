@@ -27,7 +27,8 @@ private:
     int speedLimit;
     //std::unique_ptr<TrafficLight> pointer;
     //std::array<pointer, 4> trafficLights;
-    std::array<TrafficLight, 4> trafficLights;
+    //std::array<TrafficLight, 4> trafficLights;
+    TrafficLight* trafficLights = new TrafficLight[4];
     //std::vector<std::unique_ptr<TrafficLight>> trafficLights;
     glm::vec3 roadStart;
     glm::vec3 roadDirection;
@@ -44,7 +45,6 @@ private:
 
 public:
 
-    
     Junction(std::string name, bool left, bool right, bool forward, bool backward, int speedLimit, glm::mat4 rotation, RoadType type);
     ~Junction();
     std::string getName();
@@ -90,7 +90,7 @@ public:
         return this->xRightSquare;
     }
 
-    inline std::array<TrafficLight, 4> getTrafficLights() {
+    inline TrafficLight* getTrafficLights() {
         return this->trafficLights;
     }
     //inline std::array<pointer, 4> getTrafficLights() {

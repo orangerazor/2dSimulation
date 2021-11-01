@@ -30,6 +30,7 @@ void Sprite::SetWidth(float size)
 void Sprite::SetHeight(float size)
 {
 	m_Height = size;
+	//std::cout << m_Height << std::endl;
 }
 
 void Sprite::SetXpos(float x)
@@ -215,6 +216,7 @@ void Sprite::Render(Shader& shader, glm::mat4& ModelViewMatrix, glm::mat4& Proje
 {
 	//std::cout << this->getHeight() << std::endl;
 	/****UPDATE THE CORNER VALUES BASED ON TRANSFORMATION***/
+	//std::cout << m_Height << std::endl;
 	obb.transformPoints(ModelViewMatrix);
 	//m_xpos = obb.xCentre(ModelViewMatrix);
 	//m_ypos = obb.yCentre(ModelViewMatrix);

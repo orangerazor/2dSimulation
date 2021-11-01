@@ -18,7 +18,6 @@ Junction::Junction(std::string name, bool left, bool right, bool forward, bool b
     for (int i = 0; i < this->turnings.size(); i++) {
         if (this->turnings[i]) {
             this->trafficLights[i] = TrafficLight::TrafficLight(2);
-            this->trafficLights[i].SetHeight(1000.0f);
         }
     }
 
