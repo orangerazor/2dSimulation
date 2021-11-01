@@ -426,8 +426,6 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, Junction junct
 			}
 			break;
 		case(2):
-			//bool result = m_ypos <= junction.getYTopSquare();
-			//std::cout << result << std::endl;
 			if (m_ypos <= junction.getYTopSquare() && m_xpos <= junction.getXRightSquare()) {
 				angle += 2.4f / fps;
 			}

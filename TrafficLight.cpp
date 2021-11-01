@@ -14,6 +14,16 @@ TrafficLight::TrafficLight(int green_duration){
     this->seconds_other = 0;
 }
 
+TrafficLight::TrafficLight(TrafficLight* old) {
+    this->lights = old->lights;
+    this->current_phase = old->current_phase;
+    this->num_of_phases = old->num_of_phases;
+    this->green_duration = old->green_duration;
+    this->seconds_green = old->seconds_green;
+    this->other_duration = old->other_duration;
+    this->seconds_other = old->seconds_other;
+}
+
 TrafficLight::TrafficLight() {
     this->lights = { 1,0,0 };
     this->current_phase = 0;

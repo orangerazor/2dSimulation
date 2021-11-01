@@ -21,6 +21,7 @@ private:
     int green_duration, num_of_phases, current_phase, seconds_green, seconds_other, other_duration;
 public:
     TrafficLight(int green_duration);
+    TrafficLight(TrafficLight* old);
     TrafficLight();
     ~TrafficLight();
     bool isRed();

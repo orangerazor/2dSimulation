@@ -47,6 +47,7 @@ Car car2 = Car::Car(glm::mat4(1.0f));
 Junction junction = Junction::Junction("T", true, true, false, true, 0, glm::mat4(1.0f), RoadType::T);
 Junction crossJunction = Junction::Junction("X", true, true, true, true, 0, glm::mat4(1.0f), RoadType::X);
 TrafficLight* trafficLights[1][4];
+TrafficLight trafficLight;
 float coordinates[4][3];
 
 
@@ -116,13 +117,30 @@ void display()
 		//	ModelViewMatrix = glm::rotate(ModelViewMatrix, glm::radians(coordinates[3][2]), glm::vec3(0, 0, 1));
 		//	break;
 		//}
-
 	junction.Render(shader, glm::mat4(1.0f), ProjectionMatrix);
-	for (int i = 0; i < junction.getTrafficLights().size(); i++) {
-		junction.getTrafficLights()[i].SetHeight(1.0f);
-		std::cout << junction.getTrafficLights()[i].getHeight() << endl;
-		junction.getTrafficLights()[i].Render(shader, glm::mat4(1.0f), ProjectionMatrix);
+	for (int i = 0; i < 4; i++) {
+		glm::mat4 moveLight = glm::mat4(1.0f);
+		switch (i) {
+		case(0):
+			moveLight = glm::translate(moveLight, glm::vec3(junction.getXLeftSquare() - (junction.getTrafficLights()[i].getHeight() / 2), junction.getYTopSquare() + (junction.getTrafficLights()[i].getWidth() / 2), 0.0));
+			moveLight = glm::rotate(moveLight, glm::radians(-90.0f), glm::vec3(0.0, 0.0, 1.0));
+			break;
+		case(1):
+			moveLight = glm::translate(moveLight, glm::vec3(junction.getXRightSquare()+ (junction.getTrafficLights()[i].getHeight() / 2), junction.getYBotSquare() - (junction.getTrafficLights()[i].getWidth() / 2), 0.0));
+			moveLight = glm::rotate(moveLight, glm::radians(90.0f), glm::vec3(0.0, 0.0, 1.0));
+			break;
+		case(2):
+			moveLight = glm::translate(moveLight, glm::vec3(junction.getXRightSquare() + (junction.getTrafficLights()[i].getWidth() / 2), junction.getYTopSquare() + (junction.getTrafficLights()[i].getHeight() / 2), 0.0));
+			break;
+		case(3):
+			moveLight = glm::translate(moveLight, glm::vec3(junction.getXLeftSquare() - (junction.getTrafficLights()[i].getWidth() / 2), junction.getYBotSquare() - (junction.getTrafficLights()[i].getHeight() / 2), 0.0));
+			moveLight = glm::rotate(moveLight, glm::radians(180.0f), glm::vec3(0.0, 0.0, 1.0));
+			break;
+		}
+		junction.getTrafficLights()[i].Render(shader, moveLight, ProjectionMatrix);
 	}
+	//std::cout << first.GetXPos() << ", " << first.GetYPos() << std::endl;
+
 	glm::mat4 ModelViewMatrix = glm::mat4(1.0f);
 
 	mySquare.respawn(junction);
@@ -194,8 +212,10 @@ void init()
 	car2.Init(shader, red, "textures/car.png");
 	junction.Init(shader, red, "textures/Xjunction.png");
 	//std::cout << "size = " << junction.getTrafficLights().size() << std::endl;
-	for (int i = 0; i < junction.getTrafficLights().size(); i++) {
-		junction.getTrafficLights()[i].SetHeight(1000.0f);
+	for (int i = 0; i < 4; i++) {
+		junction.getTrafficLights()[i].SetHeight(4.0f);
+		junction.getTrafficLights()[i].SetWidth(2.0f);
+		//std::cout << junction.getTrafficLights()[i].getHeight() << std::endl;
 		junction.getTrafficLights()[i].Init(shader, red, "textures/blankTrafficLight.png");
 	}
 
