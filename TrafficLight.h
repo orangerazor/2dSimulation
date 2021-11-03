@@ -52,6 +52,8 @@ public:
         //std::cout << this->other_duration - this->seconds_other << std::endl;
         return this->other_duration-this->seconds_other;
     }
+
+
 };
 
 

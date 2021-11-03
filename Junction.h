@@ -25,6 +25,7 @@ private:
     std::string name;
     std::array<bool, 4> turnings;
     int speedLimit;
+    int orientation;
     //std::unique_ptr<TrafficLight> pointer;
     //std::array<pointer, 4> trafficLights;
     //std::array<TrafficLight, 4> trafficLights;
@@ -45,7 +46,7 @@ private:
 
 public:
 
-    Junction(std::string name, bool left, bool right, bool forward, bool backward, int speedLimit, glm::mat4 rotation, RoadType type);
+    Junction(std::string name, int orientation, int speedLimit, glm::mat4 rotation, RoadType type);
     ~Junction();
     std::string getName();
     void trafficLightFlow();
@@ -92,6 +93,10 @@ public:
 
     inline TrafficLight* getTrafficLights() {
         return this->trafficLights;
+    }
+
+    inline int getOrientation() {
+        return this->orientation;
     }
     //inline std::array<pointer, 4> getTrafficLights() {
     //    return this->trafficLights;
