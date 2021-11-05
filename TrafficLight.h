@@ -20,6 +20,8 @@ private:
     int green_duration, num_of_phases, current_phase, seconds_green, seconds_other, other_duration;
 
 protected:
+	Sprite lightsSprite[3]; // red; green; yellow
+
     static GLuint texRed;
     static GLuint texRedAmb;
     static GLuint texGreen;
@@ -32,7 +34,10 @@ public:
     TrafficLight();
     ~TrafficLight();
     bool isRed();
-    //void Render(Shader& shader, glm::mat4& ModelViewMatrix, glm::mat4& ProjectionMatrix);
+	bool isGreen();
+
+	void InitLights(Shader& shader, float colour[3], std::string red, std::string green, std::string yellow);
+    void Render(Shader& shader, glm::mat4& ModelViewMatrix, glm::mat4& ProjectionMatrix);
 
     void nextLight();
     std::array<bool, 3> getLights();

@@ -25,7 +25,7 @@ TrafficLight::TrafficLight(TrafficLight* old) {
     this->seconds_other = old->seconds_other;
 }
 
-TrafficLight::TrafficLight() {
+TrafficLight::TrafficLight()  {
     this->lights = { 1,0,0 };
     this->current_phase = 0;
     this->num_of_phases = 4;
@@ -75,6 +75,35 @@ bool TrafficLight::isRed() {
         return true;
     }
     return false;
+}
+
+bool TrafficLight::isGreen()
+{
+	return lights[2];
+}
+
+void TrafficLight::InitLights(Shader & shader, float colour[3], std::string red, std::string green, std::string yellow)
+{
+	for (int i = 0; i < 3; i++)
+	{
+		lightsSprite[i].SetWidth(this->getWidth());
+		lightsSprite[i].SetHeight(this->getHeight());
+	}
+	lightsSprite[0].Init(shader, colour, red);
+	lightsSprite[1].Init(shader, colour, green);
+	lightsSprite[2].Init(shader, colour, yellow);
+}
+
+void TrafficLight::Render(Shader & shader, glm::mat4 & ModelViewMatrix, glm::mat4 & ProjectionMatrix)
+{
+	if (isRed())
+		lightsSprite[0].Render(shader, ModelViewMatrix, ProjectionMatrix);
+	else if (isGreen())
+		lightsSprite[1].Render(shader, ModelViewMatrix, ProjectionMatrix);
+	else if (!isRed() && !isGreen())
+		lightsSprite[2].Render(shader, ModelViewMatrix, ProjectionMatrix);
+	else
+		Sprite::Render(shader, ModelViewMatrix, ProjectionMatrix);
 }
 
 std::array<bool, 3> TrafficLight::getLights() {
