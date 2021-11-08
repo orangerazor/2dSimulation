@@ -86,15 +86,41 @@ void display()
 	ViewMatrix = glm::translate(glm::mat4(1.0), glm::vec3(0.0, 0.0, 0.0));
 
 	glEnable(GL_BLEND);
-	if (secondElapsed >= 1000000) {
-		junction.trafficLightFlow();
-		cout << "left" << junction.getTrafficLights()[0].getLights()[0] << junction.getTrafficLights()[0].getLights()[1] << junction.getTrafficLights()[0].getLights()[2] << endl;
-		cout << "right" << junction.getTrafficLights()[1].getLights()[0] << junction.getTrafficLights()[1].getLights()[1] << junction.getTrafficLights()[1].getLights()[2] << endl;
-		cout << "forward" << junction.getTrafficLights()[2].getLights()[0] << junction.getTrafficLights()[2].getLights()[1] << junction.getTrafficLights()[2].getLights()[2] << endl;
-		cout << "back" << junction.getTrafficLights()[3].getLights()[0] << junction.getTrafficLights()[3].getLights()[1] << junction.getTrafficLights()[3].getLights()[2] << endl;
-		secondElapsed = 0;
+	for (int i = 0; i < map.size(); i++) {
+		if (secondElapsed >= 1000000) {
+			map[i].trafficLightFlow();
+			//cout << "left" << junction.getTrafficLights()[0].getLights()[0] << junction.getTrafficLights()[0].getLights()[1] << junction.getTrafficLights()[0].getLights()[2] << endl;
+			//cout << "right" << junction.getTrafficLights()[1].getLights()[0] << junction.getTrafficLights()[1].getLights()[1] << junction.getTrafficLights()[1].getLights()[2] << endl;
+			//cout << "forward" << junction.getTrafficLights()[2].getLights()[0] << junction.getTrafficLights()[2].getLights()[1] << junction.getTrafficLights()[2].getLights()[2] << endl;
+			//cout << "back" << junction.getTrafficLights()[3].getLights()[0] << junction.getTrafficLights()[3].getLights()[1] << junction.getTrafficLights()[3].getLights()[2] << endl;
+			secondElapsed = 0;
+
+		}
+		map[i].Render(shader, glm::mat4(1.0f), ProjectionMatrix);
+		/*for (int i = 0; i < 4; i++) {
+			glm::mat4 moveLight = glm::mat4(1.0f);
+			switch (i) {
+			case(0):
+				moveLight = glm::translate(moveLight, glm::vec3(map[i].getXLeftSquare() - (map[i].getTrafficLights()[i].getHeight() / 2), map[i].getYTopSquare() + (map[i].getTrafficLights()[i].getWidth() / 2), 0.0));
+				moveLight = glm::rotate(moveLight, glm::radians(-90.0f), glm::vec3(0.0, 0.0, 1.0));
+				break;
+			case(1):
+				moveLight = glm::translate(moveLight, glm::vec3(map[i].getXRightSquare() + (map[i].getTrafficLights()[i].getHeight() / 2), map[i].getYBotSquare() - (map[i].getTrafficLights()[i].getWidth() / 2), 0.0));
+				moveLight = glm::rotate(moveLight, glm::radians(90.0f), glm::vec3(0.0, 0.0, 1.0));
+				break;
+			case(2):
+				moveLight = glm::translate(moveLight, glm::vec3(map[i].getXRightSquare() + (map[i].getTrafficLights()[i].getWidth() / 2), map[i].getYTopSquare() + (map[i].getTrafficLights()[i].getHeight() / 2), 0.0));
+				break;
+			case(3):
+				moveLight = glm::translate(moveLight, glm::vec3(map[i].getXLeftSquare() - (map[i].getTrafficLights()[i].getWidth() / 2), map[i].getYBotSquare() - (map[i].getTrafficLights()[i].getHeight() / 2), 0.0));
+				moveLight = glm::rotate(moveLight, glm::radians(180.0f), glm::vec3(0.0, 0.0, 1.0));
+				break;
+			}
+			map[i].getTrafficLights()[i].Render(shader, moveLight, ProjectionMatrix);
+		}*/
 	}
-	
+
+
 	//glm::mat4 ModelViewMatrix = mySquare.turn(speed, direction);
 	//std::cout << mySquare.GetXPos() << ", " << mySquare.GetYPos() << std::endl;
 	//mySquare.IncPos(0, 0.01f);
@@ -124,36 +150,36 @@ void display()
 		//	ModelViewMatrix = glm::rotate(ModelViewMatrix, glm::radians(coordinates[3][2]), glm::vec3(0, 0, 1));
 		//	break;
 		//}
-	junction.Render(shader, glm::mat4(1.0f), ProjectionMatrix);
-	for (int i = 0; i < 4; i++) {
-		glm::mat4 moveLight = glm::mat4(1.0f);
-		switch (i) {
-		case(0):
-			moveLight = glm::translate(moveLight, glm::vec3(junction.getXLeftSquare() - (junction.getTrafficLights()[i].getHeight() / 2), junction.getYTopSquare() + (junction.getTrafficLights()[i].getWidth() / 2), 0.0));
-			moveLight = glm::rotate(moveLight, glm::radians(-90.0f), glm::vec3(0.0, 0.0, 1.0));
-			break;
-		case(1):
-			moveLight = glm::translate(moveLight, glm::vec3(junction.getXRightSquare()+ (junction.getTrafficLights()[i].getHeight() / 2), junction.getYBotSquare() - (junction.getTrafficLights()[i].getWidth() / 2), 0.0));
-			moveLight = glm::rotate(moveLight, glm::radians(90.0f), glm::vec3(0.0, 0.0, 1.0));
-			break;
-		case(2):
-			moveLight = glm::translate(moveLight, glm::vec3(junction.getXRightSquare() + (junction.getTrafficLights()[i].getWidth() / 2), junction.getYTopSquare() + (junction.getTrafficLights()[i].getHeight() / 2), 0.0));
-			break;
-		case(3):
-			moveLight = glm::translate(moveLight, glm::vec3(junction.getXLeftSquare() - (junction.getTrafficLights()[i].getWidth() / 2), junction.getYBotSquare() - (junction.getTrafficLights()[i].getHeight() / 2), 0.0));
-			moveLight = glm::rotate(moveLight, glm::radians(180.0f), glm::vec3(0.0, 0.0, 1.0));
-			break;
-		}
-		junction.getTrafficLights()[i].Render(shader, moveLight, ProjectionMatrix);
-	}
+	//junction.Render(shader, glm::mat4(1.0f), ProjectionMatrix);
+	//for (int i = 0; i < 4; i++) {
+	//	glm::mat4 moveLight = glm::mat4(1.0f);
+	//	switch (i) {
+	//	case(0):
+	//		moveLight = glm::translate(moveLight, glm::vec3(junction.getXLeftSquare() - (junction.getTrafficLights()[i].getHeight() / 2), junction.getYTopSquare() + (junction.getTrafficLights()[i].getWidth() / 2), 0.0));
+	//		moveLight = glm::rotate(moveLight, glm::radians(-90.0f), glm::vec3(0.0, 0.0, 1.0));
+	//		break;
+	//	case(1):
+	//		moveLight = glm::translate(moveLight, glm::vec3(junction.getXRightSquare()+ (junction.getTrafficLights()[i].getHeight() / 2), junction.getYBotSquare() - (junction.getTrafficLights()[i].getWidth() / 2), 0.0));
+	//		moveLight = glm::rotate(moveLight, glm::radians(90.0f), glm::vec3(0.0, 0.0, 1.0));
+	//		break;
+	//	case(2):
+	//		moveLight = glm::translate(moveLight, glm::vec3(junction.getXRightSquare() + (junction.getTrafficLights()[i].getWidth() / 2), junction.getYTopSquare() + (junction.getTrafficLights()[i].getHeight() / 2), 0.0));
+	//		break;
+	//	case(3):
+	//		moveLight = glm::translate(moveLight, glm::vec3(junction.getXLeftSquare() - (junction.getTrafficLights()[i].getWidth() / 2), junction.getYBotSquare() - (junction.getTrafficLights()[i].getHeight() / 2), 0.0));
+	//		moveLight = glm::rotate(moveLight, glm::radians(180.0f), glm::vec3(0.0, 0.0, 1.0));
+	//		break;
+	//	}
+	//	junction.getTrafficLights()[i].Render(shader, moveLight, ProjectionMatrix);
+	//}
 	//std::cout << first.GetXPos() << ", " << first.GetYPos() << std::endl;
 
 	glm::mat4 ModelViewMatrix = glm::mat4(1.0f);
 
-	mySquare.respawn(junction);
+	mySquare.respawn(map[0]);
 	//int entryPoint = mySquare.entryPoint(junction);
-	int direction = mySquare.decideDirection(junction, mySquare.getEntryTurning());
-	ModelViewMatrix = mySquare.rotate(12.0f / fps, direction, mySquare.getEntryTurning(), junction, fps);
+	int direction = mySquare.decideDirection(map[0], mySquare.getEntryTurning());
+	ModelViewMatrix = mySquare.rotate(12.0f / fps, direction, mySquare.getEntryTurning(), map[0], fps);
 	//ModelViewMatrix = mySquare.faceJunction(entryPoint, ModelViewMatrix);
 	//ModelViewMatrix = glm::rotate(ModelViewMatrix, glm::radians(-90.0f), glm::vec3(0, 0, 1));
 	//mySquare.respawn(junction);
@@ -166,19 +192,19 @@ void display()
 		//mySquare.setCurrentJunction("");
 		//ModelViewMatrix = glm::rotate(ModelViewMatrix, glm::radians(coordinates[0][2]), glm::vec3(0, 0, 1));
 
-		
+
 	//}
 
 
-	car2.respawn(junction);
+	car2.respawn(map[0]);
 	//int entryPoint2 = car2.entryPoint(junction);
-	int direction2 = car2.decideDirection(junction, car2.getEntryTurning());
-	ModelViewMatrix = car2.rotate(12.0f / fps, direction2, car2.getEntryTurning(), junction, fps);
+	int direction2 = car2.decideDirection(map[0], car2.getEntryTurning());
+	ModelViewMatrix = car2.rotate(12.0f / fps, direction2, car2.getEntryTurning(), map[0], fps);
 	//ModelViewMatrix = car2.faceJunction(entryPoint2, ModelViewMatrix);
 	//ModelViewMatrix = glm::rotate(ModelViewMatrix, glm::radians(-90.0f), glm::vec3(0, 0, 1));
 	//car2.respawn(junction);
 	car2.Render(shader, ModelViewMatrix, ProjectionMatrix);
-	
+
 	glDisable(GL_BLEND);
 
 	glutSwapBuffers();
