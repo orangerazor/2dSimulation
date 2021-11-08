@@ -41,7 +41,7 @@ float speed = 0;
 const double PI = 3.141592653589793238463;
 float angle = 0;
 float scale = 4.0f;
-float zoom = 1;
+float zoom = 0.33;
 
 Shader shader;
 Car mySquare = Car::Car(glm::mat4(1.0f));
@@ -97,7 +97,7 @@ void display()
 			secondElapsed = 0;
 
 		}
-		map[i].Render(shader, glm::mat4(1.0f), ProjectionMatrix);
+		map[i].Render(shader, glm::translate(glm::mat4(1.0f), glm::vec3(map[i].GetXPos(), map[i].GetYPos(), 0)), ProjectionMatrix);
 		for (int j = 0; j < 4; j++) {
 			glm::mat4 moveLight = glm::mat4(1.0f);
 			switch (j) {
@@ -249,9 +249,14 @@ void init()
 	cars.push_back(car2);
 	//map.push_back(road);
 	for (int i = 0; i < map.size(); i++) {
+		
 		map[i].SetWidth(15.0f * scale * (2481 / 2481.0f));
 		map[i].SetHeight(15.0f * scale);
+		map[i].SetXpos(i * map[i].getWidth());
+		map[i].SetYpos(i * map[i].getHeight());
 		map[i].calculateLines();
+		cout << map[i].getYBotSquare();
+		
 		switch (map[i].getType())
 		{
 		case(RoadType::S):
