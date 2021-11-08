@@ -238,7 +238,10 @@ void init()
 	for (int i = 0; i < map.size(); i++) {
 		map[i].SetWidth(15.0f * scale * (2481 / 2481.0f));
 		map[i].SetHeight(15.0f * scale);
+		map[i].SetXpos(i * map[i].getWidth());
+		map[i].SetYpos(i * map[i].getHeight());
 		map[i].calculateLines();
+		
 		switch (map[i].getType())
 		{
 		case(RoadType::S):
