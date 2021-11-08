@@ -32,6 +32,9 @@ int screenWidth = 480, screenHeight = 480;
 
 //booleans to handle when the arrow keys are pressed or released.
 int secondElapsed = 0;
+float secondsToHour = 10.0f;
+int hourElapsed = 0;
+int hour;
 bool Left = false;
 bool Right = false;
 bool Up = false;
@@ -41,7 +44,8 @@ float speed = 0;
 const double PI = 3.141592653589793238463;
 float angle = 0;
 float scale = 4.0f;
-float zoom = 0.33;
+float zoom = 0.5;
+
 
 Shader shader;
 Car mySquare = Car::Car(glm::mat4(1.0f));
@@ -90,6 +94,15 @@ void display()
 	ViewMatrix = glm::translate(glm::mat4(1.0), glm::vec3(0.0, 0.0, 0.0));
 
 	glEnable(GL_BLEND);
+	if (hourElapsed >= 1000000 * secondsToHour) { //day n night cycle
+		if (hour == 23) {
+			hour = 0;
+		}
+		else{
+			hour++;
+		}
+		hourElapsed = 0;
+	}
 	for (int i = 0; i < map.size(); i++) {
 		if (secondElapsed >= 1000000) {
 			map[i].trafficLightFlow();
@@ -215,12 +228,15 @@ void display()
 	//ModelViewMatrix = glm::rotate(ModelViewMatrix, glm::radians(-90.0f), glm::vec3(0, 0, 1));
 	//car2.respawn(junction);
 	//car2.Render(shader, ModelViewMatrix, ProjectionMatrix);
-	ViewMatrix = glm::lookAt(glm::vec3(-38, 19, 84), glm::vec3(0, 0, 0), glm::vec3(0.0f, 1.0f, 0.0));
+	//ViewMatrix = glm::lookAt(glm::vec3(10, 0, 0), glm::vec3(10, 0, 0), glm::vec3(0.0f, 1.0f, 0.0));
+	//ModelViewMatrix = glm::translate(ViewMatrix, glm::vec3(0, 0, 20));
+
 	glDisable(GL_BLEND);
 
 	glutSwapBuffers();
 	std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
 	secondElapsed += chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+	hourElapsed += chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
 	//cout << (1000.0f/chrono::duration_cast<std::chrono::milliseconds>(end - begin).count()) << endl;
 	fps = 1000000.0f / chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
 	//cout << fps<<endl;
