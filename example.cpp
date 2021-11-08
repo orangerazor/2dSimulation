@@ -369,20 +369,26 @@ void processKeys()
 {
 	if (Left)
 	{
-		angle += 0.01f;
+		Car car(glm::mat4(1.0f));
+		float red[3] = { 1,0,0 };
+		car.SetWidth(scale * (500 / 264.0f));
+		car.SetHeight(scale);
+		car.Init(shader, red, "textures/car.png");
+		cars.push_back(car);
+		//angle += 0.01f;
 		//speed = 0;
 		//mySquare.transform(1, 0);
 		//mySquare.IncPos(-0.1f, 0.0f);
 	}
 	if (Right)
 	{
-		angle -= 0.01f;
+		//angle -= 0.01f;
 		//mySquare.transform(1, 1);
 		//mySquare.IncPos(0.1f, 0.0f);
 	}
 	if (Up)
 	{
-		speed += 0.03f;
+		//speed += 0.03f;
 		//mySquare.IncPos(0.0f, 0.1f);
 		//mySquare.SetYpos(0.0f);
 		//mySquare.SetXpos(0.0f);
@@ -390,7 +396,7 @@ void processKeys()
 	}
 	if (Down)
 	{
-		speed -= 0.03f;
+		//speed -= 0.03f;
 		//mySquare.IncPos(0.0f, -0.1f);
 		//direction = 1;
 
