@@ -227,7 +227,7 @@ void init()
 {
 	FreeImage_Initialise();
 
-	glClearColor(0.0,0.0,1.0,0.0);						//sets the clear colour to black
+	glClearColor(0.0,153.0f/256.0f,68.0f/256.0f,0.0);						//sets the clear colour to black
 	 
 	//Load the GLSL program 
 	if (!shader.load("Basic", "./glslfiles/basicTexture.vert", "./glslfiles/basicTexture.frag"))
