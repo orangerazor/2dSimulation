@@ -78,6 +78,9 @@ Junction::Junction(std::string name, int orientation, int speedLimit, glm::mat4 
     this->type = type;
     this->state = true;
     for (int i = 0; i < this->turnings.size(); i++) {
+        if (this->type == RoadType::S) {
+            break;
+        }
         if (this->turnings[i]) {
             this->trafficLights[i] = TrafficLight::TrafficLight(2);
         }
