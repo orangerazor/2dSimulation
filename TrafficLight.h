@@ -20,7 +20,7 @@ private:
     int green_duration, num_of_phases, current_phase, seconds_green, seconds_other, other_duration;
 
 protected:
-	Sprite lightsSprite[3]; // red; green; yellow
+	Sprite lightsSprite[4]; // red, redAndAmber, green, amber
 
     static GLuint texRed;
     static GLuint texRedAmb;
@@ -36,7 +36,7 @@ public:
     bool isRed();
 	bool isGreen();
 
-	void InitLights(Shader& shader, float colour[3], std::string red, std::string green, std::string yellow);
+	void InitLights(Shader& shader, float colour[3], std::string phaseOne, std::string phaseTwo, std::string phaseThree, std::string phaseFour);
     void Render(Shader& shader, glm::mat4& ModelViewMatrix, glm::mat4& ProjectionMatrix);
 
     void nextLight();

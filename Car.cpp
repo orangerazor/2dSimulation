@@ -413,7 +413,7 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, Junction junct
 {
 	
 	glm::vec3 forVec2 = forVec;
-	std::cout << "green = " << junction.getTrafficLights()[entryPoint].getLights()[2] << std::endl;
+	/*std::cout << "green = " << junction.getTrafficLights()[entryPoint].getLights()[2] << std::endl;*/
 	switch (entryPoint) {
 	case(0):
 		if (m_xpos <= junction.getXLeftSquare() && m_xpos > (junction.getXLeftSquare() - (m_Height)) && !junction.getTrafficLights()[entryPoint].getLights()[2]) {

@@ -80,15 +80,16 @@ void display()
 	std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
 	//clear the colour and depth buffers
 	glClear(GL_COLOR_BUFFER_BIT);
-
+	//cout << "green = " << junction.getTrafficLights()[2].getLights()[2] << endl;
 	ViewMatrix = glm::translate(glm::mat4(1.0), glm::vec3(0.0, 0.0, 0.0));
 
 	glEnable(GL_BLEND);
 	if (secondElapsed >= 1000000) {
 		junction.trafficLightFlow();
-		//cout << "left" << junction.getTrafficLights()[0].getLights()[0] << junction.getTrafficLights()[0].getLights()[1] << junction.getTrafficLights()[0].getLights()[2] << endl;
-		//cout << "right" << junction.getTrafficLights()[1].getLights()[0] << junction.getTrafficLights()[1].getLights()[1] << junction.getTrafficLights()[1].getLights()[2] << endl;
-		//cout << "back" << junction.getTrafficLights()[3].getLights()[0] << junction.getTrafficLights()[3].getLights()[1] << junction.getTrafficLights()[3].getLights()[2] << endl;
+		cout << "left" << junction.getTrafficLights()[0].getLights()[0] << junction.getTrafficLights()[0].getLights()[1] << junction.getTrafficLights()[0].getLights()[2] << endl;
+		cout << "right" << junction.getTrafficLights()[1].getLights()[0] << junction.getTrafficLights()[1].getLights()[1] << junction.getTrafficLights()[1].getLights()[2] << endl;
+		cout << "forward" << junction.getTrafficLights()[2].getLights()[0] << junction.getTrafficLights()[2].getLights()[1] << junction.getTrafficLights()[2].getLights()[2] << endl;
+		cout << "back" << junction.getTrafficLights()[3].getLights()[0] << junction.getTrafficLights()[3].getLights()[1] << junction.getTrafficLights()[3].getLights()[2] << endl;
 		secondElapsed = 0;
 	}
 	
@@ -221,8 +222,8 @@ void init()
 		junction.getTrafficLights()[i].SetWidth(scale/2);
 		//std::cout << junction.getTrafficLights()[i].getHeight() << std::endl;
 		junction.getTrafficLights()[i].Init(shader, red, "textures/blankTrafficLight.png");
-		junction.getTrafficLights()[i].InitLights(shader, red, "textures/redTrafficLight.png",
-			"textures/greenTrafficLight.png", "textures/rAndATrafficLight.png");
+		junction.getTrafficLights()[i].InitLights(shader, red, "textures/redTrafficLight.png", "textures/rAndATrafficLight.png",
+			"textures/greenTrafficLight.png", "textures/blankTrafficLight.png");
 	}
 	//TrafficLight::initTrafficTex();
 

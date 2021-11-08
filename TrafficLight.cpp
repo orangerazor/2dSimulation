@@ -82,28 +82,38 @@ bool TrafficLight::isGreen()
 	return lights[2];
 }
 
-void TrafficLight::InitLights(Shader & shader, float colour[3], std::string red, std::string green, std::string yellow)
+void TrafficLight::InitLights(Shader& shader, float colour[3], std::string phaseOne, std::string phaseTwo, std::string phaseThree, std::string phaseFour)
 {
-	for (int i = 0; i < 3; i++)
+	for (int i = 0; i < 4; i++)
 	{
 		lightsSprite[i].SetWidth(this->getWidth());
 		lightsSprite[i].SetHeight(this->getHeight());
 	}
-	lightsSprite[0].Init(shader, colour, red);
-	lightsSprite[1].Init(shader, colour, green);
-	lightsSprite[2].Init(shader, colour, yellow);
+	lightsSprite[0].Init(shader, colour, phaseOne);
+	lightsSprite[1].Init(shader, colour, phaseTwo);
+	lightsSprite[2].Init(shader, colour, phaseThree);
+    lightsSprite[3].Init(shader, colour, phaseFour);
 }
 
 void TrafficLight::Render(Shader & shader, glm::mat4 & ModelViewMatrix, glm::mat4 & ProjectionMatrix)
 {
-	if (isRed())
-		lightsSprite[0].Render(shader, ModelViewMatrix, ProjectionMatrix);
-	else if (isGreen())
-		lightsSprite[1].Render(shader, ModelViewMatrix, ProjectionMatrix);
-	else if (!isRed() && !isGreen())
-		lightsSprite[2].Render(shader, ModelViewMatrix, ProjectionMatrix);
-	else
-		Sprite::Render(shader, ModelViewMatrix, ProjectionMatrix);
+    switch (this->current_phase) {
+    case 0:
+        lightsSprite[0].Render(shader, ModelViewMatrix, ProjectionMatrix);
+        break;
+    case 1:
+        lightsSprite[1].Render(shader, ModelViewMatrix, ProjectionMatrix);
+        break;
+    case 2:
+        lightsSprite[2].Render(shader, ModelViewMatrix, ProjectionMatrix);
+        break;
+    case 3:
+        lightsSprite[3].Render(shader, ModelViewMatrix, ProjectionMatrix);
+        break;
+    default:
+        Sprite::Render(shader, ModelViewMatrix, ProjectionMatrix);
+        break;
+    }
 }
 
 std::array<bool, 3> TrafficLight::getLights() {
