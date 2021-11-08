@@ -51,7 +51,10 @@ std::vector<Junction> map(0);
 //std::vector< std::vector<Junction> > map(2, column);
 Junction junction = Junction::Junction("T", 0, 0, glm::mat4(1.0f), RoadType::X);
 Junction crossJunction = Junction::Junction("X", 0, 0, glm::mat4(1.0f), RoadType::X);
-Junction road = Junction::Junction("S", 1, 0, glm::mat4(1.0f), RoadType::S);
+Junction road1 = Junction::Junction("s1", 1, 0, glm::mat4(1.0f), RoadType::S);
+Junction road2 = Junction::Junction("s2", 1, 0, glm::mat4(1.0f), RoadType::S);
+Junction road3 = Junction::Junction("s3", 0, 0, glm::mat4(1.0f), RoadType::S);
+Junction road4 = Junction::Junction("s4", 0, 0, glm::mat4(1.0f), RoadType::S);
 
 TrafficLight* trafficLights[1][4];
 TrafficLight trafficLight;
@@ -180,11 +183,11 @@ void display()
 
 	glm::mat4 ModelViewMatrix = glm::mat4(1.0f);
 
-	for (int j = 0; j < cars.size(); j++) {
-		cars[j].respawn(map[0]);
-		int direction = cars[j].decideDirection(map[0], cars[j].getEntryTurning());
-		ModelViewMatrix = cars[j].rotate(12.0f / fps, direction, cars[j].getEntryTurning(), map[0], fps);
-		cars[j].Render(shader, ModelViewMatrix, ProjectionMatrix);
+	for (int i = 0; i < cars.size(); i++) {
+		cars[i].respawn(map[0]);
+		int direction = cars[i].decideDirection(map[0], cars[i].getEntryTurning());
+		ModelViewMatrix = cars[i].rotate(12.0f / fps, direction, cars[i].getEntryTurning(), map[0], fps);
+		cars[i].Render(shader, ModelViewMatrix, ProjectionMatrix);
 	}
 	//mySquare.respawn(map[0]);
 	//int direction = mySquare.decideDirection(map[0], mySquare.getEntryTurning());
@@ -212,7 +215,7 @@ void display()
 	//ModelViewMatrix = glm::rotate(ModelViewMatrix, glm::radians(-90.0f), glm::vec3(0, 0, 1));
 	//car2.respawn(junction);
 	//car2.Render(shader, ModelViewMatrix, ProjectionMatrix);
-
+	ViewMatrix = glm::lookAt(glm::vec3(-38, 19, 84), glm::vec3(0, 0, 0), glm::vec3(0.0f, 1.0f, 0.0));
 	glDisable(GL_BLEND);
 
 	glutSwapBuffers();
@@ -247,10 +250,14 @@ void init()
 		cars[i].SetWidth(scale * (500 / 264.0f));
 		cars[i].SetHeight(scale);
 	}
-	map.push_back(crossJunction);
+	
 	cars.push_back(mySquare);
 	cars.push_back(car2);
-	map.push_back(road);
+	map.push_back(crossJunction);
+	map.push_back(road1);
+	map.push_back(road2);
+	
+	
 	for (int i = 0; i < map.size(); i++) {
 		
 		map[i].SetWidth(15.0f * scale * (2481 / 2481.0f));
