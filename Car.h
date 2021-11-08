@@ -13,6 +13,7 @@ private:
 	float angle;
 	
 public:
+	Car();
 	Car(glm::mat4 rotation);
 	glm::mat4 turn(float speed, int direction);
 	glm::mat4 rotate(float speed, int direction, int entryPoint, Junction junction, float fps);

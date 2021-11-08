@@ -46,6 +46,7 @@ float zoom = 1;
 Shader shader;
 Car mySquare = Car::Car(glm::mat4(1.0f));
 Car car2 = Car::Car(glm::mat4(1.0f));
+std::vector<Car> cars(0);
 std::vector<Junction> map(0);
 //std::vector< std::vector<Junction> > map(2, column);
 Junction junction = Junction::Junction("T", 0, 0, glm::mat4(1.0f), RoadType::X);
@@ -110,10 +111,10 @@ void display()
 				break;
 			case(2):
 				moveLight = glm::translate(moveLight, glm::vec3(map[i].getXRightSquare() + (map[i].getTrafficLights()[j].getWidth() / 2), map[i].getYTopSquare() + (map[i].getTrafficLights()[j].getHeight() / 2), 0.0));
+				moveLight = glm::rotate(moveLight, glm::radians(180.0f), glm::vec3(0.0, 0.0, 1.0));
 				break;
 			case(3):
 				moveLight = glm::translate(moveLight, glm::vec3(map[i].getXLeftSquare() - (map[i].getTrafficLights()[j].getWidth() / 2), map[i].getYBotSquare() - (map[i].getTrafficLights()[j].getHeight() / 2), 0.0));
-				moveLight = glm::rotate(moveLight, glm::radians(180.0f), glm::vec3(0.0, 0.0, 1.0));
 				break;
 			}
 			map[i].getTrafficLights()[j].Render(shader, moveLight, ProjectionMatrix);
@@ -176,13 +177,19 @@ void display()
 
 	glm::mat4 ModelViewMatrix = glm::mat4(1.0f);
 
-	mySquare.respawn(map[0]);
-	int direction = mySquare.decideDirection(map[0], mySquare.getEntryTurning());
-	ModelViewMatrix = mySquare.rotate(12.0f / fps, direction, mySquare.getEntryTurning(), map[0], fps);
+	for (int j = 0; j < cars.size(); j++) {
+		cars[j].respawn(map[0]);
+		int direction = cars[j].decideDirection(map[0], cars[j].getEntryTurning());
+		ModelViewMatrix = cars[j].rotate(12.0f / fps, direction, cars[j].getEntryTurning(), map[0], fps);
+		cars[j].Render(shader, ModelViewMatrix, ProjectionMatrix);
+	}
+	//mySquare.respawn(map[0]);
+	//int direction = mySquare.decideDirection(map[0], mySquare.getEntryTurning());
+	//ModelViewMatrix = mySquare.rotate(12.0f / fps, direction, mySquare.getEntryTurning(), map[0], fps);
 	//ModelViewMatrix = mySquare.faceJunction(entryPoint, ModelViewMatrix);
 	//ModelViewMatrix = glm::rotate(ModelViewMatrix, glm::radians(-90.0f), glm::vec3(0, 0, 1));
 	//mySquare.respawn(junction);
-	mySquare.Render(shader, ModelViewMatrix, ProjectionMatrix);
+	//mySquare.Render(shader, ModelViewMatrix, ProjectionMatrix);
 
 	//}
 	//else {
@@ -195,13 +202,13 @@ void display()
 	//}
 
 
-	car2.respawn(map[0]);
-	int direction2 = car2.decideDirection(map[0], car2.getEntryTurning());
-	ModelViewMatrix = car2.rotate(12.0f / fps, direction2, car2.getEntryTurning(), map[0], fps);
+	//car2.respawn(map[0]);
+	//int direction2 = car2.decideDirection(map[0], car2.getEntryTurning());
+	//ModelViewMatrix = car2.rotate(12.0f / fps, direction2, car2.getEntryTurning(), map[0], fps);
 	//ModelViewMatrix = car2.faceJunction(entryPoint2, ModelViewMatrix);
 	//ModelViewMatrix = glm::rotate(ModelViewMatrix, glm::radians(-90.0f), glm::vec3(0, 0, 1));
 	//car2.respawn(junction);
-	car2.Render(shader, ModelViewMatrix, ProjectionMatrix);
+	//car2.Render(shader, ModelViewMatrix, ProjectionMatrix);
 
 	glDisable(GL_BLEND);
 
@@ -233,8 +240,14 @@ void init()
 	mySquare.SetHeight(scale);
 	car2.SetWidth(scale * (500 / 264.0f));
 	car2.SetHeight(scale);
+	for (int i = 0; i < cars.size(); i++) {
+		cars[i].SetWidth(scale * (500 / 264.0f));
+		cars[i].SetHeight(scale);
+	}
 	map.push_back(crossJunction);
-	map.push_back(road);
+	cars.push_back(mySquare);
+	cars.push_back(car2);
+	//map.push_back(road);
 	for (int i = 0; i < map.size(); i++) {
 		map[i].SetWidth(15.0f * scale * (2481 / 2481.0f));
 		map[i].SetHeight(15.0f * scale);
@@ -269,9 +282,11 @@ void init()
 	//junction.SetHeight(15.0f * scale);
 	//junction.calculateLines();
 
-	
-	mySquare.Init(shader, red, "textures/car.png");
-	car2.Init(shader, red, "textures/car.png");
+	for (int i = 0; i < cars.size(); i++) {
+		cars[i].Init(shader, red, "textures/car.png");
+	}
+	//mySquare.Init(shader, red, "textures/car.png");
+	//car2.Init(shader, red, "textures/car.png");
 	//junction.Init(shader, red, "textures/Xjunction.png");
 	//std::cout << "size = " << junction.getTrafficLights().size() << std::endl;
 	//for (int i = 0; i < 4; i++) {

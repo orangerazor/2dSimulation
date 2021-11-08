@@ -786,6 +786,10 @@ glm::mat4 Car::drive(float speed, int direction, float angle) {
 	return matrix;
 }
 
+Car::Car()
+{
+}
+
 void Car::setCurrentJunction(std::string name) {
 	currentJunction = name;
 }
