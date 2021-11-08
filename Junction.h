@@ -46,6 +46,7 @@ private:
 
 public:
 
+    Junction();
     Junction(std::string name, int orientation, int speedLimit, glm::mat4 rotation, RoadType type);
     ~Junction();
     std::string getName();

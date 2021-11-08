@@ -40,12 +40,16 @@ int direction = 0;
 float speed = 0;
 const double PI = 3.141592653589793238463;
 float angle = 0;
+float scale = 4.0f;
 
 Shader shader;
 Car mySquare = Car::Car(glm::mat4(1.0f));
 Car car2 = Car::Car(glm::mat4(1.0f));
+std::vector<Junction> column(1);
+std::vector< std::vector<Junction> > map(2, column);
 Junction junction = Junction::Junction("T", 0, 0, glm::mat4(1.0f), RoadType::T);
 Junction crossJunction = Junction::Junction("X", 0, 0, glm::mat4(1.0f), RoadType::X);
+
 TrafficLight* trafficLights[1][4];
 TrafficLight trafficLight;
 float coordinates[4][3];
@@ -198,13 +202,13 @@ void init()
 	}
 
 	///This part commented is to scale the width of the sprite to match the dimensions of the car.png image.
-	mySquare.SetWidth(4.0f *(500 / 264.0f));
-	mySquare.SetHeight(4.0f);
-	car2.SetWidth(4.0f * (500 / 264.0f));
-	car2.SetHeight(4.0f);
+	mySquare.SetWidth(scale *(500 / 264.0f));
+	mySquare.SetHeight(scale);
+	car2.SetWidth(scale * (500 / 264.0f));
+	car2.SetHeight(scale);
 
-	junction.SetWidth(60.0f * (2481 / 2481.0f));
-	junction.SetHeight(60.0f);
+	junction.SetWidth(15.0f * scale * (2481 / 2481.0f));
+	junction.SetHeight(15.0f * scale);
 	junction.calculateLines();
 
 	float red[3] = { 1,0,0 };
@@ -213,8 +217,8 @@ void init()
 	junction.Init(shader, red, "textures/Xjunction.png");
 	//std::cout << "size = " << junction.getTrafficLights().size() << std::endl;
 	for (int i = 0; i < 4; i++) {
-		junction.getTrafficLights()[i].SetHeight(4.0f);
-		junction.getTrafficLights()[i].SetWidth(2.0f);
+		junction.getTrafficLights()[i].SetHeight(scale);
+		junction.getTrafficLights()[i].SetWidth(scale/2);
 		//std::cout << junction.getTrafficLights()[i].getHeight() << std::endl;
 		junction.getTrafficLights()[i].Init(shader, red, "textures/blankTrafficLight.png");
 	}
@@ -255,6 +259,8 @@ void init()
 
 	//mySquare.SetXpos(0);
 	//mySquare.SetYpos(4);
+	map[0][0] = junction;
+	map[1][0] = crossJunction;
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 

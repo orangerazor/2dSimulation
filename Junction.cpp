@@ -4,7 +4,16 @@
 
 #include "Junction.h"
 
-
+Junction::Junction() {
+    this->name = "";
+    this->orientation = 0;
+    for (int i = 0; i < turnings.size(); i++) {
+        this->turnings[i] = false;
+    }
+    this->speedLimit = 0;
+    this->type = RoadType::S;
+    this->state = true;
+}
 
 Junction::Junction(std::string name, int orientation, int speedLimit, glm::mat4 rotation, RoadType type) {
     this->name = name;
