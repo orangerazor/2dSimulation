@@ -51,7 +51,7 @@ std::vector<Junction> map(0);
 //std::vector< std::vector<Junction> > map(2, column);
 Junction junction = Junction::Junction("T", 0, 0, glm::mat4(1.0f), RoadType::X);
 Junction crossJunction = Junction::Junction("X", 0, 0, glm::mat4(1.0f), RoadType::X);
-Junction road = Junction::Junction("S", 0, 0, glm::mat4(1.0f), RoadType::S);
+Junction road = Junction::Junction("S", 1, 0, glm::mat4(1.0f), RoadType::S);
 
 TrafficLight* trafficLights[1][4];
 TrafficLight trafficLight;
@@ -97,7 +97,10 @@ void display()
 			secondElapsed = 0;
 
 		}
-		map[i].Render(shader, glm::translate(glm::mat4(1.0f), glm::vec3(map[i].GetXPos(), map[i].GetYPos(), 0)), ProjectionMatrix);
+		glm::mat4 junctionRender = glm::mat4(1.0f);
+		junctionRender = glm::translate(glm::mat4(1.0f), glm::vec3(map[i].GetXPos(), map[i].GetYPos(), 0));
+		junctionRender = glm::rotate(junctionRender, glm::radians(map[i].getOrientation()*90.0f), glm::vec3(0.0, 0.0, 1.0));
+		map[i].Render(shader, junctionRender, ProjectionMatrix);
 		for (int j = 0; j < 4; j++) {
 			glm::mat4 moveLight = glm::mat4(1.0f);
 			switch (j) {
@@ -247,13 +250,13 @@ void init()
 	map.push_back(crossJunction);
 	cars.push_back(mySquare);
 	cars.push_back(car2);
-	//map.push_back(road);
+	map.push_back(road);
 	for (int i = 0; i < map.size(); i++) {
 		
 		map[i].SetWidth(15.0f * scale * (2481 / 2481.0f));
 		map[i].SetHeight(15.0f * scale);
 		map[i].SetXpos(i * map[i].getWidth());
-		map[i].SetYpos(i * map[i].getHeight());
+		map[i].SetYpos(0);
 		map[i].calculateLines();
 		cout << map[i].getYBotSquare();
 		
