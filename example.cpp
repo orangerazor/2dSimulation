@@ -221,6 +221,8 @@ void init()
 		junction.getTrafficLights()[i].SetWidth(scale/2);
 		//std::cout << junction.getTrafficLights()[i].getHeight() << std::endl;
 		junction.getTrafficLights()[i].Init(shader, red, "textures/blankTrafficLight.png");
+		junction.getTrafficLights()[i].InitLights(shader, red, "textures/redTrafficLight.png",
+			"textures/greenTrafficLight.png", "textures/rAndATrafficLight.png");
 	}
 	//TrafficLight::initTrafficTex();
 
