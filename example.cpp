@@ -274,6 +274,9 @@ void init()
 			break;
 		}
 		for (int j = 0; j < 4; j++) {
+			if (map[i].getType() == RoadType::S) {
+				break;
+			}
 			if (map[i].getTurnings()[j]) {
 				map[i].getTrafficLights()[j].SetHeight(scale);
 				map[i].getTrafficLights()[j].SetWidth(scale / 2);
