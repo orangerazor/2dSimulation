@@ -374,6 +374,7 @@ void processKeys()
 		car.SetWidth(scale * (500 / 264.0f));
 		car.SetHeight(scale);
 		car.Init(shader, red, "textures/car.png");
+		car.newSpawn(map[0], 0);
 		cars.push_back(car);
 		//angle += 0.01f;
 		//speed = 0;
@@ -382,12 +383,26 @@ void processKeys()
 	}
 	if (Right)
 	{
+		Car car(glm::mat4(1.0f));
+		float red[3] = { 1,0,0 };
+		car.SetWidth(scale * (500 / 264.0f));
+		car.SetHeight(scale);
+		car.Init(shader, red, "textures/car.png");
+		car.newSpawn(map[0], 1);
+		cars.push_back(car);
 		//angle -= 0.01f;
 		//mySquare.transform(1, 1);
 		//mySquare.IncPos(0.1f, 0.0f);
 	}
 	if (Up)
 	{
+		Car car(glm::mat4(1.0f));
+		float red[3] = { 1,0,0 };
+		car.SetWidth(scale * (500 / 264.0f));
+		car.SetHeight(scale);
+		car.Init(shader, red, "textures/car.png");
+		car.newSpawn(map[0], 2);
+		cars.push_back(car);
 		//speed += 0.03f;
 		//mySquare.IncPos(0.0f, 0.1f);
 		//mySquare.SetYpos(0.0f);
@@ -396,6 +411,13 @@ void processKeys()
 	}
 	if (Down)
 	{
+		Car car(glm::mat4(1.0f));
+		float red[3] = { 1,0,0 };
+		car.SetWidth(scale * (500 / 264.0f));
+		car.SetHeight(scale);
+		car.Init(shader, red, "textures/car.png");
+		car.newSpawn(map[0], 3);
+		cars.push_back(car);
 		//speed -= 0.03f;
 		//mySquare.IncPos(0.0f, -0.1f);
 		//direction = 1;

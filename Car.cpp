@@ -271,7 +271,7 @@ int Car::decideDirection(Junction junction, int entryPoint) {
 	return random;
 }
 
-void Car::respawn(Junction junction) {
+void Car::respawn(Junction junction, int presetEntry) {
 	//std::cout << "exitTurning = " << exitTurning << std::endl;
 	switch (exitTurning) {
 	case(0):
@@ -356,23 +356,71 @@ void Car::respawn(Junction junction) {
 		}
 		break;
 	default:
-		this->setSpawn(junction);
-		entryTurning = this->entryPoint(junction);
-		//int direction = this->decideDirection(junction, entryTurning);
-		switch (entryTurning) {
-		case(0):
-			angle += glm::radians(180.0f);
+		if (presetEntry == -1) {
+			this->setSpawn(junction);
+			entryTurning = this->entryPoint(junction);
+			//int direction = this->decideDirection(junction, entryTurning);
+			switch (entryTurning) {
+			case(0):
+				angle += glm::radians(180.0f);
+				break;
+			case(1):
+				break;
+			case(2):
+				angle += glm::radians(90.0f);
+				break;
+			case(3):
+				angle += glm::radians(270.0f);
+			}
 			break;
-		case(1):
-			break;
-		case(2):
-			angle += glm::radians(90.0f);
-			break;
-		case(3):
-			angle += glm::radians(270.0f);
 		}
+		else {
+			switch (presetEntry) {
+			case(0):
+				this->SetXpos(junction.GetOBB().vertOriginal[0].x + (junction.getWidth() * 1 / 6));
+				this->SetYpos(junction.GetOBB().vertOriginal[0].y + (junction.getHeight() * 7 / 12));
+				break;
+			case(1):
+				this->SetXpos(junction.GetOBB().vertOriginal[0].x + (junction.getWidth() * 5 / 6));
+				this->SetYpos(junction.GetOBB().vertOriginal[0].y + (junction.getHeight() * 5 / 12));
+				break;
+			case(2):
+				this->SetXpos(junction.GetOBB().vertOriginal[0].x + (junction.getWidth() * 7 / 12));
+				this->SetYpos(junction.GetOBB().vertOriginal[0].y + (junction.getHeight() * 5 / 6));
+				break;
+			case(3):
+				this->SetXpos(junction.GetOBB().vertOriginal[0].x + ((junction.getWidth() * 5 / 12)));
+				this->SetYpos(junction.GetOBB().vertOriginal[0].y + (junction.getHeight() * 1 / 6));
+				break;
+			}
+		}
+	}
+}
+
+void Car::newSpawn(Junction junction, int entry) {
+	switch (entry) {
+	case(0):
+		this->SetXpos(junction.GetOBB().vertOriginal[0].x + (junction.getWidth() * 1/6));
+		this->SetYpos(junction.GetOBB().vertOriginal[0].y + (junction.getHeight() * 7 / 12));
+		//angle += glm::radians(180.0f);
+		break;
+	case(1):
+		this->SetXpos(junction.GetOBB().vertOriginal[0].x + (junction.getWidth() * 5/6));
+		this->SetYpos(junction.GetOBB().vertOriginal[0].y + (junction.getHeight() * 5 / 12));
+		//angle += glm::radians(180.0f);
+		break;
+	case(2):
+		this->SetXpos(junction.GetOBB().vertOriginal[0].x + (junction.getWidth() * 7 / 12));
+		this->SetYpos(junction.GetOBB().vertOriginal[0].y + (junction.getHeight() * 5/6));
+		//angle += glm::radians(180.0f);
+		break;
+	case(3):
+		this->SetXpos(junction.GetOBB().vertOriginal[0].x + ((junction.getWidth() * 5 / 12)));
+		this->SetYpos(junction.GetOBB().vertOriginal[0].y + (junction.getHeight() * 1 / 6));
+		//angle += glm::radians(180.0f);
 		break;
 	}
+	currentJunction = "";
 }
 
 int Car::setSpawn(Junction junction) {

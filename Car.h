@@ -24,7 +24,8 @@ public:
 	int entryPoint(Junction junction);
 	glm::mat4 faceJunction(int entryPoint, glm::mat4);
 	int decideDirection(Junction junction, int entryPoint);
-	void respawn(Junction junction);
+	void respawn(Junction junction, int presetEntry = -1);
+	void newSpawn(Junction junction, int entry);
 	int setSpawn(Junction junction);
 
 	void setCurrentJunction(std::string name);
