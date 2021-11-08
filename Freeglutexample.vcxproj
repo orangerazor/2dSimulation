@@ -23,6 +23,7 @@
     <ClInclude Include="Car.h" />
     <ClInclude Include="ImageLoading.h" />
     <ClInclude Include="Junction.h" />
+    <ClInclude Include="Map.h" />
     <ClInclude Include="OBB.h" />
     <ClInclude Include="shaders\Shader.h" />
     <ClInclude Include="Sprite.h" />
@@ -35,6 +36,7 @@
     <ClCompile Include="ImageLoading.cpp" />
     <ClCompile Include="Junction.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Map.cpp" />
     <ClCompile Include="OBB.cpp" />
     <ClCompile Include="shaders\Shader.cpp" />
     <ClCompile Include="Sprite.cpp" />

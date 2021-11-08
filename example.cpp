@@ -41,14 +41,16 @@ float speed = 0;
 const double PI = 3.141592653589793238463;
 float angle = 0;
 float scale = 4.0f;
+float zoom = 1;
 
 Shader shader;
 Car mySquare = Car::Car(glm::mat4(1.0f));
 Car car2 = Car::Car(glm::mat4(1.0f));
-std::vector<Junction> column(1);
-std::vector< std::vector<Junction> > map(2, column);
-Junction junction = Junction::Junction("T", 0, 0, glm::mat4(1.0f), RoadType::T);
+std::vector<Junction> map(2);
+//std::vector< std::vector<Junction> > map(2, column);
+Junction junction = Junction::Junction("T", 0, 0, glm::mat4(1.0f), RoadType::X);
 Junction crossJunction = Junction::Junction("X", 0, 0, glm::mat4(1.0f), RoadType::X);
+Junction road = Junction::Junction("S", 0, 0, glm::mat4(1.0f), RoadType::S);
 
 TrafficLight* trafficLights[1][4];
 TrafficLight trafficLight;
@@ -69,7 +71,7 @@ void reshape(int width, int height)		// Resize the OpenGL window
 
 	glViewport(0, 0, width, height);						// set Viewport dimensions
 
-	ProjectionMatrix = glm::ortho(-25.0, 25.0, -25.0, 25.0); 
+	ProjectionMatrix = glm::ortho(-25.0/zoom, 25.0/zoom, -25.0/zoom, 25.0/zoom);
 }
 
 
@@ -201,30 +203,61 @@ void init()
 	{
 		std::cout << "failed to load shader" << std::endl;
 	}
-
+	float red[3] = { 1,0,0 };
 	///This part commented is to scale the width of the sprite to match the dimensions of the car.png image.
 	mySquare.SetWidth(scale *(500 / 264.0f));
 	mySquare.SetHeight(scale);
 	car2.SetWidth(scale * (500 / 264.0f));
 	car2.SetHeight(scale);
+	map.push_back(crossJunction);
+	map.push_back(road);
+	for (int i = 0; i < map.size(); i++) {
+		map[i].SetWidth(15.0f * scale * (2481 / 2481.0f));
+		map[i].SetHeight(15.0f * scale);
+		map[i].calculateLines();
+		switch (map[i].getType())
+		{
+		case(RoadType::S):
+			map[i].Init(shader, red, "textures/Road.png");
+			break;
+		case(RoadType::T):
+			map[i].Init(shader, red, "textures/Tjunction.png");
+			break;
+		case(RoadType::X):
+		default:
+			map[i].Init(shader, red, "textures/Xjunction.png");
+			break;
+		}
+		for (int j = 0; j < 4; j++) {
+			if (map[i].getTurnings()[j]) {
+				map[i].getTrafficLights()[j].SetHeight(scale);
+				map[i].getTrafficLights()[j].SetWidth(scale / 2);
+				//std::cout << junction.getTrafficLights()[i].getHeight() << std::endl;
+				map[i].getTrafficLights()[j].Init(shader, red, "textures/blankTrafficLight.png");
+				map[i].getTrafficLights()[j].InitLights(shader, red, "textures/redTrafficLight.png", "textures/rAndATrafficLight.png",
+					"textures/greenTrafficLight.png", "textures/blankTrafficLight.png");
+			}
+			
+		}
+	}
 
-	junction.SetWidth(15.0f * scale * (2481 / 2481.0f));
-	junction.SetHeight(15.0f * scale);
-	junction.calculateLines();
+	//junction.SetWidth(15.0f * scale * (2481 / 2481.0f));
+	//junction.SetHeight(15.0f * scale);
+	//junction.calculateLines();
 
-	float red[3] = { 1,0,0 };
+	
 	mySquare.Init(shader, red, "textures/car.png");
 	car2.Init(shader, red, "textures/car.png");
-	junction.Init(shader, red, "textures/Xjunction.png");
+	//junction.Init(shader, red, "textures/Xjunction.png");
 	//std::cout << "size = " << junction.getTrafficLights().size() << std::endl;
-	for (int i = 0; i < 4; i++) {
-		junction.getTrafficLights()[i].SetHeight(scale);
-		junction.getTrafficLights()[i].SetWidth(scale/2);
-		//std::cout << junction.getTrafficLights()[i].getHeight() << std::endl;
-		junction.getTrafficLights()[i].Init(shader, red, "textures/blankTrafficLight.png");
-		junction.getTrafficLights()[i].InitLights(shader, red, "textures/redTrafficLight.png", "textures/rAndATrafficLight.png",
-			"textures/greenTrafficLight.png", "textures/blankTrafficLight.png");
-	}
+	//for (int i = 0; i < 4; i++) {
+	//	junction.getTrafficLights()[i].SetHeight(scale);
+	//	junction.getTrafficLights()[i].SetWidth(scale/2);
+	//	//std::cout << junction.getTrafficLights()[i].getHeight() << std::endl;
+	//	junction.getTrafficLights()[i].Init(shader, red, "textures/blankTrafficLight.png");
+	//	junction.getTrafficLights()[i].InitLights(shader, red, "textures/redTrafficLight.png", "textures/rAndATrafficLight.png",
+	//		"textures/greenTrafficLight.png", "textures/blankTrafficLight.png");
+	//}
 	//TrafficLight::initTrafficTex();
 
 	//left
@@ -244,26 +277,6 @@ void init()
 	coordinates[3][1] = junction.GetOBB().vertOriginal[0].y;
 	coordinates[3][2] = 270.0f;
 
-	//top
-	
-	//bottom
-	//mySquare.SetXpos(junction.GetOBB().vertOriginal[0].x + ((junction.getWidth() * 5 / 12)));
-	//mySquare.SetYpos(junction.GetOBB().vertOriginal[0].y);
-	//left
-	//car2.SetXpos(junction.GetOBB().vertOriginal[0].x + 10);
-	//car2.SetYpos(junction.GetOBB().vertOriginal[0].y + (junction.getHeight() * 7 / 12));
-	//mySquare.SetXpos(junction.GetOBB().vertOriginal[0].x - (junction.getWidth() * 3 / 8));
-	//mySquare.SetYpos(junction.GetOBB().vertOriginal[0].y + (junction.getHeight() * 5/8));
-	//mySquare.setMatrix(glm::rotate(mySquare.getMatrix(), glm::radians(90.0f), glm::vec3(0, 1, 0)));
-	//right
-	//mySquare.SetXpos(junction.GetOBB().vertOriginal[1].x + (junction.getWidth() * 3 / 8));
-	//mySquare.SetYpos(junction.GetOBB().vertOriginal[1].y + (junction.getHeight() * 5/8));
-	//mySquare.setMatrix(glm::rotate(mySquare.getMatrix(), glm::radians(270.0f), glm::vec3(0, 1, 0)));
-
-	//mySquare.SetXpos(0);
-	//mySquare.SetYpos(4);
-	map[0][0] = junction;
-	map[1][0] = crossJunction;
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 

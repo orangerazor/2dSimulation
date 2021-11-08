@@ -21,7 +21,6 @@ private:
 
 protected:
 	Sprite lightsSprite[4]; // red, redAndAmber, green, amber
-
     static GLuint texRed;
     static GLuint texRedAmb;
     static GLuint texGreen;

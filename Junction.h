@@ -99,6 +99,10 @@ public:
     inline int getOrientation() {
         return this->orientation;
     }
+
+    inline RoadType getType() {
+        return this->type;
+    }
     //inline std::array<pointer, 4> getTrafficLights() {
     //    return this->trafficLights;
     //}
