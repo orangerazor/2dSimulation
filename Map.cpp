@@ -4,6 +4,8 @@ Map::Map(int width, int length)
 {
 	this->width = width;
 	this->length = length;
+	std::vector<std::vector<Junction>> map(width, std::vector<Junction>(length));
+	this->map = map;
 
 }
 
@@ -22,4 +24,20 @@ Map::Map()
 
 Map::~Map()
 {
+}
+
+void Map::addJunction(Junction* junction, int posX, int posY)
+{
+	this->map[posX][posY] = *junction;
+}
+
+void Map::removeJunction(int posX, int posY)
+{
+	this->map[posX][posY] = *new Junction();
+}
+
+Junction Map::getMiddle() {
+	int middle = (this->width * this->length) / 2;
+	std::cout <<"middle="<< middle << std::endl;
+	return map[middle / length][middle % length];
 }

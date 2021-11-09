@@ -18,6 +18,7 @@ using namespace std;
 #include "Car.h"
 #include "Junction.h"
 #include "TrafficLight.h"
+#include "Map.h"
 #include <chrono>
 #include <thread>
 
@@ -59,6 +60,8 @@ Junction road1 = Junction::Junction("s1", 1, 0, glm::mat4(1.0f), RoadType::S);
 Junction road2 = Junction::Junction("s2", 1, 0, glm::mat4(1.0f), RoadType::S);
 Junction road3 = Junction::Junction("s3", 0, 0, glm::mat4(1.0f), RoadType::S);
 Junction road4 = Junction::Junction("s4", 0, 0, glm::mat4(1.0f), RoadType::S);
+Junction empty = Junction::Junction();
+Map mapClass = Map::Map(3, 2);
 
 TrafficLight* trafficLights[1][4];
 TrafficLight trafficLight;
@@ -195,7 +198,8 @@ void display()
 	//std::cout << first.GetXPos() << ", " << first.GetYPos() << std::endl;
 
 	glm::mat4 ModelViewMatrix = glm::mat4(1.0f);
-
+	ViewMatrix = glm::lookAt(glm::vec3(100, 0, 0), glm::vec3(100, 0, 0), glm::vec3(0.0f, 0.0f, 1.0f));
+	ModelViewMatrix = glm::translate(ViewMatrix, glm::vec3(0, 0, 20));
 	for (int i = 0; i < cars.size(); i++) {
 		cars[i].respawn(map[0]);
 		int direction = cars[i].decideDirection(map[0], cars[i].getEntryTurning());
@@ -228,8 +232,7 @@ void display()
 	//ModelViewMatrix = glm::rotate(ModelViewMatrix, glm::radians(-90.0f), glm::vec3(0, 0, 1));
 	//car2.respawn(junction);
 	//car2.Render(shader, ModelViewMatrix, ProjectionMatrix);
-	//ViewMatrix = glm::lookAt(glm::vec3(10, 0, 0), glm::vec3(10, 0, 0), glm::vec3(0.0f, 1.0f, 0.0));
-	//ModelViewMatrix = glm::translate(ViewMatrix, glm::vec3(0, 0, 20));
+	
 
 	glDisable(GL_BLEND);
 
@@ -349,7 +352,13 @@ void init()
 	coordinates[3][0] = junction.GetOBB().vertOriginal[0].x + ((junction.getWidth() * 5 / 12));
 	coordinates[3][1] = junction.GetOBB().vertOriginal[0].y;
 	coordinates[3][2] = 270.0f;
-
+	for (int i = 0; i < mapClass.getLength(); i++) {
+		for (int j = 0; j < mapClass.getWidth(); j++) {
+			mapClass[i][j] = empty;
+		}
+	}
+	Junction middle = mapClass.getMiddle();
+	glViewport(middle.GetXPos(), middle.GetYPos(), middle.getWidth()*mapClass.getWidth(), middle.getHeight()*mapClass.getLength());
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 

@@ -5,13 +5,13 @@
 #include "Junction.h"
 
 Junction::Junction() {
-    this->name = "";
+    this->name = "Empty";
     this->orientation = 0;
     for (int i = 0; i < turnings.size(); i++) {
         this->turnings[i] = false;
     }
     this->speedLimit = 0;
-    this->type = RoadType::S;
+    this->type = RoadType::N;
     this->state = true;
 }
 

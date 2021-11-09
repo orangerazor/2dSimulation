@@ -17,6 +17,7 @@ enum RoadType {
     T,
     X,
     S,
+    N,
 };
 
 

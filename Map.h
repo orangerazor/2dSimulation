@@ -12,5 +12,25 @@ public:
     Map(std::vector<std::vector<Junction>> map);
     Map();
     ~Map();
-
+    void addJunction(Junction* junction, int posX, int posY);
+    void removeJunction(int posX, int posY);
+    inline int getWidth() {
+        return this->width;
+    }
+    inline void setWidth(int width) {
+        this->width = width;
+    }
+    inline int getLength() {
+        return this->length;
+    }
+    inline void setLength(int length) {
+        this->length = length;
+    }
+    inline std::vector<std::vector<Junction>> getMap() {
+        return this->map;
+    }
+    inline void setMap(std::vector<std::vector<Junction>> map) {
+        this->map = map;
+    }
+    Junction getMiddle();
 };
