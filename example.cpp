@@ -214,7 +214,7 @@ void display()
 	for (int i = 0; i < cars.size(); i++) {
 		cars[i].respawn(map[0]);
 		int direction = cars[i].decideDirection(map[0], cars[i].getEntryTurning());
-		ModelViewMatrix = cars[i].rotate(12.0f / fps, direction, cars[i].getEntryTurning(), map[0], fps);
+		ModelViewMatrix = cars[i].rotate(12.0f / fps, direction, cars[i].getEntryTurning(), map[0], fps, cars);
 		cars[i].Render(shader, ModelViewMatrix, ProjectionMatrix);
 	}
 	//mySquare.respawn(map[0]);
@@ -276,13 +276,14 @@ void init()
 	mySquare.SetHeight(scale);
 	car2.SetWidth(scale * (500 / 264.0f));
 	car2.SetHeight(scale);
+	cars.push_back(mySquare);
+	cars.push_back(car2);
 	for (int i = 0; i < cars.size(); i++) {
 		cars[i].SetWidth(scale * (500 / 264.0f));
 		cars[i].SetHeight(scale);
+		cars[i].setIdentifier(i);
 	}
 	
-	cars.push_back(mySquare);
-	cars.push_back(car2);
 	map.push_back(crossJunction);
 	map.push_back(road1);
 	map.push_back(road2);

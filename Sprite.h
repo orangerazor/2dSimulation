@@ -19,6 +19,7 @@ protected:
 	GLuint m_TexName; //identifier for the texture
 
 	OBB obb; //obb object for oriented bounding box collision
+	OBB collide;
 
 	//Dimensions of the sprite.
 	float m_Width;
