@@ -29,6 +29,9 @@ public:
     inline std::vector<std::vector<Junction>> getMap() {
         return this->map;
     }
+    inline Junction* getMapJunction(int y, int x) {
+        return &this->map[y][x];
+    }
     inline void setMap(std::vector<std::vector<Junction>> map) {
         this->map = map;
     }
