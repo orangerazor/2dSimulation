@@ -1,10 +1,10 @@
 #include "Map.h"
 
-Map::Map(int width, int length)
+Map::Map(int height, int width)
 {
 	this->width = width;
-	this->length = length;
-	std::vector<std::vector<Junction>> map(width, std::vector<Junction>(length));
+	this->height = height;
+	std::vector<std::vector<Junction>> map(width, std::vector<Junction>(height));
 	this->map = map;
 
 }
@@ -13,13 +13,15 @@ Map::Map(std::vector<std::vector<Junction>> map)
 {
 	this->map = map;
 	this->width = map[0].size();
-	this->length = map.size();
+	this->height = map.size();
 }
 
 Map::Map()
 {
 	this->width = 2;
-	this->length = 2;
+	this->height = 2;
+	std::vector<std::vector<Junction>> map(this->width, std::vector<Junction>(this->height));
+	this->map = map;
 }
 
 Map::~Map()
@@ -28,16 +30,16 @@ Map::~Map()
 
 void Map::addJunction(Junction* junction, int posX, int posY)
 {
-	this->map[posX][posY] = *junction;
+	this->map[posY][posX] = *junction;
 }
 
 void Map::removeJunction(int posX, int posY)
 {
-	this->map[posX][posY] = *new Junction();
+	this->map[posY][posX] = *new Junction();
 }
 
 Junction Map::getMiddle() {
-	int middle = (this->width * this->length) / 2;
+	int middle = (this->width * this->height) / 2;
 	std::cout <<"middle="<< middle << std::endl;
-	return map[middle / length][middle % length];
+	return this->map[middle / this->height][middle % this->height];
 }

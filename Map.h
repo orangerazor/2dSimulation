@@ -4,11 +4,11 @@
 class Map : public Sprite {
 private:
     int width;
-    int length;
+    int height;
     std::vector<std::vector<Junction>> map;
 
 public:
-    Map(int width, int length);
+    Map(int height, int width);
     Map(std::vector<std::vector<Junction>> map);
     Map();
     ~Map();
@@ -20,11 +20,11 @@ public:
     inline void setWidth(int width) {
         this->width = width;
     }
-    inline int getLength() {
-        return this->length;
+    inline int getheight() {
+        return this->height;
     }
-    inline void setLength(int length) {
-        this->length = length;
+    inline void setHeight(int height) {
+        this->height = height;
     }
     inline std::vector<std::vector<Junction>> getMap() {
         return this->map;

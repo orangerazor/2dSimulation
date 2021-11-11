@@ -60,8 +60,8 @@ Junction road1 = Junction::Junction("s1", 1, 0, glm::mat4(1.0f), RoadType::S);
 Junction road2 = Junction::Junction("s2", 1, 0, glm::mat4(1.0f), RoadType::S);
 Junction road3 = Junction::Junction("s3", 0, 0, glm::mat4(1.0f), RoadType::S);
 Junction road4 = Junction::Junction("s4", 0, 0, glm::mat4(1.0f), RoadType::S);
-Junction empty = Junction::Junction();
-Map mapClass = Map::Map(3, 2);
+Junction emptyJunction = Junction::Junction();
+Map mapClass = Map::Map(1, 3);
 
 TrafficLight* trafficLights[1][4];
 TrafficLight trafficLight;
@@ -95,7 +95,7 @@ void display()
 	glClear(GL_COLOR_BUFFER_BIT);
 	//cout << "green = " << junction.getTrafficLights()[2].getLights()[2] << endl;
 	ViewMatrix = glm::translate(glm::mat4(1.0), glm::vec3(0.0, 0.0, 0.0));
-
+	/*cout << "height=" << mapClass.getMap().size() << ", " << "width=" << mapClass.getMap()[0].size() << endl;*/
 	glEnable(GL_BLEND);
 	if (hourElapsed >= 1000000 * secondsToHour) { //day n night cycle
 		if (hour == 23) {
@@ -352,13 +352,14 @@ void init()
 	coordinates[3][0] = junction.GetOBB().vertOriginal[0].x + ((junction.getWidth() * 5 / 12));
 	coordinates[3][1] = junction.GetOBB().vertOriginal[0].y;
 	coordinates[3][2] = 270.0f;
-	for (int i = 0; i < mapClass.getLength(); i++) {
+	for (int i = 0; i < mapClass.getHeight(); i++) {
 		for (int j = 0; j < mapClass.getWidth(); j++) {
-			mapClass[i][j] = empty;
+			cout << "i=" << i << ", " << "j=" << j << endl;
+			mapClass.getMap()[i][j] = emptyJunction;
 		}
 	}
 	Junction middle = mapClass.getMiddle();
-	glViewport(middle.GetXPos(), middle.GetYPos(), middle.getWidth()*mapClass.getWidth(), middle.getHeight()*mapClass.getLength());
+	glViewport(middle.GetXPos(), middle.GetYPos(), middle.getWidth()*mapClass.getWidth(), middle.getHeight()*mapClass.getHeight());
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
