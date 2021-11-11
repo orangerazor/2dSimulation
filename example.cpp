@@ -95,7 +95,7 @@ void display()
 	glClear(GL_COLOR_BUFFER_BIT);
 	//cout << "green = " << junction.getTrafficLights()[2].getLights()[2] << endl;
 	ViewMatrix = glm::translate(glm::mat4(1.0), glm::vec3(0.0, 0.0, 0.0));
-	/*cout << "height=" << mapClass.getMap().size() << ", " << "width=" << mapClass.getMap()[0].size() << endl;*/
+	//cout << "height=" << mapClass.getHeight() << ", " << "width=" << mapClass.getWidth() << endl;
 	glEnable(GL_BLEND);
 	if (hourElapsed >= 1000000 * secondsToHour) { //day n night cycle
 		if (hour == 23) {
@@ -106,42 +106,53 @@ void display()
 		}
 		hourElapsed = 0;
 	}
-	for (int i = 0; i < map.size(); i++) {
-		if (secondElapsed >= 1000000) {
-			map[i].trafficLightFlow();
-			//cout << "left" << junction.getTrafficLights()[0].getLights()[0] << junction.getTrafficLights()[0].getLights()[1] << junction.getTrafficLights()[0].getLights()[2] << endl;
-			//cout << "right" << junction.getTrafficLights()[1].getLights()[0] << junction.getTrafficLights()[1].getLights()[1] << junction.getTrafficLights()[1].getLights()[2] << endl;
-			//cout << "forward" << junction.getTrafficLights()[2].getLights()[0] << junction.getTrafficLights()[2].getLights()[1] << junction.getTrafficLights()[2].getLights()[2] << endl;
-			//cout << "back" << junction.getTrafficLights()[3].getLights()[0] << junction.getTrafficLights()[3].getLights()[1] << junction.getTrafficLights()[3].getLights()[2] << endl;
-			secondElapsed = 0;
-
-		}
-		glm::mat4 junctionRender = glm::mat4(1.0f);
-		junctionRender = glm::translate(glm::mat4(1.0f), glm::vec3(map[i].GetXPos(), map[i].GetYPos(), 0));
-		junctionRender = glm::rotate(junctionRender, glm::radians(map[i].getOrientation()*90.0f), glm::vec3(0.0, 0.0, 1.0));
-		map[i].Render(shader, junctionRender, ProjectionMatrix);
-		for (int j = 0; j < 4; j++) {
-			glm::mat4 moveLight = glm::mat4(1.0f);
-			switch (j) {
-			case(0):
-				moveLight = glm::translate(moveLight, glm::vec3(map[i].getXLeftSquare() - (map[i].getTrafficLights()[j].getHeight() / 2), map[i].getYTopSquare() + (map[i].getTrafficLights()[j].getWidth() / 2), 0.0));
-				moveLight = glm::rotate(moveLight, glm::radians(-90.0f), glm::vec3(0.0, 0.0, 1.0));
-				break;
-			case(1):
-				moveLight = glm::translate(moveLight, glm::vec3(map[i].getXRightSquare() + (map[i].getTrafficLights()[j].getHeight() / 2), map[i].getYBotSquare() - (map[i].getTrafficLights()[j].getWidth() / 2), 0.0));
-				moveLight = glm::rotate(moveLight, glm::radians(90.0f), glm::vec3(0.0, 0.0, 1.0));
-				break;
-			case(2):
-				moveLight = glm::translate(moveLight, glm::vec3(map[i].getXRightSquare() + (map[i].getTrafficLights()[j].getWidth() / 2), map[i].getYTopSquare() + (map[i].getTrafficLights()[j].getHeight() / 2), 0.0));
-				moveLight = glm::rotate(moveLight, glm::radians(180.0f), glm::vec3(0.0, 0.0, 1.0));
-				break;
-			case(3):
-				moveLight = glm::translate(moveLight, glm::vec3(map[i].getXLeftSquare() - (map[i].getTrafficLights()[j].getWidth() / 2), map[i].getYBotSquare() - (map[i].getTrafficLights()[j].getHeight() / 2), 0.0));
-				break;
+	if (secondElapsed >= 1000000) {
+		
+		for (int i = 0; i < mapClass.getMap().size(); i++) {
+			for (int j = 0; j < mapClass.getMap()[0].size(); j++) {
+				mapClass.getMap()[i][j].trafficLightFlow();
 			}
-			map[i].getTrafficLights()[j].Render(shader, moveLight, ProjectionMatrix);
+		}
+		//cout << "left" << junction.getTrafficLights()[0].getLights()[0] << junction.getTrafficLights()[0].getLights()[1] << junction.getTrafficLights()[0].getLights()[2] << endl;
+		//cout << "right" << junction.getTrafficLights()[1].getLights()[0] << junction.getTrafficLights()[1].getLights()[1] << junction.getTrafficLights()[1].getLights()[2] << endl;
+		//cout << "forward" << junction.getTrafficLights()[2].getLights()[0] << junction.getTrafficLights()[2].getLights()[1] << junction.getTrafficLights()[2].getLights()[2] << endl;
+		//cout << "back" << junction.getTrafficLights()[3].getLights()[0] << junction.getTrafficLights()[3].getLights()[1] << junction.getTrafficLights()[3].getLights()[2] << endl;
+		secondElapsed = 0;
+
+	}
+	for (int i = 0; i < mapClass.getMap().size(); i++) {
+		for (int j = 0; j < mapClass.getMap()[0].size(); j++) {
+			/*cout << i << ", " << j << endl;
+			cout << mapClass.getMap()[i][j].getName() << endl;*/
+			glm::mat4 junctionRender = glm::mat4(1.0f);
+			junctionRender = glm::translate(glm::mat4(1.0f), glm::vec3(mapClass.getMap()[i][j].GetXPos(), mapClass.getMap()[i][j].GetYPos(), 0));
+			junctionRender = glm::rotate(junctionRender, glm::radians(mapClass.getMap()[i][j].getOrientation() * 90.0f), glm::vec3(0.0, 0.0, 1.0));
+			mapClass.getMap()[i][j].Render(shader, junctionRender, ProjectionMatrix);
+			for (int k = 0; k < 4; k++) {
+				glm::mat4 moveLight = glm::mat4(1.0f);
+				switch (k) {
+				case(0):
+					moveLight = glm::translate(moveLight, glm::vec3(mapClass.getMap()[i][j].getXLeftSquare() - (mapClass.getMap()[i][j].getTrafficLights()[k].getHeight() / 2), mapClass.getMap()[i][j].getYTopSquare() + (mapClass.getMap()[i][j].getTrafficLights()[k].getWidth() / 2), 0.0));
+					moveLight = glm::rotate(moveLight, glm::radians(-90.0f), glm::vec3(0.0, 0.0, 1.0));
+					break;
+				case(1):
+					moveLight = glm::translate(moveLight, glm::vec3(mapClass.getMap()[i][j].getXRightSquare() + (mapClass.getMap()[i][j].getTrafficLights()[k].getHeight() / 2), mapClass.getMap()[i][j].getYBotSquare() - (mapClass.getMap()[i][j].getTrafficLights()[k].getWidth() / 2), 0.0));
+					moveLight = glm::rotate(moveLight, glm::radians(90.0f), glm::vec3(0.0, 0.0, 1.0));
+					break;
+				case(2):
+					moveLight = glm::translate(moveLight, glm::vec3(mapClass.getMap()[i][j].getXRightSquare() + (map[k].getTrafficLights()[j].getWidth() / 2), mapClass.getMap()[i][j].getYTopSquare() + (mapClass.getMap()[i][j].getTrafficLights()[k].getHeight() / 2), 0.0));
+					moveLight = glm::rotate(moveLight, glm::radians(180.0f), glm::vec3(0.0, 0.0, 1.0));
+					break;
+				case(3):
+					moveLight = glm::translate(moveLight, glm::vec3(mapClass.getMap()[i][j].getXLeftSquare() - (mapClass.getMap()[i][j].getTrafficLights()[k].getWidth() / 2), mapClass.getMap()[i][j].getYBotSquare() - (mapClass.getMap()[i][j].getTrafficLights()[k].getHeight() / 2), 0.0));
+					break;
+				}
+				mapClass.getMap()[i][j].getTrafficLights()[j].Render(shader, moveLight, ProjectionMatrix);
+			}
 		}
 	}
+		
+		
 
 
 	//glm::mat4 ModelViewMatrix = mySquare.turn(speed, direction);
@@ -277,41 +288,44 @@ void init()
 	map.push_back(road2);
 	
 	
-	for (int i = 0; i < map.size(); i++) {
-		
-		map[i].SetWidth(15.0f * scale * (2481 / 2481.0f));
-		map[i].SetHeight(15.0f * scale);
-		map[i].SetXpos(i * map[i].getWidth());
-		map[i].SetYpos(0);
-		map[i].calculateLines();
-		cout << map[i].getYBotSquare();
-		
-		switch (map[i].getType())
-		{
-		case(RoadType::S):
-			map[i].Init(shader, red, "textures/Road.png");
-			break;
-		case(RoadType::T):
-			map[i].Init(shader, red, "textures/Tjunction.png");
-			break;
-		case(RoadType::X):
-		default:
-			map[i].Init(shader, red, "textures/Xjunction.png");
-			break;
-		}
-		for (int j = 0; j < 4; j++) {
-			if (map[i].getType() == RoadType::S) {
+	for (int i = 0; i < mapClass.getMap().size(); i++) {
+		for (int j = 0; j < mapClass.getMap()[0].size(); j++) {
+			/*mapClass.getMap()[i][j] = crossJunction;*/
+			mapClass.addJunction(crossJunction, i, j);
+			cout << mapClass.getMap()[i][j].getName() << endl;
+			mapClass.getMap()[i][j].SetWidth(15.0f * scale * (2481 / 2481.0f));
+			mapClass.getMap()[i][j].SetHeight(15.0f * scale);
+			mapClass.getMap()[i][j].SetXpos(i * mapClass.getMap()[i][j].getWidth());
+			mapClass.getMap()[i][j].SetYpos(0);
+			mapClass.getMap()[i][j].calculateLines();
+			cout << mapClass.getMap()[i][j].getYBotSquare();
+
+			switch (mapClass.getMap()[i][j].getType())
+			{
+			case(RoadType::S):
+				mapClass.getMap()[i][j].Init(shader, red, "textures/Road.png");
+				break;
+			case(RoadType::T):
+				mapClass.getMap()[i][j].Init(shader, red, "textures/Tjunction.png");
+				break;
+			case(RoadType::X):
+			default:
+				mapClass.getMap()[i][j].Init(shader, red, "textures/Xjunction.png");
 				break;
 			}
-			if (map[i].getTurnings()[j]) {
-				map[i].getTrafficLights()[j].SetHeight(scale);
-				map[i].getTrafficLights()[j].SetWidth(scale / 2);
-				//std::cout << junction.getTrafficLights()[i].getHeight() << std::endl;
-				map[i].getTrafficLights()[j].Init(shader, red, "textures/blankTrafficLight.png");
-				map[i].getTrafficLights()[j].InitLights(shader, red, "textures/redTrafficLight.png", "textures/rAndATrafficLight.png",
-					"textures/greenTrafficLight.png", "textures/blankTrafficLight.png");
+			for (int k = 0; k < 4; k++) {
+				if (mapClass.getMap()[i][j].getType() == RoadType::S) {
+					break;
+				}
+				if (mapClass.getMap()[i][j].getTurnings()[k]) {
+					mapClass.getMap()[i][j].getTrafficLights()[k].SetHeight(scale);
+					mapClass.getMap()[i][j].getTrafficLights()[k].SetWidth(scale / 2);
+					//std::cout << junction.getTrafficLights()[i].getHeight() << std::endl;
+					mapClass.getMap()[i][j].getTrafficLights()[k].Init(shader, red, "textures/blankTrafficLight.png");
+					mapClass.getMap()[i][j].getTrafficLights()[k].InitLights(shader, red, "textures/redTrafficLight.png", "textures/rAndATrafficLight.png",
+						"textures/greenTrafficLight.png", "textures/blankTrafficLight.png");
+				}
 			}
-			
 		}
 	}
 

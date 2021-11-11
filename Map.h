@@ -12,7 +12,7 @@ public:
     Map(std::vector<std::vector<Junction>> map);
     Map();
     ~Map();
-    void addJunction(Junction* junction, int posX, int posY);
+    void addJunction(Junction junction, int posX, int posY);
     void removeJunction(int posX, int posY);
     inline int getWidth() {
         return this->width;
@@ -20,7 +20,7 @@ public:
     inline void setWidth(int width) {
         this->width = width;
     }
-    inline int getheight() {
+    inline int getHeight() {
         return this->height;
     }
     inline void setHeight(int height) {
