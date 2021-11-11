@@ -457,9 +457,17 @@ int Car::setSpawn(Junction junction) {
 	return turningIndex;
 }
 
-glm::mat4 Car::rotate(float speed, int direction, int entryPoint, Junction junction, float fps)
+glm::mat4 Car::rotate(float speed, int direction, int entryPoint, Junction junction, float fps, std::vector<Car> collideCheck)
 {
-	
+	for (int i = 0; i < collideCheck.size(); i++) {
+		if (collideCheck[i] == this) {
+			continue;
+		}
+		if (collideCheck[i].IsInCollision(obb)) {
+			speed = 0;
+		}
+	}
+	std::cout << std::endl;
 	glm::vec3 forVec2 = forVec;
 	/*std::cout << "green = " << junction.getTrafficLights()[entryPoint].getLights()[2] << std::endl;*/
 	switch (entryPoint) {

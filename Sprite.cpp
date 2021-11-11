@@ -143,6 +143,18 @@ void Sprite::Init(Shader& shader, float colour[3], std::string filename)
 	obb.vertOriginal[3].x = -halfWidth;
 	obb.vertOriginal[3].y = halfHeight;
 
+	/*************************************/
+	collide.vertOriginal[0].x = -m_Width;
+	collide.vertOriginal[0].y = -m_Height;
+
+	collide.vertOriginal[1].x = m_Width;
+	collide.vertOriginal[1].y = -m_Height;
+
+	collide.vertOriginal[2].x = m_Width;
+	collide.vertOriginal[2].y = m_Height;
+
+	collide.vertOriginal[3].x = -m_Width;
+	collide.vertOriginal[3].y = m_Height;
 	/*******************/
 
 
@@ -216,6 +228,7 @@ void Sprite::Render(Shader& shader, glm::mat4& ModelViewMatrix, glm::mat4& Proje
 	/****UPDATE THE CORNER VALUES BASED ON TRANSFORMATION***/
 	//std::cout << m_Height << std::endl;
 	obb.transformPoints(ModelViewMatrix);
+	collide.transformPoints(ModelViewMatrix);
 	//m_xpos = obb.xCentre(ModelViewMatrix);
 	//m_ypos = obb.yCentre(ModelViewMatrix);
 	//glm::vec4 vector = glm::vec4(m_xpos, m_ypos, 0.0f, 1.0f);
