@@ -61,7 +61,7 @@ Junction road2 = Junction::Junction("s2", 1, 0, glm::mat4(1.0f), RoadType::S);
 Junction road3 = Junction::Junction("s3", 0, 0, glm::mat4(1.0f), RoadType::S);
 Junction road4 = Junction::Junction("s4", 0, 0, glm::mat4(1.0f), RoadType::S);
 Junction emptyJunction = Junction::Junction();
-Map mapClass = Map::Map(1, 5);
+Map mapClass = Map::Map(1, 1);
 
 TrafficLight* trafficLights[1][4];
 TrafficLight trafficLight;
