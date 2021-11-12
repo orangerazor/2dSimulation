@@ -61,7 +61,7 @@ Junction road2 = Junction::Junction("s2", 1, 0, glm::mat4(1.0f), RoadType::S);
 Junction road3 = Junction::Junction("s3", 0, 0, glm::mat4(1.0f), RoadType::S);
 Junction road4 = Junction::Junction("s4", 0, 0, glm::mat4(1.0f), RoadType::S);
 Junction emptyJunction = Junction::Junction();
-Map mapClass = Map::Map(1, 3);
+Map mapClass = Map::Map(1, 5);
 
 TrafficLight* trafficLights[1][4];
 TrafficLight trafficLight;
@@ -85,6 +85,13 @@ void reshape(int width, int height)		// Resize the OpenGL window
 	ProjectionMatrix = glm::ortho(-25.0/zoom, 25.0/zoom, -25.0/zoom, 25.0/zoom);
 }
 
+void readjustScreen(int x, int y, int width, int height) {
+	screenWidth = width;
+	screenHeight = height;
+
+	glViewport(x, y, width, height);
+}
+
 
 void display()
 
@@ -95,7 +102,7 @@ void display()
 	glClear(GL_COLOR_BUFFER_BIT);
 	//cout << "green = " << junction.getTrafficLights()[2].getLights()[2] << endl;
 	ViewMatrix = glm::translate(glm::mat4(1.0), glm::vec3(0.0, 0.0, 0.0));
-	//cout << "height=" << mapClass.getHeight() << ", " << "width=" << mapClass.getWidth() << endl;
+	//cout << "height=" << (*mapClass.getMapJunction(0,0)).getHeight() << ", " << "width=" << (*mapClass.getMapJunction(0, 0)).getWidth() << endl;
 	glEnable(GL_BLEND);
 	if (hourElapsed >= 1000000 * secondsToHour) { //day n night cycle
 		if (hour == 23) {
@@ -110,7 +117,7 @@ void display()
 		
 		for (int i = 0; i < mapClass.getMap().size(); i++) {
 			for (int j = 0; j < mapClass.getMap()[0].size(); j++) {
-				mapClass.getMap()[i][j].trafficLightFlow();
+				(*mapClass.getMapJunction(i, j)).trafficLightFlow();
 			}
 		}
 		//cout << "left" << junction.getTrafficLights()[0].getLights()[0] << junction.getTrafficLights()[0].getLights()[1] << junction.getTrafficLights()[0].getLights()[2] << endl;
@@ -125,29 +132,29 @@ void display()
 			/*cout << i << ", " << j << endl;
 			cout << mapClass.getMap()[i][j].getName() << endl;*/
 			glm::mat4 junctionRender = glm::mat4(1.0f);
-			junctionRender = glm::translate(glm::mat4(1.0f), glm::vec3(mapClass.getMap()[i][j].GetXPos(), mapClass.getMap()[i][j].GetYPos(), 0));
-			junctionRender = glm::rotate(junctionRender, glm::radians(mapClass.getMap()[i][j].getOrientation() * 90.0f), glm::vec3(0.0, 0.0, 1.0));
-			mapClass.getMap()[i][j].Render(shader, junctionRender, ProjectionMatrix);
+			junctionRender = glm::translate(glm::mat4(1.0f), glm::vec3((*mapClass.getMapJunction(i, j)).GetXPos(), (*mapClass.getMapJunction(i, j)).GetYPos(), 0));
+			junctionRender = glm::rotate(junctionRender, glm::radians((*mapClass.getMapJunction(i, j)).getOrientation() * 90.0f), glm::vec3(0.0, 0.0, 1.0));
+			(*mapClass.getMapJunction(i, j)).Render(shader, junctionRender, ProjectionMatrix);
 			for (int k = 0; k < 4; k++) {
 				glm::mat4 moveLight = glm::mat4(1.0f);
 				switch (k) {
 				case(0):
-					moveLight = glm::translate(moveLight, glm::vec3(mapClass.getMap()[i][j].getXLeftSquare() - (mapClass.getMap()[i][j].getTrafficLights()[k].getHeight() / 2), mapClass.getMap()[i][j].getYTopSquare() + (mapClass.getMap()[i][j].getTrafficLights()[k].getWidth() / 2), 0.0));
+					moveLight = glm::translate(moveLight, glm::vec3((*mapClass.getMapJunction(i, j)).getXLeftSquare() - ((*mapClass.getMapJunction(i, j)).getTrafficLights()[k].getHeight() / 2), (*mapClass.getMapJunction(i, j)).getYTopSquare() + ((*mapClass.getMapJunction(i, j)).getTrafficLights()[k].getWidth() / 2), 0.0));
 					moveLight = glm::rotate(moveLight, glm::radians(-90.0f), glm::vec3(0.0, 0.0, 1.0));
 					break;
 				case(1):
-					moveLight = glm::translate(moveLight, glm::vec3(mapClass.getMap()[i][j].getXRightSquare() + (mapClass.getMap()[i][j].getTrafficLights()[k].getHeight() / 2), mapClass.getMap()[i][j].getYBotSquare() - (mapClass.getMap()[i][j].getTrafficLights()[k].getWidth() / 2), 0.0));
+					moveLight = glm::translate(moveLight, glm::vec3((*mapClass.getMapJunction(i, j)).getXRightSquare() + ((*mapClass.getMapJunction(i, j)).getTrafficLights()[k].getHeight() / 2), (*mapClass.getMapJunction(i, j)).getYBotSquare() - ((*mapClass.getMapJunction(i, j)).getTrafficLights()[k].getWidth() / 2), 0.0));
 					moveLight = glm::rotate(moveLight, glm::radians(90.0f), glm::vec3(0.0, 0.0, 1.0));
 					break;
 				case(2):
-					moveLight = glm::translate(moveLight, glm::vec3(mapClass.getMap()[i][j].getXRightSquare() + (map[k].getTrafficLights()[j].getWidth() / 2), mapClass.getMap()[i][j].getYTopSquare() + (mapClass.getMap()[i][j].getTrafficLights()[k].getHeight() / 2), 0.0));
+					moveLight = glm::translate(moveLight, glm::vec3((*mapClass.getMapJunction(i, j)).getXRightSquare() + (map[k].getTrafficLights()[j].getWidth() / 2), (*mapClass.getMapJunction(i, j)).getYTopSquare() + ((*mapClass.getMapJunction(i, j)).getTrafficLights()[k].getHeight() / 2), 0.0));
 					moveLight = glm::rotate(moveLight, glm::radians(180.0f), glm::vec3(0.0, 0.0, 1.0));
 					break;
 				case(3):
-					moveLight = glm::translate(moveLight, glm::vec3(mapClass.getMap()[i][j].getXLeftSquare() - (mapClass.getMap()[i][j].getTrafficLights()[k].getWidth() / 2), mapClass.getMap()[i][j].getYBotSquare() - (mapClass.getMap()[i][j].getTrafficLights()[k].getHeight() / 2), 0.0));
+					moveLight = glm::translate(moveLight, glm::vec3((*mapClass.getMapJunction(i, j)).getXLeftSquare() - ((*mapClass.getMapJunction(i, j)).getTrafficLights()[k].getWidth() / 2), (*mapClass.getMapJunction(i, j)).getYBotSquare() - ((*mapClass.getMapJunction(i, j)).getTrafficLights()[k].getHeight() / 2), 0.0));
 					break;
 				}
-				mapClass.getMap()[i][j].getTrafficLights()[j].Render(shader, moveLight, ProjectionMatrix);
+				(*mapClass.getMapJunction(i, j)).getTrafficLights()[k].Render(shader, moveLight, ProjectionMatrix);
 			}
 		}
 	}
@@ -212,9 +219,9 @@ void display()
 	ViewMatrix = glm::lookAt(glm::vec3(100, 0, 0), glm::vec3(100, 0, 0), glm::vec3(0.0f, 0.0f, 1.0f));
 	ModelViewMatrix = glm::translate(ViewMatrix, glm::vec3(0, 0, 20));
 	for (int i = 0; i < cars.size(); i++) {
-		cars[i].respawn(map[0]);
-		int direction = cars[i].decideDirection(map[0], cars[i].getEntryTurning());
-		ModelViewMatrix = cars[i].rotate(12.0f / fps, direction, cars[i].getEntryTurning(), map[0], fps, cars);
+		cars[i].respawn((*mapClass.getMapJunction(0, 0)));
+		int direction = cars[i].decideDirection((*mapClass.getMapJunction(0, 0)), cars[i].getEntryTurning());
+		ModelViewMatrix = cars[i].rotate(12.0f / fps, direction, cars[i].getEntryTurning(), (*mapClass.getMapJunction(0, 0)), fps, cars);
 		cars[i].Render(shader, ModelViewMatrix, ProjectionMatrix);
 	}
 	//mySquare.respawn(map[0]);
@@ -291,39 +298,42 @@ void init()
 	
 	for (int i = 0; i < mapClass.getMap().size(); i++) {
 		for (int j = 0; j < mapClass.getMap()[0].size(); j++) {
+			/*cout << "i= " << i << ", j= " << j << endl;*/
 			/*mapClass.getMap()[i][j] = crossJunction;*/
 			mapClass.addJunction(crossJunction, i, j);
-			cout << mapClass.getMap()[i][j].getName() << endl;
-			mapClass.getMap()[i][j].SetWidth(15.0f * scale * (2481 / 2481.0f));
-			mapClass.getMap()[i][j].SetHeight(15.0f * scale);
-			mapClass.getMap()[i][j].SetXpos(i * mapClass.getMap()[i][j].getWidth());
-			mapClass.getMap()[i][j].SetYpos(0);
-			mapClass.getMap()[i][j].calculateLines();
-			cout << mapClass.getMap()[i][j].getYBotSquare();
+			cout << (*mapClass.getMapJunction(i, j)).getName() << endl;
+			Junction pointer = *mapClass.getMapJunction(i, j);
+			(*mapClass.getMapJunction(i, j)).SetWidth(15.0f * scale * (2481 / 2481.0f));
+			(*mapClass.getMapJunction(i, j)).SetHeight(15.0f * scale);
+			(*mapClass.getMapJunction(i, j)).SetXpos(j* (*mapClass.getMapJunction(i, j)).getWidth());
+			(*mapClass.getMapJunction(i, j)).SetYpos(i* (*mapClass.getMapJunction(i, j)).getHeight());
+			cout << "x = " << (*mapClass.getMapJunction(i, j)).GetXPos() << ", y = " << (*mapClass.getMapJunction(i, j)).GetYPos() << endl;
+			(*mapClass.getMapJunction(i, j)).calculateLines();
+			//cout << (*mapClass.getMapJunction(i, j)).getYBotSquare();
 
-			switch (mapClass.getMap()[i][j].getType())
+			switch ((*mapClass.getMapJunction(i, j)).getType())
 			{
 			case(RoadType::S):
-				mapClass.getMap()[i][j].Init(shader, red, "textures/Road.png");
+				(*mapClass.getMapJunction(i, j)).Init(shader, red, "textures/Road.png");
 				break;
 			case(RoadType::T):
-				mapClass.getMap()[i][j].Init(shader, red, "textures/Tjunction.png");
+				(*mapClass.getMapJunction(i, j)).Init(shader, red, "textures/Tjunction.png");
 				break;
 			case(RoadType::X):
 			default:
-				mapClass.getMap()[i][j].Init(shader, red, "textures/Xjunction.png");
+				(*mapClass.getMapJunction(i, j)).Init(shader, red, "textures/Xjunction.png");
 				break;
 			}
 			for (int k = 0; k < 4; k++) {
-				if (mapClass.getMap()[i][j].getType() == RoadType::S) {
+				if ((*mapClass.getMapJunction(i, j)).getType() == RoadType::S) {
 					break;
 				}
-				if (mapClass.getMap()[i][j].getTurnings()[k]) {
-					mapClass.getMap()[i][j].getTrafficLights()[k].SetHeight(scale);
-					mapClass.getMap()[i][j].getTrafficLights()[k].SetWidth(scale / 2);
+				if ((*mapClass.getMapJunction(i, j)).getTurnings()[k]) {
+					(*mapClass.getMapJunction(i, j)).getTrafficLights()[k].SetHeight(scale);
+					(*mapClass.getMapJunction(i, j)).getTrafficLights()[k].SetWidth(scale / 2);
 					//std::cout << junction.getTrafficLights()[i].getHeight() << std::endl;
-					mapClass.getMap()[i][j].getTrafficLights()[k].Init(shader, red, "textures/blankTrafficLight.png");
-					mapClass.getMap()[i][j].getTrafficLights()[k].InitLights(shader, red, "textures/redTrafficLight.png", "textures/rAndATrafficLight.png",
+					(*mapClass.getMapJunction(i, j)).getTrafficLights()[k].Init(shader, red, "textures/blankTrafficLight.png");
+					(*mapClass.getMapJunction(i, j)).getTrafficLights()[k].InitLights(shader, red, "textures/redTrafficLight.png", "textures/rAndATrafficLight.png",
 						"textures/greenTrafficLight.png", "textures/blankTrafficLight.png");
 				}
 			}
@@ -352,29 +362,30 @@ void init()
 	//TrafficLight::initTrafficTex();
 
 	//left
-	coordinates[0][0] = junction.GetOBB().vertOriginal[0].x;
-	coordinates[0][1] = junction.GetOBB().vertOriginal[0].y + (junction.getHeight()*7/12);
+	coordinates[0][0] = (*mapClass.getMapJunction(0, 0)).GetOBB().vertOriginal[0].x;
+	coordinates[0][1] = (*mapClass.getMapJunction(0, 0)).GetOBB().vertOriginal[0].y + ((*mapClass.getMapJunction(0, 0)).getHeight()*7/12);
 	coordinates[0][2] = -90.0f;
 	//right
-	coordinates[1][0] = junction.GetOBB().vertOriginal[0].x+(junction.getWidth());
-	coordinates[1][1] = junction.GetOBB().vertOriginal[0].y + (junction.getHeight() * 7 / 12);
+	coordinates[1][0] = (*mapClass.getMapJunction(0, 0)).GetOBB().vertOriginal[0].x+((*mapClass.getMapJunction(0, 0)).getWidth());
+	coordinates[1][1] = (*mapClass.getMapJunction(0, 0)).GetOBB().vertOriginal[0].y + ((*mapClass.getMapJunction(0, 0)).getHeight() * 7 / 12);
 	coordinates[1][2] = -90.0f;
 	//top
-	coordinates[2][0] = junction.GetOBB().vertOriginal[0].x + (junction.getWidth() * 7 / 12);
-	coordinates[2][1] = junction.GetOBB().vertOriginal[0].y + (junction.getHeight());
+	coordinates[2][0] = (*mapClass.getMapJunction(0, 0)).GetOBB().vertOriginal[0].x + ((*mapClass.getMapJunction(0, 0)).getWidth() * 7 / 12);
+	coordinates[2][1] = (*mapClass.getMapJunction(0, 0)).GetOBB().vertOriginal[0].y + ((*mapClass.getMapJunction(0, 0)).getHeight());
 	coordinates[2][2] = 90.0f;
 	//bottom
-	coordinates[3][0] = junction.GetOBB().vertOriginal[0].x + ((junction.getWidth() * 5 / 12));
-	coordinates[3][1] = junction.GetOBB().vertOriginal[0].y;
+	coordinates[3][0] = (*mapClass.getMapJunction(0, 0)).GetOBB().vertOriginal[0].x + (((*mapClass.getMapJunction(0, 0)).getWidth() * 5 / 12));
+	coordinates[3][1] = (*mapClass.getMapJunction(0, 0)).GetOBB().vertOriginal[0].y;
 	coordinates[3][2] = 270.0f;
-	for (int i = 0; i < mapClass.getHeight(); i++) {
-		for (int j = 0; j < mapClass.getWidth(); j++) {
-			cout << "i=" << i << ", " << "j=" << j << endl;
-			mapClass.getMap()[i][j] = emptyJunction;
-		}
-	}
+	//for (int i = 0; i < mapClass.getHeight(); i++) {
+	//	for (int j = 0; j < mapClass.getWidth(); j++) {
+	//		cout << "i=" << i << ", " << "j=" << j << endl;
+	//		mapClass.getMap()[i][j] = emptyJunction;
+	//	}
+	//}
 	Junction middle = mapClass.getMiddle();
-	glViewport(middle.GetXPos(), middle.GetYPos(), middle.getWidth()*mapClass.getWidth(), middle.getHeight()*mapClass.getHeight());
+	cout << "x = " << middle.GetXPos() << ", y= " << middle.GetYPos() << endl;
+	readjustScreen(60, 0, 300, 60);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
