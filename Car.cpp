@@ -580,7 +580,7 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, Junction junct
 			//	speed = 0;
 			//	break;
 			//}
-			if (m_xpos >= junction.GetXPos() && m_ypos >= junction.GetYPos() && junction.getTrafficLights()[1].isGreen()) {
+			if (m_xpos >= junction.GetXPos() && m_ypos >= junction.GetYPos() && !junction.getTrafficLights()[1].isGreen()) {
 				angle -= 2.4f/fps;
 			}
 			break;
@@ -589,7 +589,7 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, Junction junct
 			//	speed = 0;
 			//	break;
 			//}
-			if (m_xpos <= junction.GetXPos() && m_ypos <= junction.GetYPos() && junction.getTrafficLights()[2].isGreen()) {
+			if (m_xpos <= junction.GetXPos() && m_ypos <= junction.GetYPos() && !junction.getTrafficLights()[2].isGreen()) {
 				angle -= 2.4f/fps;		
 			}
 			break;
@@ -598,7 +598,7 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, Junction junct
 			//	speed = 0;
 			//	break;
 			//}
-			if (m_ypos <= junction.GetYPos() && m_xpos >= junction.GetXPos() && junction.getTrafficLights()[3].isGreen()) {
+			if (m_ypos <= junction.GetYPos() && m_xpos >= junction.GetXPos() && !junction.getTrafficLights()[3].isGreen()) {
 				angle -= 2.4f/fps;
 
 			}
@@ -608,7 +608,7 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, Junction junct
 			//	speed = 0;
 			//	break;
 			//}
-			if (m_ypos >= junction.GetYPos() && m_xpos <= junction.GetXPos() && junction.getTrafficLights()[2].isGreen()) {
+			if (m_ypos >= junction.GetYPos() && m_xpos <= junction.GetXPos() && !junction.getTrafficLights()[2].isGreen()) {
 				angle -= 2.4f / fps;
 			}
 			break;

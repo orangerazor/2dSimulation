@@ -114,7 +114,7 @@ void display()
 		hourElapsed = 0;
 	}
 	if (hour > 15 && hour < 17) {
-		if (secondElapsed >= 500000) {
+		if (secondElapsed >= 1000000) {
 			if (cars.size() < 8) {
 				Car toSpawn = Car(glm::mat4(1.0f));
 				toSpawn.SetWidth(scale * (500 / 264.0f));
@@ -256,16 +256,16 @@ void display()
 		cars[i].respawn((*mapClass.getMapJunction(0, 0)));
 		int direction = cars[i].decideDirection((*mapClass.getMapJunction(0, 0)), cars[i].getEntryTurning());
 		ModelViewMatrix =  cars[i].rotate(12.0f / fps, direction, cars[i].getEntryTurning(), (*mapClass.getMapJunction(0, 0)), fps, cars);
-		for (int j = 0; j < cars.size(); j++) {
-			if (j == i) {
-				continue;
-			}
-			if (cars[i].IsInCollision(cars[j].GetOBB())) {
-				cars[i].respawn((*mapClass.getMapJunction(0, 0)));
-				int direction = cars[i].decideDirection((*mapClass.getMapJunction(0, 0)), cars[i].getEntryTurning());
-				ModelViewMatrix = cars[i].rotate(12.0f / fps, direction, cars[i].getEntryTurning(), (*mapClass.getMapJunction(0, 0)), fps, cars);
-			}
-		}
+		//for (int j = 0; j < cars.size(); j++) {
+		//	if (j == i) {
+		//		continue;
+		//	}
+		//	if (cars[i].IsInCollision(cars[j].GetOBB())) {
+		//		cars[i].respawn((*mapClass.getMapJunction(0, 0)));
+		//		int direction = cars[i].decideDirection((*mapClass.getMapJunction(0, 0)), cars[i].getEntryTurning());
+		//		ModelViewMatrix = cars[i].rotate(12.0f / fps, direction, cars[i].getEntryTurning(), (*mapClass.getMapJunction(0, 0)), fps, cars);
+		//	}
+		//}
 		cars[i].Render(shader, ModelViewMatrix, ProjectionMatrix);
 	}
 	//mySquare.respawn(map[0]);
