@@ -52,16 +52,13 @@ Shader shader;
 Car mySquare = Car::Car(glm::mat4(1.0f));
 Car car2 = Car::Car(glm::mat4(1.0f));
 std::vector<Car> cars(0);
-std::vector<Junction> map(0);
+//std::vector<Junction> map(0);
 //std::vector< std::vector<Junction> > map(2, column);
-Junction junction = Junction::Junction("T", 0, 0, glm::mat4(1.0f), RoadType::X);
-Junction crossJunction = Junction::Junction("X", 0, 0, glm::mat4(1.0f), RoadType::X);
-Junction road1 = Junction::Junction("s1", 1, 0, glm::mat4(1.0f), RoadType::S);
-Junction road2 = Junction::Junction("s2", 1, 0, glm::mat4(1.0f), RoadType::S);
-Junction road3 = Junction::Junction("s3", 0, 0, glm::mat4(1.0f), RoadType::S);
-Junction road4 = Junction::Junction("s4", 0, 0, glm::mat4(1.0f), RoadType::S);
+Junction tJunction = Junction::Junction("T", 0, 0, glm::mat4(1.0f), RoadType::T);
+Junction xJunction = Junction::Junction("X", 0, 0, glm::mat4(1.0f), RoadType::X);
+Junction road = Junction::Junction("R", 1, 0, glm::mat4(1.0f), RoadType::S);
 Junction emptyJunction = Junction::Junction();
-Map mapClass = Map::Map(1, 1);
+Map mapClass = Map::Map(3, 3);
 
 TrafficLight* trafficLights[1][4];
 TrafficLight trafficLight;
@@ -181,7 +178,7 @@ void display()
 					moveLight = glm::rotate(moveLight, glm::radians(90.0f), glm::vec3(0.0, 0.0, 1.0));
 					break;
 				case(2):
-					moveLight = glm::translate(moveLight, glm::vec3((*mapClass.getMapJunction(i, j)).getXRightSquare() + (map[k].getTrafficLights()[j].getWidth() / 2), (*mapClass.getMapJunction(i, j)).getYTopSquare() + ((*mapClass.getMapJunction(i, j)).getTrafficLights()[k].getHeight() / 2), 0.0));
+					moveLight = glm::translate(moveLight, glm::vec3((*mapClass.getMapJunction(i, j)).getXRightSquare() + ((*mapClass.getMapJunction(i, j)).getTrafficLights()[k].getWidth() / 2), (*mapClass.getMapJunction(i, j)).getYTopSquare() + ((*mapClass.getMapJunction(i, j)).getTrafficLights()[k].getHeight() / 2), 0.0));
 					moveLight = glm::rotate(moveLight, glm::radians(180.0f), glm::vec3(0.0, 0.0, 1.0));
 					break;
 				case(3):
@@ -335,17 +332,25 @@ void init()
 		cars[i].setIdentifier(i);
 	}
 	
-	map.push_back(crossJunction);
-	map.push_back(road1);
-	map.push_back(road2);
+	mapClass.addJunction(emptyJunction, 0, 0);
+	mapClass.addJunction(road, 0, 1);
+	(*mapClass.getMapJunction(0, 1)).setOrientation(1);
+	mapClass.addJunction(emptyJunction, 0, 2);
+	mapClass.addJunction(road, 1, 0);
+	mapClass.addJunction(xJunction, 1, 1);
+	mapClass.addJunction(road, 1, 2);
+	mapClass.addJunction(emptyJunction, 2, 0);
+	mapClass.addJunction(road, 2, 1);
+	(*mapClass.getMapJunction(2, 1)).setOrientation(1);
+	mapClass.addJunction(emptyJunction, 2, 2);
 	
 	
 	for (int i = 0; i < mapClass.getMap().size(); i++) {
 		for (int j = 0; j < mapClass.getMap()[0].size(); j++) {
 			/*cout << "i= " << i << ", j= " << j << endl;*/
 			/*mapClass.getMap()[i][j] = crossJunction;*/
-			mapClass.addJunction(crossJunction, i, j);
-			cout << (*mapClass.getMapJunction(i, j)).getName() << endl;
+			//mapClass.addJunction(crossJunction, i, j);
+			cout << "type = " << (*mapClass.getMapJunction(i, j)).getType() << endl;
 			Junction pointer = *mapClass.getMapJunction(i, j);
 			(*mapClass.getMapJunction(i, j)).SetWidth(15.0f * scale * (2481 / 2481.0f));
 			(*mapClass.getMapJunction(i, j)).SetHeight(15.0f * scale);
@@ -357,6 +362,9 @@ void init()
 
 			switch ((*mapClass.getMapJunction(i, j)).getType())
 			{
+			case(RoadType::N):
+				(*mapClass.getMapJunction(i, j)).Init(shader, red, "textures/blank.png");
+				break;
 			case(RoadType::S):
 				(*mapClass.getMapJunction(i, j)).Init(shader, red, "textures/Road.png");
 				break;
@@ -428,8 +436,8 @@ void init()
 	//	}
 	//}
 	Junction middle = mapClass.getMiddle();
-	cout << "x = " << middle.GetXPos() << ", y= " << middle.GetYPos() << endl;
-	readjustScreen(60, 0, 300, 60);
+	/*cout << "x = " << middle.GetXPos() << ", y= " << middle.GetYPos() << endl;
+	readjustScreen(60, 0, 300, 60);*/
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
@@ -475,13 +483,13 @@ void processKeys()
 {
 	if (Left)
 	{
-		Car car(glm::mat4(1.0f));
+		/*Car car(glm::mat4(1.0f));
 		float red[3] = { 1,0,0 };
 		car.SetWidth(scale * (500 / 264.0f));
 		car.SetHeight(scale);
 		car.Init(shader, red, "textures/car.png");
 		car.newSpawn(map[0], 0);
-		cars.push_back(car);
+		cars.push_back(car);*/
 		//angle += 0.01f;
 		//speed = 0;
 		//mySquare.transform(1, 0);
@@ -489,26 +497,26 @@ void processKeys()
 	}
 	if (Right)
 	{
-		Car car(glm::mat4(1.0f));
+		/*Car car(glm::mat4(1.0f));
 		float red[3] = { 1,0,0 };
 		car.SetWidth(scale * (500 / 264.0f));
 		car.SetHeight(scale);
 		car.Init(shader, red, "textures/car.png");
 		car.newSpawn(map[0], 1);
-		cars.push_back(car);
+		cars.push_back(car);*/
 		//angle -= 0.01f;
 		//mySquare.transform(1, 1);
 		//mySquare.IncPos(0.1f, 0.0f);
 	}
 	if (Up)
 	{
-		Car car(glm::mat4(1.0f));
+		/*Car car(glm::mat4(1.0f));
 		float red[3] = { 1,0,0 };
 		car.SetWidth(scale * (500 / 264.0f));
 		car.SetHeight(scale);
 		car.Init(shader, red, "textures/car.png");
 		car.newSpawn(map[0], 2);
-		cars.push_back(car);
+		cars.push_back(car);*/
 		//speed += 0.03f;
 		//mySquare.IncPos(0.0f, 0.1f);
 		//mySquare.SetYpos(0.0f);
@@ -517,13 +525,13 @@ void processKeys()
 	}
 	if (Down)
 	{
-		Car car(glm::mat4(1.0f));
+		/*Car car(glm::mat4(1.0f));
 		float red[3] = { 1,0,0 };
 		car.SetWidth(scale * (500 / 264.0f));
 		car.SetHeight(scale);
 		car.Init(shader, red, "textures/car.png");
 		car.newSpawn(map[0], 3);
-		cars.push_back(car);
+		cars.push_back(car);*/
 		//speed -= 0.03f;
 		//mySquare.IncPos(0.0f, -0.1f);
 		//direction = 1;
