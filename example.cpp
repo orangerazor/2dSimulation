@@ -314,7 +314,7 @@ void init()
 			(*mapClass.getMapJunction(i, j)).SetWidth(15.0f * scale * (2481 / 2481.0f));
 			(*mapClass.getMapJunction(i, j)).SetHeight(15.0f * scale);
 			(*mapClass.getMapJunction(i, j)).SetXpos(j* (*mapClass.getMapJunction(i, j)).getWidth());
-			(*mapClass.getMapJunction(i, j)).SetYpos(i* (*mapClass.getMapJunction(i, j)).getHeight());
+			(*mapClass.getMapJunction(i, j)).SetYpos(-i* (*mapClass.getMapJunction(i, j)).getHeight());
 			cout << "x = " << (*mapClass.getMapJunction(i, j)).GetXPos() << ", y = " << (*mapClass.getMapJunction(i, j)).GetYPos() << endl;
 			(*mapClass.getMapJunction(i, j)).calculateLines();
 			//cout << (*mapClass.getMapJunction(i, j)).getYBotSquare();
