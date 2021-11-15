@@ -332,8 +332,8 @@ void init()
 		cars[i].setIdentifier(i);
 	}
 	
-	mapClass.addJunction(emptyJunction, 0, 0);
-	mapClass.addJunction(road, 0, 1);
+	mapClass.addJunction(xJunction, 0, 0);
+	/*mapClass.addJunction(road, 0, 1);
 	(*mapClass.getMapJunction(0, 1)).setOrientation(1);
 	mapClass.addJunction(emptyJunction, 0, 2);
 	mapClass.addJunction(road, 1, 0);
@@ -342,7 +342,7 @@ void init()
 	mapClass.addJunction(emptyJunction, 2, 0);
 	mapClass.addJunction(road, 2, 1);
 	(*mapClass.getMapJunction(2, 1)).setOrientation(1);
-	mapClass.addJunction(emptyJunction, 2, 2);
+	mapClass.addJunction(emptyJunction, 2, 2);*/
 	
 	
 	for (int i = 0; i < mapClass.getMap().size(); i++) {
