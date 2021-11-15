@@ -45,23 +45,20 @@ float speed = 0;
 const double PI = 3.141592653589793238463;
 float angle = 0;
 float scale = 4.0f;
-float zoom = 0.5;
+float zoom = 0.25;
 
 
 Shader shader;
 Car mySquare = Car::Car(glm::mat4(1.0f));
 Car car2 = Car::Car(glm::mat4(1.0f));
 std::vector<Car> cars(0);
-std::vector<Junction> map(0);
+//std::vector<Junction> map(0);
 //std::vector< std::vector<Junction> > map(2, column);
-Junction junction = Junction::Junction("T", 0, 0, glm::mat4(1.0f), RoadType::X);
-Junction crossJunction = Junction::Junction("X", 0, 0, glm::mat4(1.0f), RoadType::X);
-Junction road1 = Junction::Junction("s1", 1, 0, glm::mat4(1.0f), RoadType::S);
-Junction road2 = Junction::Junction("s2", 1, 0, glm::mat4(1.0f), RoadType::S);
-Junction road3 = Junction::Junction("s3", 0, 0, glm::mat4(1.0f), RoadType::S);
-Junction road4 = Junction::Junction("s4", 0, 0, glm::mat4(1.0f), RoadType::S);
+Junction tJunction = Junction::Junction("T", 0, 0, glm::mat4(1.0f), RoadType::T);
+Junction xJunction = Junction::Junction("X", 0, 0, glm::mat4(1.0f), RoadType::X);
+Junction road = Junction::Junction("R", 1, 0, glm::mat4(1.0f), RoadType::S);
 Junction emptyJunction = Junction::Junction();
-Map mapClass = Map::Map(1, 1);
+Map mapClass = Map::Map(3, 3);
 
 TrafficLight* trafficLights[1][4];
 TrafficLight trafficLight;
@@ -117,6 +114,8 @@ void display()
 		
 		for (int i = 0; i < mapClass.getMap().size(); i++) {
 			for (int j = 0; j < mapClass.getMap()[0].size(); j++) {
+				//cout << "i= " << i << endl;
+				//cout << "j= " << j << endl;
 				(*mapClass.getMapJunction(i, j)).trafficLightFlow();
 			}
 		}
@@ -147,7 +146,7 @@ void display()
 					moveLight = glm::rotate(moveLight, glm::radians(90.0f), glm::vec3(0.0, 0.0, 1.0));
 					break;
 				case(2):
-					moveLight = glm::translate(moveLight, glm::vec3((*mapClass.getMapJunction(i, j)).getXRightSquare() + (map[k].getTrafficLights()[j].getWidth() / 2), (*mapClass.getMapJunction(i, j)).getYTopSquare() + ((*mapClass.getMapJunction(i, j)).getTrafficLights()[k].getHeight() / 2), 0.0));
+					moveLight = glm::translate(moveLight, glm::vec3((*mapClass.getMapJunction(i, j)).getXRightSquare() + ((*mapClass.getMapJunction(i, j)).getTrafficLights()[k].getWidth() / 2), (*mapClass.getMapJunction(i, j)).getYTopSquare() + ((*mapClass.getMapJunction(i, j)).getTrafficLights()[k].getHeight() / 2), 0.0));
 					moveLight = glm::rotate(moveLight, glm::radians(180.0f), glm::vec3(0.0, 0.0, 1.0));
 					break;
 				case(3):
@@ -216,12 +215,12 @@ void display()
 	//std::cout << first.GetXPos() << ", " << first.GetYPos() << std::endl;
 
 	glm::mat4 ModelViewMatrix = glm::mat4(1.0f);
-	ViewMatrix = glm::lookAt(glm::vec3(100, 0, 0), glm::vec3(100, 0, 0), glm::vec3(0.0f, 0.0f, 1.0f));
+	ViewMatrix = glm::lookAt(glm::vec3(1000, 0, 0), glm::vec3(1000, 0, 0), glm::vec3(0.0f, 0.0f, 1.0f));
 	ModelViewMatrix = glm::translate(ViewMatrix, glm::vec3(0, 0, 20));
 	for (int i = 0; i < cars.size(); i++) {
-		cars[i].respawn((*mapClass.getMapJunction(0, 0)));
-		int direction = cars[i].decideDirection((*mapClass.getMapJunction(0, 0)), cars[i].getEntryTurning());
-		ModelViewMatrix = cars[i].rotate(12.0f / fps, direction, cars[i].getEntryTurning(), (*mapClass.getMapJunction(0, 0)), fps, cars);
+		cars[i].respawn((*mapClass.getMapJunction(1, 1)));
+		int direction = cars[i].decideDirection((*mapClass.getMapJunction(1, 1)), cars[i].getEntryTurning());
+		ModelViewMatrix = cars[i].rotate(12.0f / fps, direction, cars[i].getEntryTurning(), (*mapClass.getMapJunction(1, 1)), fps, cars);
 		cars[i].Render(shader, ModelViewMatrix, ProjectionMatrix);
 	}
 	//mySquare.respawn(map[0]);
@@ -291,18 +290,27 @@ void init()
 		cars[i].setIdentifier(i);
 	}
 	
-	map.push_back(crossJunction);
-	map.push_back(road1);
-	map.push_back(road2);
+	mapClass.addJunction(emptyJunction, 0, 0);
+	mapClass.addJunction(road, 0, 1);
+	(*mapClass.getMapJunction(0, 1)).setOrientation(1);
+	mapClass.addJunction(emptyJunction, 0, 2);
+	mapClass.addJunction(road, 1, 0);
+	mapClass.addJunction(xJunction, 1, 1);
+	mapClass.addJunction(road, 1, 2);
+	mapClass.addJunction(emptyJunction, 2, 0);
+	mapClass.addJunction(road, 2, 1);
+	(*mapClass.getMapJunction(2, 1)).setOrientation(1);
+	mapClass.addJunction(emptyJunction, 2, 2);
+
 	
-	
+	//mapClass.addJunction();
 	for (int i = 0; i < mapClass.getMap().size(); i++) {
 		for (int j = 0; j < mapClass.getMap()[0].size(); j++) {
 			/*cout << "i= " << i << ", j= " << j << endl;*/
 			/*mapClass.getMap()[i][j] = crossJunction;*/
-			mapClass.addJunction(crossJunction, i, j);
-			cout << (*mapClass.getMapJunction(i, j)).getName() << endl;
-			Junction pointer = *mapClass.getMapJunction(i, j);
+			/*mapClass.addJunction(emptyJunction, i, j);*/
+			cout << "type = " << (*mapClass.getMapJunction(i, j)).getType() << endl;
+			//Junction pointer = *mapClass.getMapJunction(i, j);
 			(*mapClass.getMapJunction(i, j)).SetWidth(15.0f * scale * (2481 / 2481.0f));
 			(*mapClass.getMapJunction(i, j)).SetHeight(15.0f * scale);
 			(*mapClass.getMapJunction(i, j)).SetXpos(j* (*mapClass.getMapJunction(i, j)).getWidth());
@@ -313,6 +321,9 @@ void init()
 
 			switch ((*mapClass.getMapJunction(i, j)).getType())
 			{
+			case(RoadType::N):
+				(*mapClass.getMapJunction(i, j)).Init(shader, red, "textures/blank.png");
+				break;
 			case(RoadType::S):
 				(*mapClass.getMapJunction(i, j)).Init(shader, red, "textures/Road.png");
 				break;
@@ -325,10 +336,12 @@ void init()
 				break;
 			}
 			for (int k = 0; k < 4; k++) {
+				/*cout << "i= " << i << ", j= " << j << ", k= " << k << ", turning= " << (*mapClass.getMapJunction(i, j)).getTurnings()[k] << endl;*/
 				if ((*mapClass.getMapJunction(i, j)).getType() == RoadType::S) {
 					break;
 				}
 				if ((*mapClass.getMapJunction(i, j)).getTurnings()[k]) {
+					//cout << "k= " << k << endl;
 					(*mapClass.getMapJunction(i, j)).getTrafficLights()[k].SetHeight(scale);
 					(*mapClass.getMapJunction(i, j)).getTrafficLights()[k].SetWidth(scale / 2);
 					//std::cout << junction.getTrafficLights()[i].getHeight() << std::endl;
@@ -384,8 +397,8 @@ void init()
 	//	}
 	//}
 	Junction middle = mapClass.getMiddle();
-	cout << "x = " << middle.GetXPos() << ", y= " << middle.GetYPos() << endl;
-	readjustScreen(60, 0, 300, 60);
+	/*cout << "x = " << middle.GetXPos() << ", y= " << middle.GetYPos() << endl;*/
+	/*readjustScreen(60, 0, 300, 60);*/
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
@@ -431,40 +444,40 @@ void processKeys()
 {
 	if (Left)
 	{
-		Car car(glm::mat4(1.0f));
-		float red[3] = { 1,0,0 };
-		car.SetWidth(scale * (500 / 264.0f));
-		car.SetHeight(scale);
-		car.Init(shader, red, "textures/car.png");
-		car.newSpawn(map[0], 0);
-		cars.push_back(car);
-		//angle += 0.01f;
+		//Car car(glm::mat4(1.0f));
+		//float red[3] = { 1,0,0 };
+		//car.SetWidth(scale * (500 / 264.0f));
+		//car.SetHeight(scale);
+		//car.Init(shader, red, "textures/car.png");
+		//car.newSpawn(map[0], 0);
+		//cars.push_back(car);
+		////angle += 0.01f;
 		//speed = 0;
 		//mySquare.transform(1, 0);
 		//mySquare.IncPos(-0.1f, 0.0f);
 	}
 	if (Right)
 	{
-		Car car(glm::mat4(1.0f));
+		/*Car car(glm::mat4(1.0f));
 		float red[3] = { 1,0,0 };
 		car.SetWidth(scale * (500 / 264.0f));
 		car.SetHeight(scale);
 		car.Init(shader, red, "textures/car.png");
 		car.newSpawn(map[0], 1);
-		cars.push_back(car);
+		cars.push_back(car);*/
 		//angle -= 0.01f;
 		//mySquare.transform(1, 1);
 		//mySquare.IncPos(0.1f, 0.0f);
 	}
 	if (Up)
 	{
-		Car car(glm::mat4(1.0f));
+		/*Car car(glm::mat4(1.0f));
 		float red[3] = { 1,0,0 };
 		car.SetWidth(scale * (500 / 264.0f));
 		car.SetHeight(scale);
 		car.Init(shader, red, "textures/car.png");
 		car.newSpawn(map[0], 2);
-		cars.push_back(car);
+		cars.push_back(car);*/
 		//speed += 0.03f;
 		//mySquare.IncPos(0.0f, 0.1f);
 		//mySquare.SetYpos(0.0f);
@@ -473,13 +486,13 @@ void processKeys()
 	}
 	if (Down)
 	{
-		Car car(glm::mat4(1.0f));
+		/*Car car(glm::mat4(1.0f));
 		float red[3] = { 1,0,0 };
 		car.SetWidth(scale * (500 / 264.0f));
 		car.SetHeight(scale);
 		car.Init(shader, red, "textures/car.png");
 		car.newSpawn(map[0], 3);
-		cars.push_back(car);
+		cars.push_back(car);*/
 		//speed -= 0.03f;
 		//mySquare.IncPos(0.0f, -0.1f);
 		//direction = 1;

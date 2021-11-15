@@ -9,6 +9,7 @@
 #include <string>
 #include <array>
 #include <vector>
+#include <sstream>
 #include "glm\glm.hpp"
 #include "Sprite.h"
 #include "TrafficLight.h"
@@ -21,7 +22,7 @@ enum RoadType {
 };
 
 
-class Junction : public Sprite{
+class Junction : public Sprite {
 private:
     std::string name;
     std::array<bool, 4> turnings;
@@ -44,6 +45,7 @@ private:
     float xRightSquare;
     float ySideCentre;
     float xVerticalCentre;
+    std::string identifier;
 
 public:
 
@@ -52,25 +54,26 @@ public:
     ~Junction();
     std::string getName();
     void trafficLightFlow();
+    int getNumberTurnings();
     void calculateLines();
 
-    inline std::array<bool, 4> getTurnings(){
+    inline std::array<bool, 4> getTurnings() {
         return this->turnings;
     }
 
-    inline int getSpeedLimit(){
+    inline int getSpeedLimit() {
         return this->speedLimit;
     }
 
-    inline void setTurning(bool value, int index){
+    inline void setTurning(bool value, int index) {
         this->turnings[index] = value;
     }
 
-    inline void setSpeedLimit(int speedLimit){
+    inline void setSpeedLimit(int speedLimit) {
         this->speedLimit = speedLimit;
     }
 
-    inline bool getTurning(int index){
+    inline bool getTurning(int index) {
         return this->turnings[index];
     }
 
@@ -101,14 +104,21 @@ public:
         return this->orientation;
     }
 
+    inline void setOrientation(int orientation) {
+        this->orientation = orientation;
+    }
+
     inline RoadType getType() {
         return this->type;
     }
     //inline std::array<pointer, 4> getTrafficLights() {
     //    return this->trafficLights;
     //}
+    inline std::string getIdentifier(){
+        return this->identifier;
+    }
 
-    int getNumberTurnings();
+   
 
     
 

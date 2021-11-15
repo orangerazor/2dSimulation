@@ -33,6 +33,7 @@ Map::~Map()
 
 void Map::addJunction(Junction junction, int posY, int posX)
 {
+	
 	this->map[posY][posX] = junction;
 }
 
@@ -46,8 +47,9 @@ Junction Map::getMiddle() {
 	if (middle == 0) {
 		return this->map[0][0];
 	}
-	//std::cout << "middle=" << middle << std::endl;
-	//std::cout <<"y="<< this->height / middle << std::endl;
-	//std::cout <<"x="<< this->height % middle << std::endl;
-	return this->map[this->height / middle][this->height % middle];
+	std::cout << "middle=" << middle << std::endl;
+	std::cout <<"y="<< middle / this->height << std::endl;
+	std::cout <<"x="<< middle % this->height << std::endl;
+
+	return this->map[middle / this->height][middle % this->height];
 }
