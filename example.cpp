@@ -113,8 +113,42 @@ void display()
 		}
 		hourElapsed = 0;
 	}
+	if (hour > 15 && hour < 17) {
+		if (secondElapsed >= 500000) {
+			if (cars.size() < 8) {
+				Car toSpawn = Car(glm::mat4(1.0f));
+				toSpawn.SetWidth(scale * (500 / 264.0f));
+				toSpawn.SetHeight(scale);
+				toSpawn.setIdentifier(cars.size());
+				float red[3] = { 1,0,0 };
+				toSpawn.Init(shader, red, "textures/car.png");
+				cars.push_back(toSpawn);
+			}
+		}
+	}
+	else {
+		if (secondElapsed >= 1000000) {
+			if (cars.size() < 4) {
+				Car toSpawn = Car(glm::mat4(1.0f));
+				toSpawn.SetWidth(scale * (500 / 264.0f));
+				toSpawn.SetHeight(scale);
+				toSpawn.setIdentifier(cars.size());
+				float red[3] = { 1,0,0 };
+				toSpawn.Init(shader, red, "textures/car.png");
+				cars.push_back(toSpawn);
+			}
+		}
+	}
 	if (secondElapsed >= 1000000) {
-		
+		//if (cars.size() < 8) {
+		//	Car toSpawn = Car(glm::mat4(1.0f));
+		//	toSpawn.SetWidth(scale * (500 / 264.0f));
+		//	toSpawn.SetHeight(scale);
+		//	toSpawn.setIdentifier(cars.size());
+		//	float red[3] = { 1,0,0 };
+		//	toSpawn.Init(shader, red, "textures/car.png");
+		//	cars.push_back(toSpawn);
+		//}
 		for (int i = 0; i < mapClass.getMap().size(); i++) {
 			for (int j = 0; j < mapClass.getMap()[0].size(); j++) {
 				(*mapClass.getMapJunction(i, j)).trafficLightFlow();
@@ -216,12 +250,22 @@ void display()
 	//std::cout << first.GetXPos() << ", " << first.GetYPos() << std::endl;
 
 	glm::mat4 ModelViewMatrix = glm::mat4(1.0f);
-	ViewMatrix = glm::lookAt(glm::vec3(100, 0, 0), glm::vec3(100, 0, 0), glm::vec3(0.0f, 0.0f, 1.0f));
-	ModelViewMatrix = glm::translate(ViewMatrix, glm::vec3(0, 0, 20));
+	ViewMatrix = glm::lookAt(glm::vec3(0, 0, 1), glm::vec3(20, 0, 0), glm::vec3(0.0f, 0.0f, 1.0f));
+	//ProjectionMatrix = ViewMatrix;//glm::translate(ViewMatrix, glm::vec3(0, 0, 20));
 	for (int i = 0; i < cars.size(); i++) {
 		cars[i].respawn((*mapClass.getMapJunction(0, 0)));
 		int direction = cars[i].decideDirection((*mapClass.getMapJunction(0, 0)), cars[i].getEntryTurning());
-		ModelViewMatrix = cars[i].rotate(12.0f / fps, direction, cars[i].getEntryTurning(), (*mapClass.getMapJunction(0, 0)), fps, cars);
+		ModelViewMatrix =  cars[i].rotate(12.0f / fps, direction, cars[i].getEntryTurning(), (*mapClass.getMapJunction(0, 0)), fps, cars);
+		for (int j = 0; j < cars.size(); j++) {
+			if (j == i) {
+				continue;
+			}
+			if (cars[i].IsInCollision(cars[j].GetOBB())) {
+				cars[i].respawn((*mapClass.getMapJunction(0, 0)));
+				int direction = cars[i].decideDirection((*mapClass.getMapJunction(0, 0)), cars[i].getEntryTurning());
+				ModelViewMatrix = cars[i].rotate(12.0f / fps, direction, cars[i].getEntryTurning(), (*mapClass.getMapJunction(0, 0)), fps, cars);
+			}
+		}
 		cars[i].Render(shader, ModelViewMatrix, ProjectionMatrix);
 	}
 	//mySquare.respawn(map[0]);
@@ -283,8 +327,8 @@ void init()
 	mySquare.SetHeight(scale);
 	car2.SetWidth(scale * (500 / 264.0f));
 	car2.SetHeight(scale);
-	cars.push_back(mySquare);
-	cars.push_back(car2);
+	//cars.push_back(mySquare);
+	//cars.push_back(car2);
 	for (int i = 0; i < cars.size(); i++) {
 		cars[i].SetWidth(scale * (500 / 264.0f));
 		cars[i].SetHeight(scale);
