@@ -136,7 +136,8 @@ glm::mat4 Car::turn(float speed, int direction) {
 
 int Car::entryPoint(Junction junction)
 {
-	if (currentJunction == junction.getName()) {
+	//convert to use a junction variable
+	if (currentJunction == junction.getIdentifier()) {
 		return entryTurning;
 	}
 	int entryPoint2 = 0;
@@ -190,7 +191,7 @@ glm::mat4 Car::faceJunction(int entrance, glm::mat4 ModelViewMatrix) {
 }
 
 int Car::decideDirection(Junction junction, int entryPoint) {
-	if (currentJunction == junction.getName()) {
+	if (currentJunction == junction.getIdentifier()) {
 		return exit;
 	}
 	int numTurns = junction.getTurnings().size();
@@ -206,7 +207,7 @@ int Car::decideDirection(Junction junction, int entryPoint) {
 	//srand(time(NULL));
 	int random = rand() % possibleTurnings.size();
 
-	currentJunction = junction.getName();
+	currentJunction = junction.getIdentifier();
 	random = possibleTurnings.at(random);
 	//std::cout << entryPoint << std::endl;
 	//std::cout << random << std::endl;
@@ -470,40 +471,43 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, Junction junct
 	std::cout << std::endl;
 	glm::vec3 forVec2 = forVec;
 	/*std::cout << "green = " << junction.getTrafficLights()[entryPoint].getLights()[2] << std::endl;*/
-	switch (entryPoint) {
-	case(0):
-		if (m_xpos <= junction.getXLeftSquare() && m_xpos > (junction.getXLeftSquare() - (m_Height)) && !junction.getTrafficLights()[entryPoint].getLights()[2]) {
-			speed = 0;
+	if (junction.getType() == RoadType::T || junction.getType() == RoadType::X) { //for checking that the road actually has traffic lights to obey by
+		switch (entryPoint) {
+		case(0):
+			if (m_xpos <= junction.getXLeftSquare() && m_xpos > (junction.getXLeftSquare() - (m_Height)) && !junction.getTrafficLights()[entryPoint].getLights()[2]) {
+				speed = 0;
+			}
+			if (m_xpos >= junction.getXLeftSquare() + (junction.getWidth() * 1 / 12) && m_xpos <= junction.GetXPos() && junction.getTrafficLights()[1].isGreen() && direction == 1) {
+				speed = 0;
+			}
+			break;
+		case(1):
+			if (m_xpos >= junction.getXRightSquare() && m_xpos < (junction.getXRightSquare() + (m_Height)) && !junction.getTrafficLights()[entryPoint].getLights()[2]) {
+				speed = 0;
+			}
+			if (m_xpos <= junction.getXRightSquare() - (junction.getWidth() * 1 / 12) && m_xpos >= junction.GetXPos() && junction.getTrafficLights()[0].isGreen() && direction == 1) {
+				speed = 0;
+			}
+			break;
+		case(2):
+			if (m_ypos >= junction.getYTopSquare() && m_ypos < (junction.getYTopSquare() + (m_Height)) && !junction.getTrafficLights()[entryPoint].getLights()[2]) {
+				speed = 0;
+			}
+			if (m_ypos <= junction.getYTopSquare() - (junction.getHeight() * 1 / 12) && m_ypos >= junction.GetYPos() && junction.getTrafficLights()[3].isGreen() && direction == 1) {
+				speed = 0;
+			}
+			break;
+		case(3):
+			if (m_ypos <= junction.getYBotSquare() && m_ypos > (junction.getYBotSquare() - (m_Height)) && !junction.getTrafficLights()[entryPoint].getLights()[2]) {
+				speed = 0;
+			}
+			if (m_ypos >= junction.getYBotSquare() + (junction.getHeight() * 1 / 12) && m_ypos <= junction.GetYPos() && junction.getTrafficLights()[2].isGreen() && direction == 1) {
+				speed = 0;
+			}
+			break;
 		}
-		if (m_xpos >= junction.getXLeftSquare() + (junction.getWidth() * 1/12) && m_xpos <= junction.GetXPos() && junction.getTrafficLights()[1].isGreen() && direction == 1) {
-			speed = 0;
-		}
-		break;
-	case(1):
-		if (m_xpos >= junction.getXRightSquare() && m_xpos < (junction.getXRightSquare() + (m_Height)) && !junction.getTrafficLights()[entryPoint].getLights()[2]) {
-			speed = 0;
-		}
-		if (m_xpos <= junction.getXRightSquare() - (junction.getWidth() * 1/12) && m_xpos >= junction.GetXPos() && junction.getTrafficLights()[0].isGreen() && direction == 1) {
-			speed = 0;
-		}
-		break;
-	case(2):
-		if (m_ypos >= junction.getYTopSquare() && m_ypos < (junction.getYTopSquare() + (m_Height)) && !junction.getTrafficLights()[entryPoint].getLights()[2]) {
-			speed = 0;
-		}
-		if (m_ypos <= junction.getYTopSquare() - (junction.getHeight() * 1/12) && m_ypos >= junction.GetYPos() && junction.getTrafficLights()[3].isGreen() && direction == 1) {
-			speed = 0;
-		}
-		break;
-	case(3):
-		if (m_ypos <= junction.getYBotSquare() && m_ypos > (junction.getYBotSquare() - (m_Height)) && !junction.getTrafficLights()[entryPoint].getLights()[2]) {
-			speed = 0;
-		}
-		if (m_ypos >= junction.getYBotSquare() + (junction.getHeight() * 1/12) && m_ypos <= junction.GetYPos() && junction.getTrafficLights()[2].isGreen() && direction == 1) {
-			speed = 0;
-		}
-		break;
 	}
+	
 	switch (direction) {
 	case(-1):
 		switch (entryPoint) {

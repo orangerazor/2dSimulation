@@ -12,6 +12,8 @@ private:
 	int exitTurning = -1;
 	int exit;
 	float angle;
+	//Junction* currentJunction;
+
 public:
 	Car();
 	Car(glm::mat4 rotation);
