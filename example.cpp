@@ -245,17 +245,26 @@ void display()
 	//	junction.getTrafficLights()[i].Render(shader, moveLight, ProjectionMatrix);
 	//}
 	//std::cout << first.GetXPos() << ", " << first.GetYPos() << std::endl;
-	for (int k = 0; k < mapClass.getMap().size(); k++) {
-		for (int l = 0; l < mapClass.getMap().size(); l++) {
-
-		}
-	}
 
 	glm::mat4 ModelViewMatrix = glm::mat4(1.0f);
 	ViewMatrix = glm::lookAt(glm::vec3(0, 0, 1), glm::vec3(20, 0, 0), glm::vec3(0.0f, 0.0f, 1.0f));
+	//works out if each car is colliding with a junction, else it respawns it
+	for (int i = 0; i < cars.size(); i++) {
+		for (int j = 0; j < mapClass.getMap().size(); j++) {
+			for (int k = 0; k < mapClass.getMap()[0].size(); k++) {
+				if (cars[i].IsInCollision(mapClass.getMapJunction(j, k)->GetOBB()) && cars[i].getJunction() != mapClass.getMapJunction(j, k)) {
+					cars[i].setJunction((mapClass.getMapJunction(j, k)));
+					break; break; break;
+				}
+			}
+		}
+		cars[i].respawn((*mapClass.getMapJunction(0, 0)));
+	}
+
+	
 	//ProjectionMatrix = ViewMatrix;//glm::translate(ViewMatrix, glm::vec3(0, 0, 20));
 	for (int i = 0; i < cars.size(); i++) {
-		cars[i].respawn((*mapClass.getMapJunction(0, 0)));
+		/*cars[i].respawn((*mapClass.getMapJunction(0, 0)));*/
 		int direction = cars[i].decideDirection((*mapClass.getMapJunction(0, 0)), cars[i].getEntryTurning());
 		ModelViewMatrix =  cars[i].rotate(12.0f / fps, direction, cars[i].getEntryTurning(), (*mapClass.getMapJunction(0, 0)), fps, cars);
 		for (int j = 0; j < cars.size(); j++) {
@@ -338,7 +347,7 @@ void init()
 	}
 	
 	mapClass.addJunction(xJunction, 0, 0);
-	mapClass.addJunction(road, 0, 1);
+	/*mapClass.addJunction(road, 0, 1);*/
 	//(*mapClass.getMapJunction(0, 1)).setOrientation(1);
 	//mapClass.addJunction(emptyJunction, 0, 2);
 	//mapClass.addJunction(road, 1, 0);

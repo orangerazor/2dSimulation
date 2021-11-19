@@ -12,7 +12,7 @@ private:
 	int exitTurning = -1;
 	int exit;
 	float angle;
-	//Junction* currentJunction;
+	Junction* junction;
 
 public:
 	Car();
@@ -64,5 +64,13 @@ public:
 	}
 	inline float getAngle() {
 		return angle;
+	}
+
+	inline void setJunction(Junction *junction) {
+		this->junction = junction;
+	}
+
+	inline Junction* getJunction() {
+		return this->junction;
 	}
 };
