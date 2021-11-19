@@ -248,33 +248,47 @@ void display()
 
 	glm::mat4 ModelViewMatrix = glm::mat4(1.0f);
 	ViewMatrix = glm::lookAt(glm::vec3(0, 0, 1), glm::vec3(20, 0, 0), glm::vec3(0.0f, 0.0f, 1.0f));
+
+
 	//works out if each car is colliding with a junction, else it respawns it
 	for (int i = 0; i < cars.size(); i++) {
 		for (int j = 0; j < mapClass.getMap().size(); j++) {
 			for (int k = 0; k < mapClass.getMap()[0].size(); k++) {
-				if (cars[i].IsInCollision(mapClass.getMapJunction(j, k)->GetOBB()) && cars[i].getJunction() != mapClass.getMapJunction(j, k)) {
-					cars[i].setJunction((mapClass.getMapJunction(j, k)));
-					break; break; break;
+				//std::cout << "j = " << j << ", k = " << k << ", type = " << mapClass.getMapJunction(j, k)->getType() << std::endl;
+				if (cars[i].IsInCollision(mapClass.getMapJunction(j, k)->GetOBB())) {
+					//std::cout << "j = " << j << ", k = " << k << ", type = " << mapClass.getMapJunction(j, k)->getType() << std::endl;
+					//std::cout << cars[i].getJunction() << endl;
+					//std::cout << mapClass.getMapJunction(j, k) << endl;
+					if (cars[i].getJunction() != mapClass.getMapJunction(j, k)) {
+						cars[i].setJunction((mapClass.getMapJunction(j, k)));
+					}
+
+					goto end;
 				}
+
+				
 			}
 		}
-		cars[i].respawn((*mapClass.getMapJunction(0, 0)));
+		cout << "here" << endl;
+		cars[i].respawn((mapClass.getMapJunction(0, 0)));
+	end:
+		std::cout;
 	}
 
 	
 	//ProjectionMatrix = ViewMatrix;//glm::translate(ViewMatrix, glm::vec3(0, 0, 20));
 	for (int i = 0; i < cars.size(); i++) {
-		/*cars[i].respawn((*mapClass.getMapJunction(0, 0)));*/
-		int direction = cars[i].decideDirection((*mapClass.getMapJunction(0, 0)), cars[i].getEntryTurning());
-		ModelViewMatrix =  cars[i].rotate(12.0f / fps, direction, cars[i].getEntryTurning(), (*mapClass.getMapJunction(0, 0)), fps, cars);
+		cars[i].respawn(cars[i].getJunction());
+		int direction = cars[i].decideDirection(cars[i].getEntryTurning());
+		ModelViewMatrix =  cars[i].rotate(12.0f / fps, direction, cars[i].getEntryTurning(), fps, cars);
 		for (int j = 0; j < cars.size(); j++) {
 			if (j == i) {
 				continue;
 			}
 			if (cars[i].IsInCollision(cars[j].GetOBB())) {
 				//cars[i].respawn((*mapClass.getMapJunction(0, 0)));
-				int direction = cars[i].decideDirection((*mapClass.getMapJunction(0, 0)), cars[i].getEntryTurning());
-				ModelViewMatrix = cars[i].rotate(12.0f / fps, direction, cars[i].getEntryTurning(), (*mapClass.getMapJunction(0, 0)), fps, cars);
+				int direction = cars[i].decideDirection(cars[i].getEntryTurning());
+				ModelViewMatrix = cars[i].rotate(12.0f / fps, direction, cars[i].getEntryTurning(), fps, cars);
 			}
 		}
 		cars[i].Render(shader, ModelViewMatrix, ProjectionMatrix);
@@ -346,8 +360,8 @@ void init()
 		cars[i].setIdentifier(i);
 	}
 	
-	mapClass.addJunction(xJunction, 0, 0);
-	/*mapClass.addJunction(road, 0, 1);*/
+	mapClass.addJunction(road, 0, 0);
+	mapClass.addJunction(road, 0, 1);
 	//(*mapClass.getMapJunction(0, 1)).setOrientation(1);
 	//mapClass.addJunction(emptyJunction, 0, 2);
 	//mapClass.addJunction(road, 1, 0);
@@ -364,13 +378,13 @@ void init()
 			/*cout << "i= " << i << ", j= " << j << endl;*/
 			/*mapClass.getMap()[i][j] = crossJunction;*/
 			//mapClass.addJunction(crossJunction, i, j);
-			cout << "type = " << (*mapClass.getMapJunction(i, j)).getType() << endl;
+			//cout << "type = " << (*mapClass.getMapJunction(i, j)).getType() << endl;
 			Junction pointer = *mapClass.getMapJunction(i, j);
 			(*mapClass.getMapJunction(i, j)).SetWidth(15.0f * scale * (2481 / 2481.0f));
 			(*mapClass.getMapJunction(i, j)).SetHeight(15.0f * scale);
 			(*mapClass.getMapJunction(i, j)).SetXpos(j* (*mapClass.getMapJunction(i, j)).getWidth());
 			(*mapClass.getMapJunction(i, j)).SetYpos(-i* (*mapClass.getMapJunction(i, j)).getHeight());
-			cout << "x = " << (*mapClass.getMapJunction(i, j)).GetXPos() << ", y = " << (*mapClass.getMapJunction(i, j)).GetYPos() << endl;
+			//cout << "x = " << (*mapClass.getMapJunction(i, j)).GetXPos() << ", y = " << (*mapClass.getMapJunction(i, j)).GetYPos() << endl;
 			(*mapClass.getMapJunction(i, j)).calculateLines();
 			//cout << (*mapClass.getMapJunction(i, j)).getYBotSquare();
 

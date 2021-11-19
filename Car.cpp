@@ -134,10 +134,10 @@ glm::mat4 Car::turn(float speed, int direction) {
 	return glm::mat4(1.0f);
 }
 
-int Car::entryPoint(Junction junction)
+int Car::entryPoint()
 {
 	//convert to use a junction variable
-	if (currentJunction == junction.getIdentifier()) {
+	if (currentJunction == (*junction).getIdentifier()) {
 		return entryTurning;
 	}
 	int entryPoint2 = 0;
@@ -146,12 +146,12 @@ int Car::entryPoint(Junction junction)
 		float xVert = INT_MAX;
 		float yVert = INT_MAX;
 		if (i < 3) {
-			xVert = (junction.GetOBB().vertOriginal[i].x + junction.GetOBB().vertOriginal[i + 1].x) / 2;
-			yVert = (junction.GetOBB().vertOriginal[i].y + junction.GetOBB().vertOriginal[i + 1].y) / 2;
+			xVert = ((*junction).GetOBB().vertOriginal[i].x + (*junction).GetOBB().vertOriginal[i + 1].x) / 2;
+			yVert = ((*junction).GetOBB().vertOriginal[i].y + (*junction).GetOBB().vertOriginal[i + 1].y) / 2;
 		}
 		else {
-			xVert = (junction.GetOBB().vertOriginal[i].x + junction.GetOBB().vertOriginal[0].x) / 2;
-			yVert = (junction.GetOBB().vertOriginal[i].y + junction.GetOBB().vertOriginal[0].y) / 2;
+			xVert = ((*junction).GetOBB().vertOriginal[i].x + (*junction).GetOBB().vertOriginal[0].x) / 2;
+			yVert = ((*junction).GetOBB().vertOriginal[i].y + (*junction).GetOBB().vertOriginal[0].y) / 2;
 		}
 		//std::cout << xVert << ", " << yVert << std::endl;
 		float distanceFromEdge = ((m_xpos - xVert) * (m_xpos - xVert)) + ((m_ypos - yVert) * (m_ypos - yVert));
@@ -190,24 +190,24 @@ glm::mat4 Car::faceJunction(int entrance, glm::mat4 ModelViewMatrix) {
 	}
 }
 
-int Car::decideDirection(Junction junction, int entryPoint) {
-	if (currentJunction == junction.getIdentifier()) {
+int Car::decideDirection(int entryPoint) {
+	if (currentJunction == (*junction).getIdentifier()) {
 		return exit;
 	}
-	int numTurns = junction.getTurnings().size();
+	int numTurns = (*junction).getTurnings().size();
 	std::vector<int> possibleTurnings;
 	for (int i = 0; i < numTurns; i++) {
 		if (i == entryPoint) {
 			continue;
 		}
-		if (junction.getTurning(i) == true) {
+		if ((*junction).getTurning(i) == true) {
 			possibleTurnings.push_back(i);
 		}
 	}
 	//srand(time(NULL));
 	int random = rand() % possibleTurnings.size();
 
-	currentJunction = junction.getIdentifier();
+	currentJunction = (*junction).getIdentifier();
 	random = possibleTurnings.at(random);
 	//std::cout << entryPoint << std::endl;
 	//std::cout << random << std::endl;
@@ -272,14 +272,15 @@ int Car::decideDirection(Junction junction, int entryPoint) {
 	return random;
 }
 
-void Car::respawn(Junction junction, int presetEntry) {
+void Car::respawn(Junction *junction, int presetEntry) {
+	this->junction = junction;
 	//std::cout << "exitTurning = " << exitTurning << std::endl;
 	switch (exitTurning) {
 	case(0):
-		if (m_xpos <= (junction.GetXPos() - (junction.getWidth() / 2))) {
+		if (m_xpos <= ((*junction).GetXPos() - ((*junction).getWidth() / 2))) {
 			std::cout << "reset time " << std::endl;
 			//std::cout << "angle = " << angle << std::endl;
-			int newSpawn = this->setSpawn(junction);
+			int newSpawn = this->setSpawn();
 			switch (newSpawn) {
 			case(0):
 				angle -= glm::radians(180.0f);
@@ -297,9 +298,9 @@ void Car::respawn(Junction junction, int presetEntry) {
 		}
 		break;
 	case(1):
-		if (m_xpos >= (junction.GetXPos() + (junction.getWidth() / 2))) {
+		if (m_xpos >= ((*junction).GetXPos() + ((*junction).getWidth() / 2))) {
 			std::cout << "reset time " << std::endl;
-			int newSpawn = this->setSpawn(junction);
+			int newSpawn = this->setSpawn();
 			switch (newSpawn) {
 			case(0):
 				break;
@@ -317,9 +318,9 @@ void Car::respawn(Junction junction, int presetEntry) {
 		}
 		break;
 	case(2):
-		if (m_ypos >= (junction.GetYPos() + (junction.getHeight() / 2))) {
+		if (m_ypos >= ((*junction).GetYPos() + ((*junction).getHeight() / 2))) {
 			std::cout << "reset time " << std::endl;
-			int newSpawn = this->setSpawn(junction);
+			int newSpawn = this->setSpawn();
 			switch (newSpawn) {
 			case(0):
 				angle -= glm::radians(90.0f);
@@ -337,9 +338,9 @@ void Car::respawn(Junction junction, int presetEntry) {
 		}
 		break;
 	case(3):
-		if (m_ypos <= (junction.GetYPos() - (junction.getHeight() / 2))) {
+		if (m_ypos <= ((*junction).GetYPos() - ((*junction).getHeight() / 2))) {
 			std::cout << "reset time " << std::endl;
-			int newSpawn = this->setSpawn(junction);
+			int newSpawn = this->setSpawn();
 			switch (newSpawn) {
 			case(0):
 				angle -= glm::radians(270.0f);
@@ -358,8 +359,8 @@ void Car::respawn(Junction junction, int presetEntry) {
 		break;
 	default:
 		if (presetEntry == -1) {
-			this->setSpawn(junction);
-			entryTurning = this->entryPoint(junction);
+			this->setSpawn();
+			entryTurning = this->entryPoint();
 			//int direction = this->decideDirection(junction, entryTurning);
 			switch (entryTurning) {
 			case(0):
@@ -378,57 +379,57 @@ void Car::respawn(Junction junction, int presetEntry) {
 		else {
 			switch (presetEntry) {
 			case(0):
-				this->SetXpos(junction.GetOBB().vertOriginal[0].x + (junction.getWidth() * 1 / 6));
-				this->SetYpos(junction.GetOBB().vertOriginal[0].y + (junction.getHeight() * 7 / 12));
+				this->SetXpos((*junction).GetOBB().vertOriginal[0].x + ((*junction).getWidth() * 1 / 6));
+				this->SetYpos((*junction).GetOBB().vertOriginal[0].y + ((*junction).getHeight() * 7 / 12));
 				break;
 			case(1):
-				this->SetXpos(junction.GetOBB().vertOriginal[0].x + (junction.getWidth() * 5 / 6));
-				this->SetYpos(junction.GetOBB().vertOriginal[0].y + (junction.getHeight() * 5 / 12));
+				this->SetXpos((*junction).GetOBB().vertOriginal[0].x + ((*junction).getWidth() * 5 / 6));
+				this->SetYpos((*junction).GetOBB().vertOriginal[0].y + ((*junction).getHeight() * 5 / 12));
 				break;
 			case(2):
-				this->SetXpos(junction.GetOBB().vertOriginal[0].x + (junction.getWidth() * 7 / 12));
-				this->SetYpos(junction.GetOBB().vertOriginal[0].y + (junction.getHeight() * 5 / 6));
+				this->SetXpos((*junction).GetOBB().vertOriginal[0].x + ((*junction).getWidth() * 7 / 12));
+				this->SetYpos((*junction).GetOBB().vertOriginal[0].y + ((*junction).getHeight() * 5 / 6));
 				break;
 			case(3):
-				this->SetXpos(junction.GetOBB().vertOriginal[0].x + ((junction.getWidth() * 5 / 12)));
-				this->SetYpos(junction.GetOBB().vertOriginal[0].y + (junction.getHeight() * 1 / 6));
+				this->SetXpos((*junction).GetOBB().vertOriginal[0].x + (((*junction).getWidth() * 5 / 12)));
+				this->SetYpos((*junction).GetOBB().vertOriginal[0].y + ((*junction).getHeight() * 1 / 6));
 				break;
 			}
 		}
 	}
 }
 
-void Car::newSpawn(Junction junction, int entry) {
+void Car::newSpawn(int entry) {
 	switch (entry) {
 	case(0):
-		this->SetXpos(junction.GetOBB().vertOriginal[0].x + (junction.getWidth() * 1/6));
-		this->SetYpos(junction.GetOBB().vertOriginal[0].y + (junction.getHeight() * 7 / 12));
+		this->SetXpos((*junction).GetOBB().vertOriginal[0].x + ((*junction).getWidth() * 1/6));
+		this->SetYpos((*junction).GetOBB().vertOriginal[0].y + ((*junction).getHeight() * 7 / 12));
 		//angle += glm::radians(180.0f);
 		break;
 	case(1):
-		this->SetXpos(junction.GetOBB().vertOriginal[0].x + (junction.getWidth() * 5/6));
-		this->SetYpos(junction.GetOBB().vertOriginal[0].y + (junction.getHeight() * 5 / 12));
+		this->SetXpos((*junction).GetOBB().vertOriginal[0].x + ((*junction).getWidth() * 5/6));
+		this->SetYpos((*junction).GetOBB().vertOriginal[0].y + ((*junction).getHeight() * 5 / 12));
 		//angle += glm::radians(180.0f);
 		break;
 	case(2):
-		this->SetXpos(junction.GetOBB().vertOriginal[0].x + (junction.getWidth() * 7 / 12));
-		this->SetYpos(junction.GetOBB().vertOriginal[0].y + (junction.getHeight() * 5/6));
+		this->SetXpos((*junction).GetOBB().vertOriginal[0].x + ((*junction).getWidth() * 7 / 12));
+		this->SetYpos((*junction).GetOBB().vertOriginal[0].y + ((*junction).getHeight() * 5/6));
 		//angle += glm::radians(180.0f);
 		break;
 	case(3):
-		this->SetXpos(junction.GetOBB().vertOriginal[0].x + ((junction.getWidth() * 5 / 12)));
-		this->SetYpos(junction.GetOBB().vertOriginal[0].y + (junction.getHeight() * 1 / 6));
+		this->SetXpos((*junction).GetOBB().vertOriginal[0].x + (((*junction).getWidth() * 5 / 12)));
+		this->SetYpos((*junction).GetOBB().vertOriginal[0].y + ((*junction).getHeight() * 1 / 6));
 		//angle += glm::radians(180.0f);
 		break;
 	}
 	currentJunction = "";
 }
 
-int Car::setSpawn(Junction junction) {
-	int numTurns = junction.getTurnings().size();
+int Car::setSpawn() {
+	int numTurns = (*junction).getTurnings().size();
 	std::vector<int> possibleTurnings;
 	for (int i = 0; i < numTurns; i++) {
-		if (junction.getTurning(i) == true) {
+		if ((*junction).getTurning(i) == true) {
 			possibleTurnings.push_back(i);
 		}
 	}
@@ -437,20 +438,20 @@ int Car::setSpawn(Junction junction) {
 	int turningIndex = possibleTurnings.at(random);
 	switch (turningIndex) {
 	case(0):
-		this->SetXpos(junction.GetOBB().vertOriginal[0].x);
-		this->SetYpos(junction.GetOBB().vertOriginal[0].y + (junction.getHeight() * 7 / 12));
+		this->SetXpos((*junction).GetOBB().vertOriginal[0].x);
+		this->SetYpos((*junction).GetOBB().vertOriginal[0].y + ((*junction).getHeight() * 7 / 12));
 		break;
 	case(1):
-		this->SetXpos(junction.GetOBB().vertOriginal[0].x + (junction.getWidth()));
-		this->SetYpos(junction.GetOBB().vertOriginal[0].y + (junction.getHeight() * 5 / 12));
+		this->SetXpos((*junction).GetOBB().vertOriginal[0].x + ((*junction).getWidth()));
+		this->SetYpos((*junction).GetOBB().vertOriginal[0].y + ((*junction).getHeight() * 5 / 12));
 		break;
 	case(2):
-		this->SetXpos(junction.GetOBB().vertOriginal[0].x + (junction.getWidth() * 7 / 12));
-		this->SetYpos(junction.GetOBB().vertOriginal[0].y + (junction.getHeight()));
+		this->SetXpos((*junction).GetOBB().vertOriginal[0].x + ((*junction).getWidth() * 7 / 12));
+		this->SetYpos((*junction).GetOBB().vertOriginal[0].y + ((*junction).getHeight()));
 		break;
 	case(3):
-		this->SetXpos(junction.GetOBB().vertOriginal[0].x + ((junction.getWidth() * 5 / 12)));
-		this->SetYpos(junction.GetOBB().vertOriginal[0].y);
+		this->SetXpos((*junction).GetOBB().vertOriginal[0].x + (((*junction).getWidth() * 5 / 12)));
+		this->SetYpos((*junction).GetOBB().vertOriginal[0].y);
 		break;
 	}
 	currentJunction = "";
@@ -458,7 +459,7 @@ int Car::setSpawn(Junction junction) {
 	return turningIndex;
 }
 
-glm::mat4 Car::rotate(float speed, int direction, int entryPoint, Junction junction, float fps, std::vector<Car> collideCheck)
+glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std::vector<Car> collideCheck)
 {
 	for (int i = 0; i < collideCheck.size(); i++) {
 		if (collideCheck[i] == this) {
@@ -471,37 +472,37 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, Junction junct
 	std::cout << std::endl;
 	glm::vec3 forVec2 = forVec;
 	/*std::cout << "green = " << junction.getTrafficLights()[entryPoint].getLights()[2] << std::endl;*/
-	if (junction.getType() == RoadType::T || junction.getType() == RoadType::X) { //for checking that the road actually has traffic lights to obey by
+	if ((*junction).getType() == RoadType::T || (*junction).getType() == RoadType::X) { //for checking that the road actually has traffic lights to obey by
 		switch (entryPoint) {
 		case(0):
-			if (m_xpos <= junction.getXLeftSquare() && m_xpos > (junction.getXLeftSquare() - (m_Height)) && !junction.getTrafficLights()[entryPoint].getLights()[2]) {
+			if (m_xpos <= (*junction).getXLeftSquare() && m_xpos > ((*junction).getXLeftSquare() - (m_Height)) && !(*junction).getTrafficLights()[entryPoint].getLights()[2]) {
 				speed = 0;
 			}
-			if (m_xpos >= junction.getXLeftSquare() + (junction.getWidth() * 1 / 12) && m_xpos <= junction.GetXPos() && junction.getTrafficLights()[1].isGreen() && direction == 1) {
+			if (m_xpos >= (*junction).getXLeftSquare() + ((*junction).getWidth() * 1 / 12) && m_xpos <= (*junction).GetXPos() && (*junction).getTrafficLights()[1].isGreen() && direction == 1) {
 				speed = 0;
 			}
 			break;
 		case(1):
-			if (m_xpos >= junction.getXRightSquare() && m_xpos < (junction.getXRightSquare() + (m_Height)) && !junction.getTrafficLights()[entryPoint].getLights()[2]) {
+			if (m_xpos >= (*junction).getXRightSquare() && m_xpos < ((*junction).getXRightSquare() + (m_Height)) && !(*junction).getTrafficLights()[entryPoint].getLights()[2]) {
 				speed = 0;
 			}
-			if (m_xpos <= junction.getXRightSquare() - (junction.getWidth() * 1 / 12) && m_xpos >= junction.GetXPos() && junction.getTrafficLights()[0].isGreen() && direction == 1) {
+			if (m_xpos <= (*junction).getXRightSquare() - ((*junction).getWidth() * 1 / 12) && m_xpos >= (*junction).GetXPos() && (*junction).getTrafficLights()[0].isGreen() && direction == 1) {
 				speed = 0;
 			}
 			break;
 		case(2):
-			if (m_ypos >= junction.getYTopSquare() && m_ypos < (junction.getYTopSquare() + (m_Height)) && !junction.getTrafficLights()[entryPoint].getLights()[2]) {
+			if (m_ypos >= (*junction).getYTopSquare() && m_ypos < ((*junction).getYTopSquare() + (m_Height)) && !(*junction).getTrafficLights()[entryPoint].getLights()[2]) {
 				speed = 0;
 			}
-			if (m_ypos <= junction.getYTopSquare() - (junction.getHeight() * 1 / 12) && m_ypos >= junction.GetYPos() && junction.getTrafficLights()[3].isGreen() && direction == 1) {
+			if (m_ypos <= (*junction).getYTopSquare() - ((*junction).getHeight() * 1 / 12) && m_ypos >= (*junction).GetYPos() && (*junction).getTrafficLights()[3].isGreen() && direction == 1) {
 				speed = 0;
 			}
 			break;
 		case(3):
-			if (m_ypos <= junction.getYBotSquare() && m_ypos > (junction.getYBotSquare() - (m_Height)) && !junction.getTrafficLights()[entryPoint].getLights()[2]) {
+			if (m_ypos <= (*junction).getYBotSquare() && m_ypos > ((*junction).getYBotSquare() - (m_Height)) && !(*junction).getTrafficLights()[entryPoint].getLights()[2]) {
 				speed = 0;
 			}
-			if (m_ypos >= junction.getYBotSquare() + (junction.getHeight() * 1 / 12) && m_ypos <= junction.GetYPos() && junction.getTrafficLights()[2].isGreen() && direction == 1) {
+			if (m_ypos >= (*junction).getYBotSquare() + ((*junction).getHeight() * 1 / 12) && m_ypos <= (*junction).GetYPos() && (*junction).getTrafficLights()[2].isGreen() && direction == 1) {
 				speed = 0;
 			}
 			break;
@@ -516,7 +517,7 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, Junction junct
 			//	speed = 0;
 			//	break;
 			//}
-			if (m_xpos >= junction.getXLeftSquare() && m_ypos <= junction.getYTopSquare()) {
+			if (m_xpos >= (*junction).getXLeftSquare() && m_ypos <= (*junction).getYTopSquare()) {
 				angle += 2.4f / fps;
 			}
 			break;
@@ -525,7 +526,7 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, Junction junct
 			//	speed = 0;
 			//	break;
 			//}
-			if (m_xpos <= junction.getXRightSquare() && m_ypos >= junction.getYBotSquare()) {
+			if (m_xpos <= (*junction).getXRightSquare() && m_ypos >= (*junction).getYBotSquare()) {
 				angle += 2.4f / fps;
 			}
 			break;
@@ -534,7 +535,7 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, Junction junct
 			//	speed = 0;
 			//	break;
 			//}
-			if (m_ypos <= junction.getYTopSquare() && m_xpos <= junction.getXRightSquare()) {
+			if (m_ypos <= (*junction).getYTopSquare() && m_xpos <= (*junction).getXRightSquare()) {
 				angle += 2.4f / fps;
 			}
 			break;
@@ -543,7 +544,7 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, Junction junct
 			//	speed = 0;
 			//	break;
 			//}
-			if (m_ypos >= junction.getYBotSquare() && m_xpos >= junction.getXLeftSquare()) {
+			if (m_ypos >= (*junction).getYBotSquare() && m_xpos >= (*junction).getXLeftSquare()) {
 				angle += 2.4f / fps;
 			}
 			break;
@@ -584,7 +585,7 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, Junction junct
 			//	speed = 0;
 			//	break;
 			//}
-			if (m_xpos >= junction.GetXPos() && m_ypos >= junction.GetYPos() && !junction.getTrafficLights()[1].isGreen()) {
+			if (m_xpos >= (*junction).GetXPos() && m_ypos >= (*junction).GetYPos() && !(*junction).getTrafficLights()[1].isGreen()) {
 				angle -= 2.4f/fps;
 			}
 			break;
@@ -593,7 +594,7 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, Junction junct
 			//	speed = 0;
 			//	break;
 			//}
-			if (m_xpos <= junction.GetXPos() && m_ypos <= junction.GetYPos() && !junction.getTrafficLights()[2].isGreen()) {
+			if (m_xpos <= (*junction).GetXPos() && m_ypos <= (*junction).GetYPos() && !(*junction).getTrafficLights()[2].isGreen()) {
 				angle -= 2.4f/fps;		
 			}
 			break;
@@ -602,7 +603,7 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, Junction junct
 			//	speed = 0;
 			//	break;
 			//}
-			if (m_ypos <= junction.GetYPos() && m_xpos >= junction.GetXPos() && !junction.getTrafficLights()[3].isGreen()) {
+			if (m_ypos <= (*junction).GetYPos() && m_xpos >= (*junction).GetXPos() && !(*junction).getTrafficLights()[3].isGreen()) {
 				angle -= 2.4f/fps;
 
 			}
@@ -612,7 +613,7 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, Junction junct
 			//	speed = 0;
 			//	break;
 			//}
-			if (m_ypos >= junction.GetYPos() && m_xpos <= junction.GetXPos() && !junction.getTrafficLights()[2].isGreen()) {
+			if (m_ypos >= (*junction).GetYPos() && m_xpos <= (*junction).GetXPos() && !(*junction).getTrafficLights()[2].isGreen()) {
 				angle -= 2.4f / fps;
 			}
 			break;
@@ -633,7 +634,7 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, Junction junct
 	// Use on left test to determine if the car has turned correctly
 	switch (exitTurning) {
 	case(0):
-		if (m_xpos <= junction.getXLeftSquare()) {
+		if (m_xpos <= (*junction).getXLeftSquare()) {
 			glm::vec3 target = glm::vec3(-1.0, 0.0, 0.0);
 			float area = (forVec2.x * target.y) - (target.x * forVec2.y);
 			if (area < 0) {
@@ -645,7 +646,7 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, Junction junct
 		}
 		break;
 	case(1):
-		if (m_xpos >= junction.getXRightSquare()) {
+		if (m_xpos >= (*junction).getXRightSquare()) {
 			glm::vec3 target = glm::vec3(1.0, 0.0, 0.0);
 			float area = (forVec2.x * target.y) - (target.x * forVec2.y);
 			if (area < 0) {
@@ -657,7 +658,7 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, Junction junct
 		}
 		break;
 	case(2):
-		if (m_ypos >= junction.getYTopSquare()) {
+		if (m_ypos >= (*junction).getYTopSquare()) {
 			glm::vec3 target = glm::vec3(0.0, 1.0, 0.0);
 			float area = (forVec2.x * target.y) - (target.x * forVec2.y);
 			if (area < 0) {
@@ -669,7 +670,7 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, Junction junct
 		}
 		break;
 	case(3):
-		if (m_ypos <= junction.getYBotSquare()) {
+		if (m_ypos <= (*junction).getYBotSquare()) {
 			glm::vec3 target = glm::vec3(0.0, -1.0, 0.0);
 			float area = (forVec2.x * target.y) - (target.x * forVec2.y);
 			if (area < 0) {
@@ -713,7 +714,7 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, Junction junct
 }
 
 
-glm::mat4 Car::moveJunction(Junction junction, int desiredTurning, glm::mat4 objectRotation, glm::vec3 pos, float speed) {
+glm::mat4 Car::moveJunction(int desiredTurning, glm::mat4 objectRotation, glm::vec3 pos, float speed) {
 	// Check if centre of the car has reached the mark to turn
 	//float tVal = (model.theBBox.centrePoint.x - junction.getRoadStart().x) / junction.getRoadDirection().x;
 	//if ((junction.getRoadStart().y + (tVal * junction.getRoadDirection().y) == model.theBBox.centrePoint.y) && (junction.getRoadStart().z + (tVal * junction.getRoadDirection().z) == model.theBBox.centrePoint.z)) {
