@@ -263,20 +263,23 @@ void display()
 			for (int k = 0; k < mapClass.getMap()[0].size(); k++) {
 				//std::cout << "j = " << j << ", k = " << k << ", type = " << mapClass.getMapJunction(j, k)->getType() << std::endl;
 				if (cars[i].IsInCollision(mapClass.getMapJunction(j, k)->GetOBB())) {
-					std::cout << "j = " << j << ", k = " << k << ", type = " << mapClass.getMapJunction(j, k)->getType() << std::endl;
-					std::cout << cars[i].getJunction() << endl;
-					std::cout << mapClass.getMapJunction(j, k) << endl;
+					
+					//std::cout << "j = " << j << ", k = " << k << ", type = " << mapClass.getMapJunction(j, k)->getType() << std::endl;
+					//std::cout << cars[i].getJunction() << endl;
+					//std::cout << mapClass.getMapJunction(j, k) << endl;
 					if (cars[i].getJunction() != mapClass.getMapJunction(j, k)) {
-						cars[i].setJunction((mapClass.getMapJunction(j, k)));
+						if (mapClass.getMapJunction(j, k)->getType() != RoadType::N) {
+							cars[i].setJunction((mapClass.getMapJunction(j, k)));
+						}
+						else {
+							cars[i].setJunction(mapClass.getMapJunction(0, 0));
+							cars[i].respawn((mapClass.getMapJunction(0, 0)));
+						}
 					}
-
 					goto end;
 				}
-
-				
 			}
 		}
-		//cout << "here" << endl;
 		cars[i].setJunction(mapClass.getMapJunction(0, 0));
 		cars[i].respawn((mapClass.getMapJunction(0, 0)));
 	end:
@@ -370,7 +373,11 @@ void init()
 	}
 	
 	mapClass.addJunction(road, 0, 0);
+	(*mapClass.getMapJunction(0, 0)).setOrientation(1);
 	mapClass.addJunction(xJunction, 0, 1);
+	mapClass.addJunction(road, 0, 2);
+	mapClass.addJunction(road, 1, 1);
+	(*mapClass.getMapJunction(1, 1)).setOrientation(0);
 	//(*mapClass.getMapJunction(0, 1)).setOrientation(1);
 	//mapClass.addJunction(emptyJunction, 0, 2);
 	//mapClass.addJunction(road, 1, 0);
