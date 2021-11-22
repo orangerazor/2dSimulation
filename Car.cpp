@@ -476,11 +476,12 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 		switch (entryPoint) {
 		case(0):
 			if (m_xpos <= (*junction).getXLeftSquare() && m_xpos > ((*junction).getXLeftSquare() - (m_Height)) && !(*junction).getTrafficLights()[entryPoint].isGreen()) {
-				std::cout << "Bug A" << std::endl;
+				//std::cout << "Bug A" << std::endl;
 				speed = 0;
 			}
-			else if (m_xpos >= (*junction).getXLeftSquare() + ((*junction).getWidth() * 1 / 12) && m_xpos <= (*junction).GetXPos() && (*junction).getTrafficLights()[1].isGreen() && direction == 1) {
+			else if (m_xpos >= (*junction).getXLeftSquare() + ((*junction).getWidth() * 1 / 12) && m_xpos <= (*junction).GetXPos() && (*junction).getTrafficLights()[1].getLights()[2] && direction == 1) {
 				std::cout << "Bug B" << std::endl;
+				std::cout << (*junction).getTrafficLights()[1].isGreen() << std::endl;
 				speed = 0;
 			}
 			else {
