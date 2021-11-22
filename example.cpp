@@ -47,7 +47,7 @@ float speed = 0;
 const double PI = 3.141592653589793238463;
 float angle = 0;
 float scale = 4.0f;
-float zoom = 0.5;
+float zoom = 0.25;
 
 
 Shader shader;
@@ -259,9 +259,9 @@ void display()
 			for (int k = 0; k < mapClass.getMap()[0].size(); k++) {
 				//std::cout << "j = " << j << ", k = " << k << ", type = " << mapClass.getMapJunction(j, k)->getType() << std::endl;
 				if (cars[i].IsInCollision(mapClass.getMapJunction(j, k)->GetOBB())) {
-					//std::cout << "j = " << j << ", k = " << k << ", type = " << mapClass.getMapJunction(j, k)->getType() << std::endl;
-					//std::cout << cars[i].getJunction() << endl;
-					//std::cout << mapClass.getMapJunction(j, k) << endl;
+					std::cout << "j = " << j << ", k = " << k << ", type = " << mapClass.getMapJunction(j, k)->getType() << std::endl;
+					std::cout << cars[i].getJunction() << endl;
+					std::cout << mapClass.getMapJunction(j, k) << endl;
 					if (cars[i].getJunction() != mapClass.getMapJunction(j, k)) {
 						cars[i].setJunction((mapClass.getMapJunction(j, k)));
 					}
@@ -275,13 +275,13 @@ void display()
 		//cout << "here" << endl;
 		cars[i].respawn((mapClass.getMapJunction(0, 0)));
 	end:
-		std::cout;
+		continue;
 	}
 
 	
 	//ProjectionMatrix = ViewMatrix;//glm::translate(ViewMatrix, glm::vec3(0, 0, 20));
 	for (int i = 0; i < cars.size(); i++) {
-		cars[i].respawn(cars[i].getJunction());
+		//cars[i].respawn(cars[i].getJunction());
 		int direction = cars[i].decideDirection(cars[i].getEntryTurning());
 		ModelMatrix =  cars[i].rotate(12.0f / fps, direction, cars[i].getEntryTurning(), fps, cars);
 		for (int j = 0; j < cars.size(); j++) {
@@ -364,8 +364,8 @@ void init()
 		cars[i].setIdentifier(i);
 	}
 	
-	mapClass.addJunction(xJunction, 0, 0);
-	//mapClass.addJunction(road, 0, 1);
+	mapClass.addJunction(road, 0, 0);
+	mapClass.addJunction(xJunction, 0, 1);
 	//(*mapClass.getMapJunction(0, 1)).setOrientation(1);
 	//mapClass.addJunction(emptyJunction, 0, 2);
 	//mapClass.addJunction(road, 1, 0);
