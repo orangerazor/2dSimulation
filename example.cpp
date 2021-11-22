@@ -47,7 +47,7 @@ float speed = 0;
 const double PI = 3.141592653589793238463;
 float angle = 0;
 float scale = 4.0f;
-float zoom = 0.25;
+float zoom = 0.5;
 
 
 Shader shader;
@@ -269,7 +269,6 @@ void display()
 					if (cars[i].getJunction() != mapClass.getMapJunction(j, k)) {
 						cars[i].setJunction((mapClass.getMapJunction(j, k)));
 					}
-
 					goto end;
 				}
 
@@ -369,8 +368,8 @@ void init()
 		cars[i].setIdentifier(i);
 	}
 	
-	mapClass.addJunction(road, 0, 0);
-	mapClass.addJunction(xJunction, 0, 1);
+	mapClass.addJunction(xJunction, 0, 0);
+	//mapClass.addJunction(xJunction, 0, 1);
 	//(*mapClass.getMapJunction(0, 1)).setOrientation(1);
 	//mapClass.addJunction(emptyJunction, 0, 2);
 	//mapClass.addJunction(road, 1, 0);
