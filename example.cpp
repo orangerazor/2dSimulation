@@ -218,7 +218,7 @@ noCar:
 			junctionRender = glm::translate(glm::mat4(1.0f), glm::vec3((*mapClass.getMapJunction(i, j)).GetXPos(), (*mapClass.getMapJunction(i, j)).GetYPos(), 0));
 			junctionRender = glm::rotate(junctionRender, glm::radians((*mapClass.getMapJunction(i, j)).getOrientation() * 90.0f), glm::vec3(0.0, 0.0, 1.0));
 			ModelViewMatrix = ViewMatrix * junctionRender;
-			(*mapClass.getMapJunction(i, j)).Render(shader, ModelViewMatrix, ProjectionMatrix);
+			(*mapClass.getMapJunction(i, j)).Render(shader, ModelViewMatrix, ProjectionMatrix, junctionRender);
 			for (int k = 0; k < 4; k++) {
 				glm::mat4 moveLight = glm::mat4(1.0f);
 				switch (k) {
@@ -239,7 +239,7 @@ noCar:
 					break;
 				}
 				ModelViewMatrix = ViewMatrix * moveLight;
-				(*mapClass.getMapJunction(i, j)).getTrafficLights()[k].Render(shader, ModelViewMatrix, ProjectionMatrix);
+				(*mapClass.getMapJunction(i, j)).getTrafficLights()[k].Render(shader, ModelViewMatrix, ProjectionMatrix, moveLight);
 			}
 		}
 	}
@@ -302,7 +302,7 @@ noCar:
 				//delete cars[i];
 			}
 		}
-		cars[i].Render(shader, ModelViewMatrix, ProjectionMatrix);
+		cars[i].Render(shader, ModelViewMatrix, ProjectionMatrix, ModelMatrix);
 		
 	}
 
@@ -353,8 +353,8 @@ void init()
 	(*mapClass.getMapJunction(0, 0)).setOrientation(1);
 	mapClass.addJunction(xJunction, 0, 1);
 	mapClass.addJunction(road, 0, 2);
-	//mapClass.addJunction(road, 1, 1);
-	//(*mapClass.getMapJunction(1, 1)).setOrientation(0);
+	mapClass.addJunction(road, 1, 1);
+	(*mapClass.getMapJunction(1, 1)).setOrientation(0);
 	//(*mapClass.getMapJunction(0, 1)).setOrientation(1);
 	//mapClass.addJunction(emptyJunction, 0, 2);
 	//mapClass.addJunction(road, 1, 0);

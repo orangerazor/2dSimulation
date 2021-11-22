@@ -36,7 +36,7 @@ public:
 	bool isGreen();
 
 	void InitLights(Shader& shader, float colour[3], std::string phaseOne, std::string phaseTwo, std::string phaseThree, std::string phaseFour);
-    void Render(Shader& shader, glm::mat4& ModelViewMatrix, glm::mat4& ProjectionMatrix);
+    void Render(Shader& shader, glm::mat4& ModelViewMatrix, glm::mat4& ProjectionMatrix, glm::mat4& ModelMatrix);
 
     void nextLight();
     std::array<bool, 3> getLights();

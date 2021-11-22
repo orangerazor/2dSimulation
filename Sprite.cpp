@@ -222,13 +222,13 @@ void Sprite::Init(Shader& shader, float colour[3], std::string filename)
 	glBindVertexArray(0);
 }
 
-void Sprite::Render(Shader& shader, glm::mat4& ModelViewMatrix, glm::mat4& ProjectionMatrix)
+void Sprite::Render(Shader& shader, glm::mat4& ModelViewMatrix, glm::mat4& ProjectionMatrix, glm::mat4& ModelMatrix)
 {
 	//std::cout << this->getHeight() << std::endl;
 	/****UPDATE THE CORNER VALUES BASED ON TRANSFORMATION***/
 	//std::cout << m_Height << std::endl;
-	obb.transformPoints(ModelViewMatrix);
-	collide.transformPoints(ModelViewMatrix);
+	obb.transformPoints(ModelMatrix);
+	collide.transformPoints(ModelMatrix);
 	//m_xpos = obb.xCentre(ModelViewMatrix);
 	//m_ypos = obb.yCentre(ModelViewMatrix);
 	//glm::vec4 vector = glm::vec4(m_xpos, m_ypos, 0.0f, 1.0f);
