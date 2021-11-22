@@ -29,6 +29,8 @@ int fps = 40;
 
 glm::mat4 ViewMatrix;  // matrix for the modelling and viewing
 glm::mat4 ProjectionMatrix; // matrix for the orthographic projection
+glm::mat4 ModelMatrix;
+glm::mat4 ModelViewMatrix;
 int screenWidth = 480, screenHeight = 480;
 
 //booleans to handle when the arrow keys are pressed or released.
@@ -93,12 +95,15 @@ void readjustScreen(int x, int y, int width, int height) {
 void display()
 
 {
+	ModelViewMatrix = glm::mat4(1.0f);
+	ModelMatrix = glm::mat4(1.0f);
+	ViewMatrix = glm::lookAt(glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	//std::cout << "x = " << mySquare.GetXPos() << "y = " << mySquare.GetYPos() << std::endl;
 	std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
 	//clear the colour and depth buffers
 	glClear(GL_COLOR_BUFFER_BIT);
 	//cout << "green = " << junction.getTrafficLights()[2].getLights()[2] << endl;
-	ViewMatrix = glm::translate(glm::mat4(1.0), glm::vec3(0.0, 0.0, 0.0));
+	//ViewMatrix = glm::translate(glm::mat4(1.0), glm::vec3(0.0, 0.0, 0.0));
 	//cout << "height=" << (*mapClass.getMapJunction(0,0)).getHeight() << ", " << "width=" << (*mapClass.getMapJunction(0, 0)).getWidth() << endl;
 	glEnable(GL_BLEND);
 	if (hourElapsed >= 1000000 * secondsToHour) { //day n night cycle
@@ -165,7 +170,8 @@ void display()
 			glm::mat4 junctionRender = glm::mat4(1.0f);
 			junctionRender = glm::translate(glm::mat4(1.0f), glm::vec3((*mapClass.getMapJunction(i, j)).GetXPos(), (*mapClass.getMapJunction(i, j)).GetYPos(), 0));
 			junctionRender = glm::rotate(junctionRender, glm::radians((*mapClass.getMapJunction(i, j)).getOrientation() * 90.0f), glm::vec3(0.0, 0.0, 1.0));
-			(*mapClass.getMapJunction(i, j)).Render(shader, junctionRender, ProjectionMatrix);
+			ModelViewMatrix = ViewMatrix * junctionRender;
+			(*mapClass.getMapJunction(i, j)).Render(shader, ModelViewMatrix, ProjectionMatrix);
 			for (int k = 0; k < 4; k++) {
 				glm::mat4 moveLight = glm::mat4(1.0f);
 				switch (k) {
@@ -185,7 +191,8 @@ void display()
 					moveLight = glm::translate(moveLight, glm::vec3((*mapClass.getMapJunction(i, j)).getXLeftSquare() - ((*mapClass.getMapJunction(i, j)).getTrafficLights()[k].getWidth() / 2), (*mapClass.getMapJunction(i, j)).getYBotSquare() - ((*mapClass.getMapJunction(i, j)).getTrafficLights()[k].getHeight() / 2), 0.0));
 					break;
 				}
-				(*mapClass.getMapJunction(i, j)).getTrafficLights()[k].Render(shader, moveLight, ProjectionMatrix);
+				ModelViewMatrix = ViewMatrix * moveLight;
+				(*mapClass.getMapJunction(i, j)).getTrafficLights()[k].Render(shader, ModelViewMatrix, ProjectionMatrix);
 			}
 		}
 	}
@@ -246,10 +253,6 @@ void display()
 	//}
 	//std::cout << first.GetXPos() << ", " << first.GetYPos() << std::endl;
 
-	glm::mat4 ModelViewMatrix = glm::mat4(1.0f);
-	ViewMatrix = glm::lookAt(glm::vec3(0, 0, 1), glm::vec3(20, 0, 0), glm::vec3(0.0f, 0.0f, 1.0f));
-
-
 	//works out if each car is colliding with a junction, else it respawns it
 	for (int i = 0; i < cars.size(); i++) {
 		for (int j = 0; j < mapClass.getMap().size(); j++) {
@@ -269,7 +272,7 @@ void display()
 				
 			}
 		}
-		cout << "here" << endl;
+		//cout << "here" << endl;
 		cars[i].respawn((mapClass.getMapJunction(0, 0)));
 	end:
 		std::cout;
@@ -280,7 +283,7 @@ void display()
 	for (int i = 0; i < cars.size(); i++) {
 		cars[i].respawn(cars[i].getJunction());
 		int direction = cars[i].decideDirection(cars[i].getEntryTurning());
-		ModelViewMatrix =  cars[i].rotate(12.0f / fps, direction, cars[i].getEntryTurning(), fps, cars);
+		ModelMatrix =  cars[i].rotate(12.0f / fps, direction, cars[i].getEntryTurning(), fps, cars);
 		for (int j = 0; j < cars.size(); j++) {
 			if (j == i) {
 				continue;
@@ -288,9 +291,10 @@ void display()
 			if (cars[i].IsInCollision(cars[j].GetOBB())) {
 				//cars[i].respawn((*mapClass.getMapJunction(0, 0)));
 				int direction = cars[i].decideDirection(cars[i].getEntryTurning());
-				ModelViewMatrix = cars[i].rotate(12.0f / fps, direction, cars[i].getEntryTurning(), fps, cars);
+				ModelMatrix = cars[i].rotate(12.0f / fps, direction, cars[i].getEntryTurning(), fps, cars);
 			}
 		}
+		ModelViewMatrix = ViewMatrix * ModelMatrix;
 		cars[i].Render(shader, ModelViewMatrix, ProjectionMatrix);
 	}
 	//mySquare.respawn(map[0]);
@@ -360,8 +364,8 @@ void init()
 		cars[i].setIdentifier(i);
 	}
 	
-	mapClass.addJunction(road, 0, 0);
-	mapClass.addJunction(road, 0, 1);
+	mapClass.addJunction(xJunction, 0, 0);
+	//mapClass.addJunction(road, 0, 1);
 	//(*mapClass.getMapJunction(0, 1)).setOrientation(1);
 	//mapClass.addJunction(emptyJunction, 0, 2);
 	//mapClass.addJunction(road, 1, 0);
