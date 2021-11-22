@@ -374,7 +374,7 @@ void init()
 	
 	mapClass.addJunction(road, 0, 0);
 	(*mapClass.getMapJunction(0, 0)).setOrientation(1);
-	mapClass.addJunction(xJunction, 0, 1);
+	mapClass.addJunction(tJunction, 0, 1);
 	mapClass.addJunction(road, 0, 2);
 	mapClass.addJunction(road, 1, 1);
 	(*mapClass.getMapJunction(1, 1)).setOrientation(0);

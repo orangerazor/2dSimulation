@@ -163,7 +163,7 @@ void Car::respawn(Junction *junction, int presetEntry) {
 	case(0):
 		if (m_xpos <= ((*junction).GetXPos() - ((*junction).getWidth() / 2))) {
 			std::cout << "reset time " << std::endl;
-			//std::cout << "angle = " << angle << std::endl;
+			std::cout << "0" << std::endl;
 			int newSpawn = this->setSpawn();
 			switch (newSpawn) {
 			case(0):
@@ -416,7 +416,7 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 			//	speed = 0;
 			//	break;
 			//}
-			if (m_xpos >= (*junction).getXLeftSquare() && m_ypos <= (*junction).getYTopSquare() && speed == 0.1) {
+			if (m_xpos >= (*junction).getXLeftSquare() && m_ypos <= (*junction).getYTopSquare() && speed != 0) {
 				angle += 2.4f / fps;
 			}
 			break;
@@ -425,7 +425,7 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 			//	speed = 0;
 			//	break;
 			//}
-			if (m_xpos <= (*junction).getXRightSquare() && m_ypos >= (*junction).getYBotSquare() && speed == 0.1) {
+			if (m_xpos <= (*junction).getXRightSquare() && m_ypos >= (*junction).getYBotSquare() && speed != 0) {
 				angle += 2.4f / fps;
 			}
 			break;
@@ -434,7 +434,7 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 			//	speed = 0;
 			//	break;
 			//}
-			if (m_ypos <= (*junction).getYTopSquare() && m_xpos <= (*junction).getXRightSquare() && speed == 0.1) {
+			if (m_ypos <= (*junction).getYTopSquare() && m_xpos <= (*junction).getXRightSquare() && speed != 0) {
 				angle += 2.4f / fps;
 			}
 			break;
@@ -443,7 +443,7 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 			//	speed = 0;
 			//	break;
 			//}
-			if (m_ypos >= (*junction).getYBotSquare() && m_xpos >= (*junction).getXLeftSquare() && speed == 0.1) {
+			if (m_ypos >= (*junction).getYBotSquare() && m_xpos >= (*junction).getXLeftSquare() && speed != 0) {
 				angle += 2.4f / fps;
 			}
 			break;
@@ -484,7 +484,7 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 			//	speed = 0;
 			//	break;
 			//}
-			if (m_xpos >= (*junction).GetXPos() && m_ypos >= (*junction).GetYPos() && !(*junction).getTrafficLights()[1].isGreen() && speed == 0.1) {
+			if (m_xpos >= (*junction).GetXPos() && m_ypos >= (*junction).GetYPos() && !(*junction).getTrafficLights()[1].isGreen() && speed != 0) {
 				angle -= 2.4f/fps;
 			}
 			break;
@@ -493,7 +493,7 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 			//	speed = 0;
 			//	break;
 			//}
-			if (m_xpos <= (*junction).GetXPos() && m_ypos <= (*junction).GetYPos() && !(*junction).getTrafficLights()[2].isGreen() && speed == 0.1) {
+			if (m_xpos <= (*junction).GetXPos() && m_ypos <= (*junction).GetYPos() && !(*junction).getTrafficLights()[2].isGreen() && speed != 0) {
 				angle -= 2.4f/fps;		
 			}
 			break;
@@ -502,7 +502,7 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 			//	speed = 0;
 			//	break;
 			//}
-			if (m_ypos <= (*junction).GetYPos() && m_xpos >= (*junction).GetXPos() && !(*junction).getTrafficLights()[3].isGreen() && speed == 0.1) {
+			if (m_ypos <= (*junction).GetYPos() && m_xpos >= (*junction).GetXPos() && !(*junction).getTrafficLights()[3].isGreen() && speed != 0) {
 				angle -= 2.4f/fps;
 
 			}
@@ -512,7 +512,7 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 			//	speed = 0;
 			//	break;
 			//}
-			if (m_ypos >= (*junction).GetYPos() && m_xpos <= (*junction).GetXPos() && !(*junction).getTrafficLights()[2].isGreen() && speed == 0.1) {
+			if (m_ypos >= (*junction).GetYPos() && m_xpos <= (*junction).GetXPos() && !(*junction).getTrafficLights()[2].isGreen() && speed != 0) {
 				angle -= 2.4f / fps;
 			}
 			break;
