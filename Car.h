@@ -68,4 +68,5 @@ public:
 	inline Junction* getJunction() {
 		return this->junction;
 	}
+
 };

@@ -95,6 +95,8 @@ void readjustScreen(int x, int y, int width, int height) {
 void display()
 
 {
+
+	//cout << mapClass.getMapJunction(1, 1);
 	ModelViewMatrix = glm::mat4(1.0f);
 	ModelMatrix = glm::mat4(1.0f);
 	ViewMatrix = glm::lookAt(glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
@@ -270,6 +272,10 @@ void display()
 					if (cars[i].getJunction() != mapClass.getMapJunction(j, k)) {
 						if (mapClass.getMapJunction(j, k)->getType() != RoadType::N) {
 							cars[i].setJunction((mapClass.getMapJunction(j, k)));
+							int entry = cars[i].entryPoint();
+							cout << "entry = " << entry << endl;
+							//cars[i].decideDirection(entry);
+
 						}
 						else {
 							cars[i].setJunction(mapClass.getMapJunction(0, 0));
