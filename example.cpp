@@ -95,12 +95,9 @@ void readjustScreen(int x, int y, int width, int height) {
 void display()
 
 {
-
-	//cout << mapClass.getMapJunction(1, 1);
 	ModelViewMatrix = glm::mat4(1.0f);
 	ModelMatrix = glm::mat4(1.0f);
 	ViewMatrix = glm::lookAt(glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-	//std::cout << "x = " << mySquare.GetXPos() << "y = " << mySquare.GetYPos() << std::endl;
 	std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
 	//clear the colour and depth buffers
 	glClear(GL_COLOR_BUFFER_BIT);
@@ -134,7 +131,7 @@ void display()
 	}
 	else {
 		if (secondElapsed >= 1000000) {
-			if (cars.size() < 4) {
+			if (cars.size() < 1) {
 				Car toSpawn = Car(glm::mat4(1.0f));
 				toSpawn.SetWidth(scale * (500 / 264.0f));
 				toSpawn.SetHeight(scale);
@@ -202,62 +199,6 @@ void display()
 			}
 		}
 	}
-		
-		
-
-
-	//glm::mat4 ModelViewMatrix = mySquare.turn(speed, direction);
-	//std::cout << mySquare.GetXPos() << ", " << mySquare.GetYPos() << std::endl;
-	//mySquare.IncPos(0, 0.01f);
-	/*glm::mat4 modelviewmatrix = mysquare.drive(speed, direction, angle) * viewmatrix;*/
-	//if (mySquare.IsInCollision(junction.GetOBB())) {
-		//direction = -1;
-		//if (mySquare.IsInCollision(junction.GetOBB())) {
-		//if (mySquare.GetYPos() > junction.getYBotSquare()) {
-		//	ModelViewMatrix = mySquare.rotate(4.0f / fps, -1, entryPoint, junction, fps);
-		//}
-		//else {
-		//	ModelViewMatrix = mySquare.rotate(4.0f / fps, 0, entryPoint, junction, fps);
-		//}
-
-		//std::cout << "entry = " << entryPoint << std::endl;
-		//switch (entryPoint) {
-		//case(0):
-		//	ModelViewMatrix = glm::rotate(ModelViewMatrix, glm::radians(coordinates[0][2]), glm::vec3(0, 0, 1));
-		//	break;
-		//case(1):
-		//	ModelViewMatrix = glm::rotate(ModelViewMatrix, glm::radians(coordinates[1][2]), glm::vec3(0, 0, 1));
-		//	break;
-		//case(2):
-		//	ModelViewMatrix = glm::rotate(ModelViewMatrix, glm::radians(coordinates[2][2]), glm::vec3(0, 0, 1));
-		//	break;
-		//case(3):
-		//	ModelViewMatrix = glm::rotate(ModelViewMatrix, glm::radians(coordinates[3][2]), glm::vec3(0, 0, 1));
-		//	break;
-		//}
-	//junction.Render(shader, glm::mat4(1.0f), ProjectionMatrix);
-	//for (int i = 0; i < 4; i++) {
-	//	glm::mat4 moveLight = glm::mat4(1.0f);
-	//	switch (i) {
-	//	case(0):
-	//		moveLight = glm::translate(moveLight, glm::vec3(junction.getXLeftSquare() - (junction.getTrafficLights()[i].getHeight() / 2), junction.getYTopSquare() + (junction.getTrafficLights()[i].getWidth() / 2), 0.0));
-	//		moveLight = glm::rotate(moveLight, glm::radians(-90.0f), glm::vec3(0.0, 0.0, 1.0));
-	//		break;
-	//	case(1):
-	//		moveLight = glm::translate(moveLight, glm::vec3(junction.getXRightSquare()+ (junction.getTrafficLights()[i].getHeight() / 2), junction.getYBotSquare() - (junction.getTrafficLights()[i].getWidth() / 2), 0.0));
-	//		moveLight = glm::rotate(moveLight, glm::radians(90.0f), glm::vec3(0.0, 0.0, 1.0));
-	//		break;
-	//	case(2):
-	//		moveLight = glm::translate(moveLight, glm::vec3(junction.getXRightSquare() + (junction.getTrafficLights()[i].getWidth() / 2), junction.getYTopSquare() + (junction.getTrafficLights()[i].getHeight() / 2), 0.0));
-	//		break;
-	//	case(3):
-	//		moveLight = glm::translate(moveLight, glm::vec3(junction.getXLeftSquare() - (junction.getTrafficLights()[i].getWidth() / 2), junction.getYBotSquare() - (junction.getTrafficLights()[i].getHeight() / 2), 0.0));
-	//		moveLight = glm::rotate(moveLight, glm::radians(180.0f), glm::vec3(0.0, 0.0, 1.0));
-	//		break;
-	//	}
-	//	junction.getTrafficLights()[i].Render(shader, moveLight, ProjectionMatrix);
-	//}
-	//std::cout << first.GetXPos() << ", " << first.GetYPos() << std::endl;
 
 	//works out if each car is colliding with a junction, else it respawns it
 	for (int i = 0; i < cars.size(); i++) {
@@ -272,8 +213,8 @@ void display()
 					if (cars[i].getJunction() != mapClass.getMapJunction(j, k)) {
 						if (mapClass.getMapJunction(j, k)->getType() != RoadType::N) {
 							cars[i].setJunction((mapClass.getMapJunction(j, k)));
-							int entry = cars[i].entryPoint();
-							cout << "entry = " << entry << endl;
+							//int entry = cars[i].entryPoint();
+							//cout << "entry 2 = " << entry << endl;
 							//cars[i].decideDirection(entry);
 
 						}
@@ -311,33 +252,6 @@ void display()
 		ModelViewMatrix = ViewMatrix * ModelMatrix;
 		cars[i].Render(shader, ModelViewMatrix, ProjectionMatrix);
 	}
-	//mySquare.respawn(map[0]);
-	//int direction = mySquare.decideDirection(map[0], mySquare.getEntryTurning());
-	//ModelViewMatrix = mySquare.rotate(12.0f / fps, direction, mySquare.getEntryTurning(), map[0], fps);
-	//ModelViewMatrix = mySquare.faceJunction(entryPoint, ModelViewMatrix);
-	//ModelViewMatrix = glm::rotate(ModelViewMatrix, glm::radians(-90.0f), glm::vec3(0, 0, 1));
-	//mySquare.respawn(junction);
-	//mySquare.Render(shader, ModelViewMatrix, ProjectionMatrix);
-
-	//}
-	//else {
-		//mySquare.SetXpos(0);
-		//mySquare.SetYpos(-8);
-		//mySquare.setCurrentJunction("");
-		//ModelViewMatrix = glm::rotate(ModelViewMatrix, glm::radians(coordinates[0][2]), glm::vec3(0, 0, 1));
-
-
-	//}
-
-
-	//car2.respawn(map[0]);
-	//int direction2 = car2.decideDirection(map[0], car2.getEntryTurning());
-	//ModelViewMatrix = car2.rotate(12.0f / fps, direction2, car2.getEntryTurning(), map[0], fps);
-	//ModelViewMatrix = car2.faceJunction(entryPoint2, ModelViewMatrix);
-	//ModelViewMatrix = glm::rotate(ModelViewMatrix, glm::radians(-90.0f), glm::vec3(0, 0, 1));
-	//car2.respawn(junction);
-	//car2.Render(shader, ModelViewMatrix, ProjectionMatrix);
-	
 
 	glDisable(GL_BLEND);
 

@@ -184,6 +184,7 @@ void Car::respawn(Junction *junction, int presetEntry) {
 	case(1):
 		if (m_xpos >= ((*junction).GetXPos() + ((*junction).getWidth() / 2))) {
 			std::cout << "reset time " << std::endl;
+			std::cout << "1" << std::endl;
 			int newSpawn = this->setSpawn();
 			switch (newSpawn) {
 			case(0):
@@ -204,6 +205,7 @@ void Car::respawn(Junction *junction, int presetEntry) {
 	case(2):
 		if (m_ypos >= ((*junction).GetYPos() + ((*junction).getHeight() / 2))) {
 			std::cout << "reset time " << std::endl;
+			std::cout << "2" << std::endl;
 			int newSpawn = this->setSpawn();
 			switch (newSpawn) {
 			case(0):
@@ -224,6 +226,7 @@ void Car::respawn(Junction *junction, int presetEntry) {
 	case(3):
 		if (m_ypos <= ((*junction).GetYPos() - ((*junction).getHeight() / 2))) {
 			std::cout << "reset time " << std::endl;
+			std::cout << "3" << std::endl;
 			int newSpawn = this->setSpawn();
 			switch (newSpawn) {
 			case(0):
