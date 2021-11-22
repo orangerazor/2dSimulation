@@ -131,7 +131,7 @@ void display()
 	}
 	else {
 		if (secondElapsed >= 1000000) {
-			if (cars.size() < 1) {
+			if (cars.size() < 200) {
 				Car toSpawn = Car(glm::mat4(1.0f));
 				toSpawn.SetWidth(scale * (500 / 264.0f));
 				toSpawn.SetHeight(scale);
@@ -219,14 +219,16 @@ void display()
 
 						}
 						else {
-							cars[i].setJunction(mapClass.getMapJunction(0, 0));
-							cars[i].respawn((mapClass.getMapJunction(0, 0)));
+							goto respawn;
+							//cars[i].setJunction(mapClass.getMapJunction(0, 0));
+							//cars[i].respawn((mapClass.getMapJunction(0, 0)));
 						}
 					}
 					goto end;
 				}
 			}
 		}
+	respawn:
 		cars[i].setJunction(mapClass.getMapJunction(0, 0));
 		cars[i].respawn((mapClass.getMapJunction(0, 0)));
 	end:
@@ -250,7 +252,13 @@ void display()
 			}
 		}
 		ModelViewMatrix = ViewMatrix * ModelMatrix;
+		for (int j = 0; j < cars.size(); j++) {
+			if (cars[i].IsInCollision(cars[j].GetOBB()) && i != j) {
+				delete cars[i];
+			}
+		}
 		cars[i].Render(shader, ModelViewMatrix, ProjectionMatrix);
+		
 	}
 
 	glDisable(GL_BLEND);
