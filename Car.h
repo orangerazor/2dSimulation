@@ -63,6 +63,7 @@ public:
 
 	inline void setJunction(Junction *junction) {
 		this->junction = junction;
+		this->currentJunction = "";
 	}
 
 	inline Junction* getJunction() {
