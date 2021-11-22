@@ -322,6 +322,7 @@ int Car::setSpawn() {
 	}
 	
 	int random = rand() % possibleTurnings.size();
+	random = 0;
 	int turningIndex = possibleTurnings.at(random);
 	switch (turningIndex) {
 	case(0):
@@ -367,8 +368,8 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 				speed = 0;
 			}
 			else if (m_xpos >= (*junction).getXLeftSquare() + ((*junction).getWidth() * 1 / 12) && m_xpos <= (*junction).GetXPos() && (*junction).getTrafficLights()[1].getLights()[2] && direction == 1) {
-				std::cout << "Bug B" << std::endl;
-				std::cout << (*junction).getTrafficLights()[1].isGreen() << std::endl;
+				//std::cout << "Bug B" << std::endl;
+				//std::cout << (*junction).getTrafficLights()[1].isGreen() << std::endl;
 				speed = 0;
 			}
 			else {
@@ -536,7 +537,7 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 	// Use on left test to determine if the car has turned correctly
 	switch (exitTurning) {
 	case(0):
-		if (m_xpos <= (*junction).getXLeftSquare() && speed == 0.1) {
+		if (m_xpos <= (*junction).getXLeftSquare() && speed != 0.0) {
 			glm::vec3 target = glm::vec3(-1.0, 0.0, 0.0);
 			float area = (forVec2.x * target.y) - (target.x * forVec2.y);
 			if (area < 0) {
@@ -548,7 +549,7 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 		}
 		break;
 	case(1):
-		if (m_xpos >= (*junction).getXRightSquare() && speed == 0.1) {
+		if (m_xpos >= (*junction).getXRightSquare() && speed != 0) {
 			glm::vec3 target = glm::vec3(1.0, 0.0, 0.0);
 			float area = (forVec2.x * target.y) - (target.x * forVec2.y);
 			if (area < 0) {
@@ -560,7 +561,7 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 		}
 		break;
 	case(2):
-		if (m_ypos >= (*junction).getYTopSquare() && speed == 0.1) {
+		if (m_ypos >= (*junction).getYTopSquare() && speed != 0.0) {
 			glm::vec3 target = glm::vec3(0.0, 1.0, 0.0);
 			float area = (forVec2.x * target.y) - (target.x * forVec2.y);
 			if (area < 0) {
@@ -572,7 +573,7 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 		}
 		break;
 	case(3):
-		if (m_ypos <= (*junction).getYBotSquare() && speed == 0.1) {
+		if (m_ypos <= (*junction).getYBotSquare() && speed != 0.0) {
 			glm::vec3 target = glm::vec3(0.0, -1.0, 0.0);
 			float area = (forVec2.x * target.y) - (target.x * forVec2.y);
 			if (area < 0) {

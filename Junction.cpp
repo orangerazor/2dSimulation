@@ -167,6 +167,11 @@ void Junction::calculateLines() {
     yTopSquare = m_ypos + (m_Height * 1 / 6);
     xLeftSquare = m_xpos - (m_Width * 1 / 6);
     xRightSquare = m_xpos + (m_Width * 1 / 6);
+
+    leftInner = m_xpos + (m_Width * 1 / 6);
+    rightInner = m_xpos - (m_Width * 1 / 6);
+    topInner = m_ypos - (m_Height * 1 / 6);
+    botInner = m_ypos + (m_Height * 1 / 6);
 }
 
 //int main(){

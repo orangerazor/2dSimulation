@@ -48,6 +48,8 @@ const double PI = 3.141592653589793238463;
 float angle = 0;
 float scale = 4.0f;
 float zoom = 0.25;
+float xpos = 0;
+float ypos = 0;
 
 
 Shader shader;
@@ -79,9 +81,17 @@ void reshape(int width, int height)		// Resize the OpenGL window
 	screenWidth = width;
 	screenHeight = height;
 
+	float aspect = (float)screenWidth / (float)screenHeight;
+
 	glViewport(0, 0, width, height);						// set Viewport dimensions
 
-	ProjectionMatrix = glm::ortho(-25.0/zoom, 25.0/zoom, -25.0/zoom, 25.0/zoom);
+	if (aspect >= 1.0) {
+		ProjectionMatrix = glm::ortho((-25.0f * aspect) / zoom, 25.0f * aspect / zoom, -25.0f / zoom, 25.0f / zoom);
+	}
+	else {
+		ProjectionMatrix = glm::ortho(-25.0f / zoom, 25.0f / zoom, -25.0f / aspect / zoom, 25.0f / aspect / zoom);
+	}
+	//ProjectionMatrix = glm::ortho(-25.0/zoom, 25.0/zoom, -25.0/zoom, 25.0/zoom);
 }
 
 void readjustScreen(int x, int y, int width, int height) {
@@ -97,7 +107,10 @@ void display()
 {
 	ModelViewMatrix = glm::mat4(1.0f);
 	ModelMatrix = glm::mat4(1.0f);
-	ViewMatrix = glm::lookAt(glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+
+	glm::vec3 pos = glm::vec3(xpos, ypos, 1.0);
+	std::cout << pos.x << std::endl;
+	ViewMatrix = glm::lookAt(pos, glm::vec3(pos.x, pos.y, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
 	//clear the colour and depth buffers
 	glClear(GL_COLOR_BUFFER_BIT);
@@ -114,9 +127,9 @@ void display()
 		}
 		hourElapsed = 0;
 	}
-	if (hour > 15 && hour < 17) {
+	if (hour > 4 && hour < 6) {
 		if (secondElapsed >= 500000) {
-			if (cars.size() < 8) {
+			if (cars.size() < 16) {
 				Car toSpawn = Car(glm::mat4(1.0f));
 				toSpawn.SetWidth(scale * (500 / 264.0f));
 				toSpawn.SetHeight(scale);
@@ -131,7 +144,36 @@ void display()
 	}
 	else {
 		if (secondElapsed >= 1000000) {
-			if (cars.size() < 200) {
+			if (cars.size() < 7) {
+				for (int i = 0; i < cars.size(); i++) {
+					Junction currentJunc = *mapClass.getMapJunction(0, 0);
+					float carPosX = cars[i].GetXPos();
+					float carPosY = cars[i].GetYPos();
+					if (
+						carPosX <= currentJunc.getLeftInner() && 
+						carPosX >= (currentJunc.GetXPos() - (currentJunc.getWidth() * 1/2)) &&
+						carPosY <= currentJunc.getYTopSquare() &&
+						carPosY >= currentJunc.getYBotSquare() &&
+
+						carPosX >= currentJunc.getRightInner() &&
+						carPosX <= currentJunc.GetXPos() + (currentJunc.getWidth() * 1/2) &&
+						carPosY <= currentJunc.getYTopSquare() &&
+						carPosY >= currentJunc.getYBotSquare() &&
+
+						carPosY >= currentJunc.getTopInner() &&
+						carPosY <= currentJunc.GetYPos() + (currentJunc.getHeight() * 1/2) &&
+						carPosX <= currentJunc.getXRightSquare() &&
+						carPosX >= currentJunc.getXLeftSquare() &&
+
+						carPosY <= currentJunc.getBotInner() &&
+						carPosY >= currentJunc.GetYPos() - (currentJunc.getWidth() * 1 / 2) &&
+						carPosX <= currentJunc.getXRightSquare() &&
+						carPosX >= currentJunc.getXLeftSquare()
+						) {
+						//cout << "MATRIX DODGE" << endl;
+						//goto noCar;
+					}
+				}
 				Car toSpawn = Car(glm::mat4(1.0f));
 				toSpawn.SetWidth(scale * (500 / 264.0f));
 				toSpawn.SetHeight(scale);
@@ -144,6 +186,8 @@ void display()
 			}
 		}
 	}
+noCar:
+	cout;
 	if (secondElapsed >= 1000000) {
 		//if (cars.size() < 8) {
 		//	Car toSpawn = Car(glm::mat4(1.0f));
@@ -213,7 +257,6 @@ void display()
 					if (cars[i].getJunction() != mapClass.getMapJunction(j, k)) {
 						if (mapClass.getMapJunction(j, k)->getType() != RoadType::N) {
 							cars[i].setJunction((mapClass.getMapJunction(j, k)));
-							//int entry = cars[i].entryPoint();
 							//cout << "entry 2 = " << entry << endl;
 							//cars[i].decideDirection(entry);
 
@@ -224,6 +267,7 @@ void display()
 							//cars[i].respawn((mapClass.getMapJunction(0, 0)));
 						}
 					}
+					//cout << "The way I go is... " << cars[i].getEntryTurning() << endl;
 					goto end;
 				}
 			}
@@ -232,6 +276,7 @@ void display()
 		cars[i].setJunction(mapClass.getMapJunction(0, 0));
 		cars[i].respawn((mapClass.getMapJunction(0, 0)));
 	end:
+		//cars[i].entryPoint();
 		continue;
 	}
 
@@ -254,7 +299,7 @@ void display()
 		ModelViewMatrix = ViewMatrix * ModelMatrix;
 		for (int j = 0; j < cars.size(); j++) {
 			if (cars[i].IsInCollision(cars[j].GetOBB()) && i != j) {
-				delete cars[i];
+				//delete cars[i];
 			}
 		}
 		cars[i].Render(shader, ModelViewMatrix, ProjectionMatrix);
@@ -265,6 +310,10 @@ void display()
 
 	glutSwapBuffers();
 	std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+
+	//std::chrono::duration<double> elapsed = end - begin;
+
+
 	secondElapsed += chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
 	hourElapsed += chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
 	//cout << (1000.0f/chrono::duration_cast<std::chrono::milliseconds>(end - begin).count()) << endl;
@@ -302,10 +351,10 @@ void init()
 	
 	mapClass.addJunction(road, 0, 0);
 	(*mapClass.getMapJunction(0, 0)).setOrientation(1);
-	mapClass.addJunction(tJunction, 0, 1);
+	mapClass.addJunction(xJunction, 0, 1);
 	mapClass.addJunction(road, 0, 2);
-	mapClass.addJunction(road, 1, 1);
-	(*mapClass.getMapJunction(1, 1)).setOrientation(0);
+	//mapClass.addJunction(road, 1, 1);
+	//(*mapClass.getMapJunction(1, 1)).setOrientation(0);
 	//(*mapClass.getMapJunction(0, 1)).setOrientation(1);
 	//mapClass.addJunction(emptyJunction, 0, 2);
 	//mapClass.addJunction(road, 1, 0);
@@ -455,6 +504,7 @@ void processKeys()
 {
 	if (Left)
 	{
+		xpos -= 1000/fps;
 		/*Car car(glm::mat4(1.0f));
 		float red[3] = { 1,0,0 };
 		car.SetWidth(scale * (500 / 264.0f));
@@ -469,6 +519,7 @@ void processKeys()
 	}
 	if (Right)
 	{
+		xpos += 1000 / fps;
 		/*Car car(glm::mat4(1.0f));
 		float red[3] = { 1,0,0 };
 		car.SetWidth(scale * (500 / 264.0f));
@@ -482,6 +533,7 @@ void processKeys()
 	}
 	if (Up)
 	{
+		ypos += 1000 / fps;
 		/*Car car(glm::mat4(1.0f));
 		float red[3] = { 1,0,0 };
 		car.SetWidth(scale * (500 / 264.0f));
@@ -497,6 +549,7 @@ void processKeys()
 	}
 	if (Down)
 	{
+		ypos -= 1000 / fps;
 		/*Car car(glm::mat4(1.0f));
 		float red[3] = { 1,0,0 };
 		car.SetWidth(scale * (500 / 264.0f));

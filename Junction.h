@@ -45,6 +45,17 @@ private:
     float xRightSquare;
     float ySideCentre;
     float xVerticalCentre;
+
+    // Respawn boxes
+    // Left
+    float leftInner;
+    // Right
+    float rightInner;
+    // Top
+    float topInner;
+    //Bottom
+    float botInner;
+
     std::string identifier;
 
 public:
@@ -94,6 +105,18 @@ public:
     }
     inline float getXRightSquare() {
         return this->xRightSquare;
+    }
+    inline float getLeftInner() {
+        return this->leftInner;
+    }
+    inline float getRightInner() {
+        return this->rightInner;
+    }
+    inline float getTopInner() {
+        return this->topInner;
+    }
+    inline float getBotInner() {
+        return this->botInner;
     }
 
     inline TrafficLight* getTrafficLights() {
