@@ -124,6 +124,8 @@ void display()
 				toSpawn.setIdentifier(cars.size());
 				float red[3] = { 1,0,0 };
 				toSpawn.Init(shader, red, "textures/car.png");
+				toSpawn.setJunction(mapClass.getMapJunction(0, 0));
+				toSpawn.respawn((mapClass.getMapJunction(0, 0)));
 				cars.push_back(toSpawn);
 			}
 		}
@@ -137,6 +139,8 @@ void display()
 				toSpawn.setIdentifier(cars.size());
 				float red[3] = { 1,0,0 };
 				toSpawn.Init(shader, red, "textures/car.png");
+				toSpawn.setJunction(mapClass.getMapJunction(0, 0));
+				toSpawn.respawn((mapClass.getMapJunction(0, 0)));
 				cars.push_back(toSpawn);
 			}
 		}
@@ -273,6 +277,7 @@ void display()
 			}
 		}
 		//cout << "here" << endl;
+		cars[i].setJunction(mapClass.getMapJunction(0, 0));
 		cars[i].respawn((mapClass.getMapJunction(0, 0)));
 	end:
 		continue;
