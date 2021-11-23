@@ -27,6 +27,7 @@ void OBB::transformPoints(glm::mat4 matrix)
 		vert[i] = matrix*vertOriginal[i];
 		//std::cout << vert[i].x << ", " << vert[i].y << std::endl;
 	}
+	//std::cout << std::endl;
 }
 
 float OBB::xCentre(glm::mat4 matrix) {

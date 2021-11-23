@@ -215,6 +215,9 @@ noCar:
 			/*cout << i << ", " << j << endl;
 			cout << mapClass.getMap()[i][j].getName() << endl;*/
 			glm::mat4 junctionRender = glm::mat4(1.0f);
+			//std::cout << "Junc x pos = " << (*mapClass.getMapJunction(i, j)).GetXPos() << std::endl;
+			//std::cout << "Junc y pos = " << (*mapClass.getMapJunction(i, j)).GetYPos() << std::endl;
+
 			junctionRender = glm::translate(glm::mat4(1.0f), glm::vec3((*mapClass.getMapJunction(i, j)).GetXPos(), (*mapClass.getMapJunction(i, j)).GetYPos(), 0));
 			junctionRender = glm::rotate(junctionRender, glm::radians((*mapClass.getMapJunction(i, j)).getOrientation() * 90.0f), glm::vec3(0.0, 0.0, 1.0));
 			ModelViewMatrix = ViewMatrix * junctionRender;
@@ -296,6 +299,7 @@ noCar:
 	
 	//ProjectionMatrix = ViewMatrix;//glm::translate(ViewMatrix, glm::vec3(0, 0, 20));
 	for (int i = 0; i < cars.size(); i++) {
+		//cars[i].respawn(cars[i].getJunction());
 		//cars[i].respawn(cars[i].getJunction());
 		int direction = cars[i].decideDirection(cars[i].getEntryTurning());
 		ModelMatrix =  cars[i].rotate(12.0f / fps, direction, cars[i].getEntryTurning(), fps, cars);
