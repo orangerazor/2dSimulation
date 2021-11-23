@@ -13,6 +13,7 @@ private:
 	int exit;
 	float angle;
 	Junction* junction;
+	std::string previousJunction;
 
 public:
 	Car();
@@ -68,6 +69,14 @@ public:
 
 	inline Junction* getJunction() {
 		return this->junction;
+	}
+
+	inline void setPreviousJunction(std::string junctionIdentifier) {
+		this->previousJunction = junctionIdentifier;
+	}
+
+	inline std::string getPreviousJunction() {
+		return this->previousJunction;
 	}
 
 };

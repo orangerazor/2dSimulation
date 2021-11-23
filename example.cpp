@@ -109,7 +109,7 @@ void display()
 	ModelMatrix = glm::mat4(1.0f);
 
 	glm::vec3 pos = glm::vec3(xpos, ypos, 1.0);
-	std::cout << pos.x << std::endl;
+	/*std::cout << pos.x << std::endl;*/
 	ViewMatrix = glm::lookAt(pos, glm::vec3(pos.x, pos.y, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
 	//clear the colour and depth buffers
@@ -240,12 +240,15 @@ noCar:
 				}
 				ModelViewMatrix = ViewMatrix * moveLight;
 				(*mapClass.getMapJunction(i, j)).getTrafficLights()[k].Render(shader, ModelViewMatrix, ProjectionMatrix, moveLight);
+				//cout << "for loop map junction = " << mapClass.getMapJunction(i, j)->getIdentifier() << endl;
+
 			}
 		}
 	}
 
 	//works out if each car is colliding with a junction, else it respawns it
 	for (int i = 0; i < cars.size(); i++) {
+		//cout << "car current junction = " << cars[i].getJunction()->getIdentifier() << endl;
 		for (int j = 0; j < mapClass.getMap().size(); j++) {
 			for (int k = 0; k < mapClass.getMap()[0].size(); k++) {
 				//std::cout << "j = " << j << ", k = " << k << ", type = " << mapClass.getMapJunction(j, k)->getType() << std::endl;
@@ -254,9 +257,19 @@ noCar:
 					//std::cout << "j = " << j << ", k = " << k << ", type = " << mapClass.getMapJunction(j, k)->getType() << std::endl;
 					//std::cout << cars[i].getJunction() << endl;
 					//std::cout << mapClass.getMapJunction(j, k) << endl;
-					if (cars[i].getJunction() != mapClass.getMapJunction(j, k)) {
+					if (cars[i].getJunction() != mapClass.getMapJunction(j, k) && mapClass.getMapJunction(j, k)->getIdentifier() != cars[i].getPreviousJunction()) {
 						if (mapClass.getMapJunction(j, k)->getType() != RoadType::N) {
+							//cout << "map junction = " << mapClass.getMapJunction(j, k)->getIdentifier() << endl;
+							//cout << "previous junction = " << cars[i].getPreviousJunction() << endl;
+							//cout << "current junction = " << cars[i].getJunction()->getIdentifier() << endl;
+							cars[i].setPreviousJunction(cars[i].getJunction()->getIdentifier());
 							cars[i].setJunction((mapClass.getMapJunction(j, k)));
+							cars[i].getJunction()->setIdentifier(mapClass.getMapJunction(j, k)->getIdentifier());
+							//cout << "map junction = " << mapClass.getMapJunction(j, k)->getIdentifier() << endl;
+							//cout << "previous junction = " << cars[i].getPreviousJunction() << endl;
+							//cout << "current junction = " << cars[i].getJunction()->getIdentifier() << endl;
+							//int entry = cars[i].entryPoint();
+							//cars[i].decideDirection(entry);
 							//cout << "entry 2 = " << entry << endl;
 							//cars[i].decideDirection(entry);
 

@@ -141,6 +141,10 @@ public:
         return this->identifier;
     }
 
+    inline void setIdentifier(std::string identifier) {
+        this->identifier = identifier;
+    }
+
    
 
     
