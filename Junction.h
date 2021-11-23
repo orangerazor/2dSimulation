@@ -10,6 +10,7 @@
 #include <array>
 #include <vector>
 #include <sstream>
+#include <utility>
 #include "glm\glm.hpp"
 #include "Sprite.h"
 #include "TrafficLight.h"
@@ -45,6 +46,7 @@ private:
     float xRightSquare;
     float ySideCentre;
     float xVerticalCentre;
+    std::pair<bool, int> spawnable;
 
     // Respawn boxes
     // Left
@@ -143,6 +145,15 @@ public:
 
     inline void setIdentifier(std::string identifier) {
         this->identifier = identifier;
+    }
+
+    inline void setSpawnable(bool spawnable, int entrance) {
+        this->spawnable.first = spawnable;
+        this->spawnable.second = entrance;
+    }
+
+    inline std::pair<bool, int> getSpawnable() {
+        return this->spawnable;
     }
 
    

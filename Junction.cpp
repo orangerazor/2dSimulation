@@ -13,6 +13,8 @@ Junction::Junction() {
     this->speedLimit = 0;
     this->type = RoadType::N;
     this->state = true;
+    this->spawnable.first = false;
+    this->spawnable.second = NULL;
     //https://www.codegrepper.com/code-examples/cpp/convert+pointer+address+to+string+c%2B%2B
     std::stringstream ss;
     ss << &this->name;
@@ -95,6 +97,8 @@ Junction::Junction(std::string name, int orientation, int speedLimit, glm::mat4 
     std::stringstream ss;
     ss << &this->name;
     this->identifier = ss.str();
+    this->spawnable.first = false;
+    this->spawnable.second = NULL;
 }
 
 Junction::~Junction()

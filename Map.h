@@ -1,17 +1,20 @@
 #include "Sprite.h"
 #include "Junction.h"
+#include <utility>
 
 class Map : public Sprite {
 private:
     int width;
     int height;
     std::vector<std::vector<Junction>> map;
+    std::vector<std::pair<int, int>> spawns;
 
 public:
     Map(int height, int width);
     Map(std::vector<std::vector<Junction>> map);
     Map();
     ~Map();
+    void initialiseSpawns();
     void addJunction(Junction junction, int posX, int posY);
     void removeJunction(int posX, int posY);
     inline int getWidth() {

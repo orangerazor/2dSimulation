@@ -33,7 +33,6 @@ Map::~Map()
 
 void Map::addJunction(Junction junction, int posY, int posX)
 {
-	
 	this->map[posY][posX] = junction;
 }
 
@@ -52,4 +51,17 @@ Junction Map::getMiddle() {
 	std::cout <<"x="<< middle % this->height << std::endl;
 
 	return this->map[middle / this->height][middle % this->height];
+}
+
+void Map::initialiseSpawns() {
+	for (int i = 0; i < this->height; i++){
+		for (int j = 0; j < this->width; j++) {
+			if (this->map[i][j].getSpawnable().first == true) {
+				std::pair<int, int> temp;
+				temp.first = i;
+				temp.second = j;
+				this->spawns.push_back(temp);
+			}
+		}
+	}
 }

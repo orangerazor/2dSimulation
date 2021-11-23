@@ -21,6 +21,7 @@ using namespace std;
 #include "Map.h"
 #include <chrono>
 #include <thread>
+#include <utility>
 
 
 #include <iostream>
@@ -291,6 +292,7 @@ noCar:
 	respawn:
 		cars[i].setJunction(mapClass.getMapJunction(1, 0));
 		cars[i].respawn((mapClass.getMapJunction(1, 0)));
+
 	end:
 		//cars[i].entryPoint();
 		continue;
@@ -368,13 +370,17 @@ void init()
 	
 	mapClass.addJunction(road, 0, 1);
 	(*mapClass.getMapJunction(0, 1)).setOrientation(0);
+	(*mapClass.getMapJunction(0, 1)).setSpawnable(true, 2);
 	mapClass.addJunction(xJunction, 1, 1);
 	mapClass.addJunction(road, 1, 0);
 	(*mapClass.getMapJunction(1, 0)).setOrientation(1);
+	(*mapClass.getMapJunction(1, 0)).setSpawnable(true, 0);
 	mapClass.addJunction(road, 1, 2);
 	(*mapClass.getMapJunction(1, 2)).setOrientation(1);
+	(*mapClass.getMapJunction(1, 2)).setSpawnable(true, 1);
 	mapClass.addJunction(road, 2, 1);
 	(*mapClass.getMapJunction(2, 1)).setOrientation(0);
+	(*mapClass.getMapJunction(2, 1)).setSpawnable(true, 3);
 	//(*mapClass.getMapJunction(0, 1)).setOrientation(1);
 	//mapClass.addJunction(emptyJunction, 0, 2);
 	//mapClass.addJunction(road, 1, 0);
@@ -432,6 +438,7 @@ void init()
 			}
 		}
 	}
+	mapClass.initialiseSpawns();
 
 	//junction.SetWidth(15.0f * scale * (2481 / 2481.0f));
 	//junction.SetHeight(15.0f * scale);
