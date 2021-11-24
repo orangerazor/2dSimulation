@@ -25,7 +25,9 @@ void OBB::transformPoints(glm::mat4 matrix)
 	{
 		vert[i] = matrix*vertOriginal[i]; 
 		vert[i] = matrix*vertOriginal[i];
-		//std::cout << vert[i].x << ", " << vert[i].y << std::endl;
+		if (i == 0) {
+			//std::cout << vert[i].x << ", " << vert[i].y << std::endl;
+		}
 	}
 	//std::cout << std::endl;
 }

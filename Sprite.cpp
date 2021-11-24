@@ -227,7 +227,10 @@ void Sprite::Render(Shader& shader, glm::mat4& ModelViewMatrix, glm::mat4& Proje
 	//std::cout << this->getHeight() << std::endl;
 	/****UPDATE THE CORNER VALUES BASED ON TRANSFORMATION***/
 	//std::cout << m_Height << std::endl;
+	//std::cout << "X before = " << obb.vert[0].x << " Y before = " << obb.vert[0].y << std::endl;
+	//std::cout << ModelMatrix[3][0] << ", " << ModelMatrix[3][1] << std::endl;
 	obb.transformPoints(ModelMatrix);
+	//std::cout << "X after = " << obb.vert[0].x << " Y after = " << obb.vert[0].y << std::endl;
 	collide.transformPoints(ModelMatrix);
 	//m_xpos = obb.xCentre(ModelViewMatrix);
 	//m_ypos = obb.yCentre(ModelViewMatrix);

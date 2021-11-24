@@ -61,7 +61,7 @@ std::vector<Car> cars(0);
 //std::vector< std::vector<Junction> > map(2, column);
 Junction tJunction = Junction::Junction("T", 0, 0, glm::mat4(1.0f), RoadType::T);
 Junction xJunction = Junction::Junction("X", 0, 0, glm::mat4(1.0f), RoadType::X);
-Junction road = Junction::Junction("R", 1, 0, glm::mat4(1.0f), RoadType::S);
+Junction road = Junction::Junction("R", 0, 0, glm::mat4(1.0f), RoadType::S);
 Junction emptyJunction = Junction::Junction();
 Map mapClass = Map::Map(3, 3);
 
@@ -177,8 +177,8 @@ void display()
 				toSpawn.setIdentifier(cars.size());
 				float red[3] = { 1,0,0 };
 				toSpawn.Init(shader, red, "textures/car.png");
-				toSpawn.setJunction(mapClass.getMapJunction(0, 1));
-				toSpawn.respawn((mapClass.getMapJunction(0, 1)));
+				toSpawn.setJunction(mapClass.getMapJunction(1, 0));
+				toSpawn.respawn((mapClass.getMapJunction(1, 0)));
 				cars.push_back(toSpawn);
 			}
 		}
@@ -206,10 +206,25 @@ noCar:
 	for (int i = 0; i < mapClass.getMap().size(); i++) {
 		for (int j = 0; j < mapClass.getMap()[0].size(); j++) {
 			glm::mat4 junctionRender = glm::mat4(1.0f);
-			junctionRender = glm::translate(glm::mat4(1.0f), glm::vec3((*mapClass.getMapJunction(i, j)).GetXPos(), (*mapClass.getMapJunction(i, j)).GetYPos(), 0));
+			junctionRender = glm::translate(junctionRender, glm::vec3((*mapClass.getMapJunction(i, j)).GetXPos(), (*mapClass.getMapJunction(i, j)).GetYPos(), 0));
 			junctionRender = glm::rotate(junctionRender, glm::radians((*mapClass.getMapJunction(i, j)).getOrientation() * 90.0f), glm::vec3(0.0, 0.0, 1.0));
+			//if (i == 1 && j == 0) {
+			//	for (int k = 0; k < 4; k++) {
+			//		for (int l = 0; l < 4; l++) {
+			//			std::cout << "[ " << junctionRender[l][k] << " ] ";
+			//		}
+			//		std::cout << std::endl;
+			//	}
+			//	std::cout << std::endl;
+			//}
 			ModelViewMatrix = ViewMatrix * junctionRender;
+			if (i == 1 && j == 0) {
+				//std::cout << "LOOK HERE YA BIG BAFOON" << std::endl;
+			}
 			(*mapClass.getMapJunction(i, j)).Render(shader, ModelViewMatrix, ProjectionMatrix, junctionRender);
+			if (i == 1 && j == 0) {
+				//std::cout << "ENDS HERE YA BIG FLAFOON" << std::endl;
+			}
 			for (int k = 0; k < 4; k++) {
 				glm::mat4 moveLight = glm::mat4(1.0f);
 				switch (k) {
@@ -260,8 +275,8 @@ noCar:
 			}
 		}
 	respawn:
-		cars[i].setJunction(mapClass.getMapJunction(2, 1));
-		cars[i].respawn((mapClass.getMapJunction(2, 1)));
+		cars[i].setJunction(mapClass.getMapJunction(1, 0));
+		cars[i].respawn((mapClass.getMapJunction(1, 0)));
 
 	end:
 		//cars[i].entryPoint();
@@ -329,8 +344,8 @@ void init()
 		cars[i].SetHeight(scale);
 		cars[i].setIdentifier(i);
 	}
-	mapClass.addJunction(road, 0, 0);
-	(*mapClass.getMapJunction(0, 0)).setOrientation(0);
+	//mapClass.addJunction(road, 0, 0);
+	//(*mapClass.getMapJunction(0, 0)).setOrientation(0);
 	(*mapClass.getMapJunction(0, 0)).setSpawnable(true, 0);
 	mapClass.addJunction(road, 0, 1);
 	(*mapClass.getMapJunction(0, 1)).setOrientation(0);
