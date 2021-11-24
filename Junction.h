@@ -10,7 +10,6 @@
 #include <array>
 #include <vector>
 #include <sstream>
-#include <utility>
 #include "glm\glm.hpp"
 #include "Sprite.h"
 #include "TrafficLight.h"
@@ -46,18 +45,6 @@ private:
     float xRightSquare;
     float ySideCentre;
     float xVerticalCentre;
-    std::pair<bool, int> spawnable;
-
-    // Respawn boxes
-    // Left
-    float leftInner;
-    // Right
-    float rightInner;
-    // Top
-    float topInner;
-    //Bottom
-    float botInner;
-
     std::string identifier;
 
 public:
@@ -108,18 +95,6 @@ public:
     inline float getXRightSquare() {
         return this->xRightSquare;
     }
-    inline float getLeftInner() {
-        return this->leftInner;
-    }
-    inline float getRightInner() {
-        return this->rightInner;
-    }
-    inline float getTopInner() {
-        return this->topInner;
-    }
-    inline float getBotInner() {
-        return this->botInner;
-    }
 
     inline TrafficLight* getTrafficLights() {
         return this->trafficLights;
@@ -141,19 +116,6 @@ public:
     //}
     inline std::string getIdentifier(){
         return this->identifier;
-    }
-
-    inline void setIdentifier(std::string identifier) {
-        this->identifier = identifier;
-    }
-
-    inline void setSpawnable(bool spawnable, int entrance) {
-        this->spawnable.first = spawnable;
-        this->spawnable.second = entrance;
-    }
-
-    inline std::pair<bool, int> getSpawnable() {
-        return this->spawnable;
     }
 
    
