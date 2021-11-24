@@ -1,3 +1,4 @@
+#pragma once
 #include "Sprite.h"
 #include "Junction.h"
 #include <utility>
@@ -37,6 +38,9 @@ public:
     }
     inline void setMap(std::vector<std::vector<Junction>> map) {
         this->map = map;
+    }
+    inline std::vector<std::pair<int, int>> getSpawns() {
+        return this->spawns;
     }
     Junction getMiddle();
 };

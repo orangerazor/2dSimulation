@@ -7,9 +7,6 @@ Map::Map(int height, int width)
 	this->height = height;
 	std::vector<std::vector<Junction>> map(height, std::vector<Junction>(width));
 	this->map = map;
-
-
-
 }
 
 Map::Map(std::vector<std::vector<Junction>> map)

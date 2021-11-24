@@ -1,7 +1,11 @@
 #pragma once
 #include "glm\glm.hpp"
-#include "Junction.h"
+#include "Map.h"
+#include "glm/ext/matrix_transform.hpp"
+#include <vector>
+#include <random>
 #include "Sprite.h"
+
 
 class Car : public Sprite
 {
@@ -24,7 +28,8 @@ public:
 	int decideDirection(int entryPoint);
 	void respawn(Junction *junction, int presetEntry = -1);
 	void newSpawn(int entry);
-	int setSpawn();
+	int setSpawn(int entry = -1);
+	void mapCarRespawn(Map map);
 
 	void setCurrentJunction(std::string name);
 	std::string getCurrentJunction();

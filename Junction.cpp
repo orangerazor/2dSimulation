@@ -15,10 +15,11 @@ Junction::Junction() {
     this->state = true;
     this->spawnable.first = false;
     this->spawnable.second = NULL;
-    //https://www.codegrepper.com/code-examples/cpp/convert+pointer+address+to+string+c%2B%2B
-    std::stringstream ss;
-    ss << &this->name;
-    this->identifier = ss.str();
+    ////https://www.codegrepper.com/code-examples/cpp/convert+pointer+address+to+string+c%2B%2B
+    //std::stringstream ss;
+    //ss << &this->name;
+    this->identifier = (&this->name)->c_str();
+    std::cout << "ident = " << this->type << std::endl;
 }
 
 Junction::Junction(std::string name, int orientation, int speedLimit, glm::mat4 rotation, RoadType type) {
@@ -93,10 +94,8 @@ Junction::Junction(std::string name, int orientation, int speedLimit, glm::mat4 
             this->trafficLights[i] = TrafficLight::TrafficLight(2);
         }
     }
-    //https://www.codegrepper.com/code-examples/cpp/convert+pointer+address+to+string+c%2B%2B
-    std::stringstream ss;
-    ss << &this->name;
-    this->identifier = ss.str();
+    this->identifier = (&this->name)->c_str();
+    std::cout << "ident = " << this->type << std::endl;
     this->spawnable.first = false;
     this->spawnable.second = NULL;
 }

@@ -102,7 +102,6 @@ void readjustScreen(int x, int y, int width, int height) {
 	glViewport(x, y, width, height);
 }
 
-
 void display()
 
 {
@@ -137,15 +136,16 @@ void display()
 				toSpawn.setIdentifier(cars.size());
 				float red[3] = { 1,0,0 };
 				toSpawn.Init(shader, red, "textures/car.png");
-				toSpawn.setJunction(mapClass.getMapJunction(1, 0));
-				toSpawn.respawn((mapClass.getMapJunction(1, 0)));
+				/*toSpawn.setJunction(mapClass.getMapJunction(1, 0));
+				toSpawn.respawn((mapClass.getMapJunction(1, 0)));*/
+				toSpawn.mapCarRespawn(mapClass);
 				cars.push_back(toSpawn);
 			}
 		}
 	}
 	else {
 		if (secondElapsed >= 1000000) {
-			if (cars.size() < 7) {
+			if (cars.size() < 1) {
 				for (int i = 0; i < cars.size(); i++) {
 					Junction currentJunc = *mapClass.getMapJunction(1, 0);
 					float carPosX = cars[i].GetXPos();
@@ -181,8 +181,9 @@ void display()
 				toSpawn.setIdentifier(cars.size());
 				float red[3] = { 1,0,0 };
 				toSpawn.Init(shader, red, "textures/car.png");
-				toSpawn.setJunction(mapClass.getMapJunction(1, 0));
-				toSpawn.respawn((mapClass.getMapJunction(1, 0)));
+				//toSpawn.setJunction(mapClass.getMapJunction(1, 0));
+				//toSpawn.respawn((mapClass.getMapJunction(1, 0)));
+				toSpawn.mapCarRespawn(mapClass);
 				cars.push_back(toSpawn);
 			}
 		}
@@ -287,8 +288,9 @@ noCar:
 			}
 		}
 	respawn:
-		cars[i].setJunction(mapClass.getMapJunction(1, 0));
-		cars[i].respawn((mapClass.getMapJunction(1, 0)));
+		//cars[i].setJunction(mapClass.getMapJunction(1, 0));
+		//cars[i].respawn((mapClass.getMapJunction(1, 0)));
+		cars[i].mapCarRespawn(mapClass);
 
 	end:
 		//cars[i].entryPoint();
@@ -363,7 +365,7 @@ void init()
 		cars[i].SetHeight(scale);
 		cars[i].setIdentifier(i);
 	}
-	
+	//mapClass.addJunction(road, 0, 0);
 	mapClass.addJunction(road, 0, 1);
 	(*mapClass.getMapJunction(0, 1)).setOrientation(0);
 	(*mapClass.getMapJunction(0, 1)).setSpawnable(true, 2);
