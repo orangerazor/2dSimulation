@@ -323,21 +323,22 @@ int Car::setSpawn() {
 	std::vector<int> possibleTurnings;
 	for (int i = 0; i < numTurns; i++) {
 		if ((*junction).getTurning(i) == true) {
+			std::cout << "i = " << i << std::endl;
 			possibleTurnings.push_back(i);
 		}
 	}
 	
 	int random = rand() % possibleTurnings.size();
-	random = 0;
+	//random = 0;
 	int turningIndex = possibleTurnings.at(random);
 	//std::cout << "X coord junc centre = " << (*junction).GetXPos() << std::endl;
 	//std::cout << "Y coord junc centre = " << (*junction).GetYPos() << std::endl;
 	//std::cout << "Junc height = " << junction->getHeight() << std::endl;
-	std::cout << "Fool me one time, shame on you " << (*junction).GetOBB().vertOriginal[0].x << std::endl;
-	std::cout << "Fool me twice time, can't put the blame on you " << (*junction).GetOBB().vertOriginal[0].y << std::endl;
-	//std::cout << "turningIndex = " << turningIndex << std::endl;
+	std::cout << "Fool me one time, shame on you " << (*junction).GetOBB().vert[0].x << std::endl;
+	std::cout << "Fool me twice time, can't put the blame on you " << (*junction).GetOBB().vert[0].y << std::endl;
 	//std::cout << "junc height = " << (*junction).GetOBB().vertOriginal[0].y << ", " << ((*junction).getHeight() * 7 / 12) << std::endl;
 	std::cout << "Fool me three times, fuck the peace sign, load the choppers let it rain on you " << junction->GetXPos() << ", " << junction->GetYPos() << std::endl;
+	std::cout << "turningIndex = " << turningIndex << std::endl;
 	switch (turningIndex) {
 	case(0):
 		this->SetXpos((*junction).GetOBB().vert[0].x);
