@@ -1,8 +1,6 @@
 #include "Car.h"
 const double PI = 3.141592653589793238463;
-#include "glm/ext/matrix_transform.hpp"
-#include <vector>
-#include <random>
+
 
 Car::Car(glm::mat4 rotation) {
 	rayStart = glm::vec3(0, 0, 0);
@@ -102,8 +100,10 @@ int Car::entryPoint()
 }
 
 int Car::decideDirection(int entryPoint) {
-	//std::cout << junction->getIdentifier() << std::endl;
-	if (currentJunction == (*junction).getIdentifier()) {
+	std::cout << "currentJunction = " << currentJunction << std::endl;
+	std::cout << "identifier = " << this->junction->getIdentifier() << std::endl;
+
+	if (currentJunction == this->junction->getIdentifier()) {
 		return exit;
 	}
 	int numTurns = (*junction).getTurnings().size();
@@ -293,24 +293,22 @@ void Car::respawn(Junction *junction, int presetEntry) {
 			break;
 		}
 		else {
-			switch (presetEntry) {
+			this->setSpawn(presetEntry);
+			entryTurning = this->entryPoint();
+			//int direction = this->decideDirection(junction, entryTurning);
+			switch (entryTurning) {
 			case(0):
-				this->SetXpos((*junction).GetOBB().vertOriginal[0].x + ((*junction).getWidth() * 1 / 6));
-				this->SetYpos((*junction).GetOBB().vertOriginal[0].y + ((*junction).getHeight() * 7 / 12));
+				angle += glm::radians(180.0f);
 				break;
 			case(1):
-				this->SetXpos((*junction).GetOBB().vertOriginal[0].x + ((*junction).getWidth() * 5 / 6));
-				this->SetYpos((*junction).GetOBB().vertOriginal[0].y + ((*junction).getHeight() * 5 / 12));
 				break;
 			case(2):
-				this->SetXpos((*junction).GetOBB().vertOriginal[0].x + ((*junction).getWidth() * 7 / 12));
-				this->SetYpos((*junction).GetOBB().vertOriginal[0].y + ((*junction).getHeight() * 5 / 6));
+				angle += glm::radians(90.0f);
 				break;
 			case(3):
-				this->SetXpos((*junction).GetOBB().vertOriginal[0].x + (((*junction).getWidth() * 5 / 12)));
-				this->SetYpos((*junction).GetOBB().vertOriginal[0].y + ((*junction).getHeight() * 1 / 6));
-				break;
+				angle += glm::radians(270.0f);
 			}
+			
 		}
 	}
 }
@@ -341,18 +339,13 @@ void Car::newSpawn(int entry) {
 	currentJunction = "";
 }
 
-int Car::setSpawn() {
-	//std::cout << "X coord junc obb = " << (*junction).GetOBB().vertOriginal[0].x << std::endl;
-	//std::cout << "Y coord junc obb = " << (*junction).GetOBB().vertOriginal[0].y << std::endl;
-
-	//std::cout << "X coord car centre = " << m_xpos << std::endl;
-	//std::cout << "Y coord car centre = " << m_ypos  << std::endl;
-
+int Car::setSpawn(int entry)
+{
+	int spawnEntrance;
 	int numTurns = (*junction).getTurnings().size();
 	std::vector<int> possibleTurnings;
 	for (int i = 0; i < numTurns; i++) {
 		if ((*junction).getTurning(i) == true) {
-			std::cout << "i = " << i << std::endl;
 			possibleTurnings.push_back(i);
 		}
 	}
@@ -406,6 +399,19 @@ int Car::setSpawn() {
 	//std::cout << "Y coord car centre = " << m_ypos << std::endl;
 	std::cout << "Set spawn = " << turningIndex << std::endl;
 	return turningIndex;
+}
+
+void Car::mapCarRespawn(Map map)
+{
+
+	std::pair<int, int> spawnJunctionIndex = map.getSpawns()[rand() % map.getSpawns().size()];
+	std::cout << "first = " << spawnJunctionIndex.first << ", second = " << spawnJunctionIndex.second << std::endl;
+	std::cout << "identifier = " << (map.getMapJunction(spawnJunctionIndex.first, spawnJunctionIndex.second)->getIdentifier()) << std::endl;
+
+	this->junction = (map.getMapJunction(spawnJunctionIndex.first, spawnJunctionIndex.second));
+	this->respawn(this->junction, this->junction->getSpawnable().second);
+	std::cout << "thisJunc = " << this->junction->getIdentifier() << std::endl;
+	//(*car).setJunction(mapClass.getMapJunction(spawnJunctionIndex.first, spawnJunctionIndex.second));
 }
 
 glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std::vector<Car> collideCheck)

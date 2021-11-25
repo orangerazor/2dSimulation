@@ -7,9 +7,6 @@ Map::Map(int height, int width)
 	this->height = height;
 	std::vector<std::vector<Junction>> map(height, std::vector<Junction>(width));
 	this->map = map;
-
-
-
 }
 
 Map::Map(std::vector<std::vector<Junction>> map)
@@ -31,6 +28,9 @@ Map::~Map()
 {
 }
 
+Junction* Map::getMapJunction(int y, int x) {
+	return &this->map[y][x];
+}
 void Map::addJunction(Junction junction, int posY, int posX)
 {
 	this->map[posY][posX] = junction;
