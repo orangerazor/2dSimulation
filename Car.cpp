@@ -37,6 +37,7 @@ Car::Car(glm::mat4 rotation) {
 
 int Car::entryPoint()
 {
+	std::cout << "Are you ever called deerie?" << std::endl;
 	//convert to use a junction variable
 	if (currentJunction == (*junction).getIdentifier()) {
 		return entryTurning;
@@ -69,12 +70,39 @@ int Car::entryPoint()
 			}
 		}
 	}
+	switch (junction->getOrientation()) {
+	case 0:
+		break;
+	case 1:
+		switch (entryPoint2) {
+		case 0:
+			entryPoint2 = 3;
+			break;
+		case 1:
+			entryPoint2 = 2;
+			break;
+		case 2:
+			entryPoint2 = 0;
+			break;
+		case 3:
+			entryPoint2 = 1;
+			break;
+		}
+		break;
+	case 2:
+		break;
+	case 3:
+		break;
+	case 4:
+		break;
+	}
 	entryTurning = entryPoint2;
 	std::cout << "entry = " << entryPoint2 << std::endl;
 	return entryPoint2;
 }
 
 int Car::decideDirection(int entryPoint) {
+	//std::cout << junction->getIdentifier() << std::endl;
 	if (currentJunction == (*junction).getIdentifier()) {
 		return exit;
 	}
@@ -246,8 +274,9 @@ void Car::respawn(Junction *junction, int presetEntry) {
 		break;
 	default:
 		if (presetEntry == -1) {
-			this->setSpawn();
-			entryTurning = this->entryPoint();
+			entryTurning = this->setSpawn();
+			//entryTurning = this->entryPoint();
+			//std::cout << "entryTurning = " << entryTurning << std::endl;
 			//int direction = this->decideDirection(junction, entryTurning);
 			switch (entryTurning) {
 			case(0):
@@ -334,33 +363,48 @@ int Car::setSpawn() {
 	//std::cout << "X coord junc centre = " << (*junction).GetXPos() << std::endl;
 	//std::cout << "Y coord junc centre = " << (*junction).GetYPos() << std::endl;
 	//std::cout << "Junc height = " << junction->getHeight() << std::endl;
-	std::cout << "Fool me one time, shame on you " << junction->GetOBB().vert[3].x << std::endl;
-	std::cout << "Fool me twice time, can't put the blame on you " << junction->GetOBB().vert[3].y << std::endl;
+	//std::cout << "Fool me one time, shame on you " << junction->GetOBB().vert[3].x << std::endl;
+	//std::cout << "Fool me twice time, can't put the blame on you " << junction->GetOBB().vert[3].y << std::endl;
 	//std::cout << "junc height = " << (*junction).GetOBB().vertOriginal[0].y << ", " << ((*junction).getHeight() * 7 / 12) << std::endl;
-	std::cout << "Fool me three times, fuck the peace sign, load the choppers let it rain on you " << junction->GetXPos() << ", " << junction->GetYPos() << std::endl;
-	std::cout << "turningIndex = " << turningIndex << std::endl;
+	//std::cout << "Fool me three times, fuck the peace sign, load the choppers let it rain on you " << junction->GetXPos() << ", " << junction->GetYPos() << std::endl;
+	int correctVert = 0;
+	switch (junction->getOrientation()) {
+	case 0:
+		correctVert = 0;
+		break;
+	case 1:
+		correctVert = 3;
+		break;
+	case 2:
+		correctVert = 2;
+		break;
+	case 3:
+		correctVert = 1;
+		break;
+	}
 	switch (turningIndex) {
 	case(0):
-		this->SetXpos((*junction).GetOBB().vert[0].x);
-		this->SetYpos((*junction).GetOBB().vert[0].y + ((*junction).getHeight() * 7 / 12));
+		this->SetXpos((*junction).GetOBB().vert[correctVert].x);
+		this->SetYpos((*junction).GetOBB().vert[correctVert].y + ((*junction).getHeight() * 7 / 12));
 		break;
 	case(1):
-		this->SetXpos((*junction).GetOBB().vert[0].x + ((*junction).getWidth()));
-		this->SetYpos((*junction).GetOBB().vert[0].y + ((*junction).getHeight() * 5 / 12));
+		this->SetXpos((*junction).GetOBB().vert[correctVert].x + ((*junction).getWidth()));
+		this->SetYpos((*junction).GetOBB().vert[correctVert].y + ((*junction).getHeight() * 5 / 12));
 		break;
 	case(2):
-		this->SetXpos((*junction).GetOBB().vert[0].x + ((*junction).getWidth() * 7 / 12));
-		this->SetYpos((*junction).GetOBB().vert[0].y + ((*junction).getHeight()));
+		this->SetXpos((*junction).GetOBB().vert[correctVert].x + ((*junction).getWidth() * 7 / 12));
+		this->SetYpos((*junction).GetOBB().vert[correctVert].y + ((*junction).getHeight()));
 		break;
 	case(3):
-		this->SetXpos((*junction).GetOBB().vert[0].x + (((*junction).getWidth() * 5 / 12)));
-		this->SetYpos((*junction).GetOBB().vert[0].y);
+		this->SetXpos((*junction).GetOBB().vert[correctVert].x + (((*junction).getWidth() * 5 / 12)));
+		this->SetYpos((*junction).GetOBB().vert[correctVert].y);
 		break;
 	}
 	currentJunction = "";
 	
 	//std::cout << "X coord car centre = " << m_xpos << std::endl;
 	//std::cout << "Y coord car centre = " << m_ypos << std::endl;
+	std::cout << "Set spawn = " << turningIndex << std::endl;
 	return turningIndex;
 }
 

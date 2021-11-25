@@ -133,8 +133,8 @@ void display()
 				toSpawn.setIdentifier(cars.size());
 				float red[3] = { 1,0,0 };
 				toSpawn.Init(shader, red, "textures/car.png");
-				toSpawn.setJunction(mapClass.getMapJunction(1, 0));
-				toSpawn.respawn((mapClass.getMapJunction(1, 0)));
+				//toSpawn.setJunction(mapClass.getMapJunction(1, 0));
+				//toSpawn.respawn((mapClass.getMapJunction(1, 0)));
 				cars.push_back(toSpawn);
 			}
 		}
@@ -177,8 +177,8 @@ void display()
 				toSpawn.setIdentifier(cars.size());
 				float red[3] = { 1,0,0 };
 				toSpawn.Init(shader, red, "textures/car.png");
-				toSpawn.setJunction(mapClass.getMapJunction(1, 0));
-				toSpawn.respawn((mapClass.getMapJunction(1, 0)));
+				//toSpawn.setJunction(mapClass.getMapJunction(1, 0));
+				//toSpawn.respawn((mapClass.getMapJunction(1, 0)));
 				cars.push_back(toSpawn);
 			}
 		}
@@ -275,8 +275,8 @@ noCar:
 			}
 		}
 	respawn:
-		cars[i].setJunction(mapClass.getMapJunction(1, 0));
-		cars[i].respawn((mapClass.getMapJunction(1, 0)));
+		cars[i].setJunction(mapClass.getMapJunction(1, 2));
+		cars[i].respawn((mapClass.getMapJunction(1, 2)));
 
 	end:
 		//cars[i].entryPoint();
@@ -291,17 +291,17 @@ noCar:
 			if (j == i) {
 				continue;
 			}
-			if (cars[i].IsInCollision(cars[j].GetOBB())) {
-				int direction = cars[i].decideDirection(cars[i].getEntryTurning());
-				ModelMatrix = cars[i].rotate(12.0f / fps, direction, cars[i].getEntryTurning(), fps, cars);
-			}
+			//if (cars[i].IsInCollision(cars[j].GetOBB())) {
+			//	int direction = cars[i].decideDirection(cars[i].getEntryTurning());
+			//	ModelMatrix = cars[i].rotate(12.0f / fps, direction, cars[i].getEntryTurning(), fps, cars);
+			//}
 		}
 		ModelViewMatrix = ViewMatrix * ModelMatrix;
-		for (int j = 0; j < cars.size(); j++) {
-			if (cars[i].IsInCollision(cars[j].GetOBB()) && i != j) {
-				//delete cars[i];
-			}
-		}
+		//for (int j = 0; j < cars.size(); j++) {
+		//	if (cars[i].IsInCollision(cars[j].GetOBB()) && i != j) {
+		//		//delete cars[i];
+		//	}
+		//}
 		cars[i].Render(shader, ModelViewMatrix, ProjectionMatrix, ModelMatrix);
 		
 	}
