@@ -18,6 +18,8 @@ public:
     void initialiseSpawns();
     void addJunction(Junction junction, int posX, int posY);
     void removeJunction(int posX, int posY);
+    Junction* getMapJunction(int y, int x);
+
     inline int getWidth() {
         return this->width;
     }
@@ -33,9 +35,7 @@ public:
     inline std::vector<std::vector<Junction>> getMap() {
         return this->map;
     }
-    inline Junction* getMapJunction(int y, int x) {
-        return &this->map[y][x];
-    }
+    
     inline void setMap(std::vector<std::vector<Junction>> map) {
         this->map = map;
     }

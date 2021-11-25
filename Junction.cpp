@@ -19,7 +19,7 @@ Junction::Junction() {
     //std::stringstream ss;
     //ss << &this->name;
     this->identifier = (&this->name)->c_str();
-    std::cout << "ident = " << this->type << std::endl;
+    std::cout << "ident = " << (&this->name)->c_str() << std::endl;
 }
 
 Junction::Junction(std::string name, int orientation, int speedLimit, glm::mat4 rotation, RoadType type) {
@@ -95,7 +95,7 @@ Junction::Junction(std::string name, int orientation, int speedLimit, glm::mat4 
         }
     }
     this->identifier = (&this->name)->c_str();
-    std::cout << "ident = " << this->type << std::endl;
+    std::cout << "ident = " << (&this->name)->c_str() << std::endl;
     this->spawnable.first = false;
     this->spawnable.second = NULL;
 }

@@ -28,6 +28,9 @@ Map::~Map()
 {
 }
 
+Junction* Map::getMapJunction(int y, int x) {
+	return &this->map[y][x];
+}
 void Map::addJunction(Junction junction, int posY, int posX)
 {
 	this->map[posY][posX] = junction;

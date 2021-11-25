@@ -73,7 +73,7 @@ int Car::entryPoint()
 }
 
 int Car::decideDirection(int entryPoint) {
-	//std::cout << "currentJunction = " << currentJunction << std::endl;
+	std::cout << "currentJunction = " << currentJunction << std::endl;
 	std::cout << "identifier = " << this->junction->getIdentifier() << std::endl;
 
 	if (currentJunction == this->junction->getIdentifier()) {
@@ -358,8 +358,8 @@ void Car::mapCarRespawn(Map map)
 	std::cout << "first = " << spawnJunctionIndex.first << ", second = " << spawnJunctionIndex.second << std::endl;
 	std::cout << "identifier = " << (map.getMapJunction(spawnJunctionIndex.first, spawnJunctionIndex.second)->getIdentifier()) << std::endl;
 
-	this->setJunction(map.getMapJunction(spawnJunctionIndex.first, spawnJunctionIndex.second));
-	this->respawn(map.getMapJunction(spawnJunctionIndex.first, spawnJunctionIndex.second), map.getMapJunction(spawnJunctionIndex.first, spawnJunctionIndex.second)->getSpawnable().second);
+	this->junction = (map.getMapJunction(spawnJunctionIndex.first, spawnJunctionIndex.second));
+	this->respawn(this->junction, this->junction->getSpawnable().second);
 	std::cout << "thisJunc = " << this->junction->getIdentifier() << std::endl;
 	//(*car).setJunction(mapClass.getMapJunction(spawnJunctionIndex.first, spawnJunctionIndex.second));
 }
