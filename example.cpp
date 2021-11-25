@@ -25,6 +25,7 @@ using namespace std;
 
 
 #include <iostream>
+#include <string>
 using namespace std;
 int fps = 40;
 
@@ -68,6 +69,7 @@ Map mapClass = Map::Map(3, 3);
 TrafficLight* trafficLights[1][4];
 TrafficLight trafficLight;
 float coordinates[4][3];
+vector<vector<Car>> buffer;
 
 
 //OPENGL FUNCTION PROTOTYPES
@@ -123,7 +125,7 @@ void display()
 		}
 		hourElapsed = 0;
 	}
-	if (hour > 4 && hour < 6) {
+	if (hour > 14 && hour < 16) {
 		if (secondElapsed >= 500000) {
 			if (cars.size() < 16) {
 				Car toSpawn = Car(glm::mat4(1.0f));
@@ -140,36 +142,36 @@ void display()
 	}
 	else {
 		if (secondElapsed >= 1000000) {
-			if (cars.size() < 1) {
-				for (int i = 0; i < cars.size(); i++) {
-					Junction currentJunc = *mapClass.getMapJunction(1, 0);
-					float carPosX = cars[i].GetXPos();
-					float carPosY = cars[i].GetYPos();
-					if (
-						carPosX <= currentJunc.getLeftInner() && 
-						carPosX >= (currentJunc.GetXPos() - (currentJunc.getWidth() * 1/2)) &&
-						carPosY <= currentJunc.getYTopSquare() &&
-						carPosY >= currentJunc.getYBotSquare() &&
+			if (cars.size() < 200) {
+				//for (int i = 0; i < cars.size(); i++) {
+				//	Junction currentJunc = *mapClass.getMapJunction(1, 0);
+				//	float carPosX = cars[i].GetXPos();
+				//	float carPosY = cars[i].GetYPos();
+				//	if (
+				//		carPosX <= currentJunc.getLeftInner() && 
+				//		carPosX >= (currentJunc.GetXPos() - (currentJunc.getWidth() * 1/2)) &&
+				//		carPosY <= currentJunc.getYTopSquare() &&
+				//		carPosY >= currentJunc.getYBotSquare() &&
 
-						carPosX >= currentJunc.getRightInner() &&
-						carPosX <= currentJunc.GetXPos() + (currentJunc.getWidth() * 1/2) &&
-						carPosY <= currentJunc.getYTopSquare() &&
-						carPosY >= currentJunc.getYBotSquare() &&
+				//		carPosX >= currentJunc.getRightInner() &&
+				//		carPosX <= currentJunc.GetXPos() + (currentJunc.getWidth() * 1/2) &&
+				//		carPosY <= currentJunc.getYTopSquare() &&
+				//		carPosY >= currentJunc.getYBotSquare() &&
 
-						carPosY >= currentJunc.getTopInner() &&
-						carPosY <= currentJunc.GetYPos() + (currentJunc.getHeight() * 1/2) &&
-						carPosX <= currentJunc.getXRightSquare() &&
-						carPosX >= currentJunc.getXLeftSquare() &&
+				//		carPosY >= currentJunc.getTopInner() &&
+				//		carPosY <= currentJunc.GetYPos() + (currentJunc.getHeight() * 1/2) &&
+				//		carPosX <= currentJunc.getXRightSquare() &&
+				//		carPosX >= currentJunc.getXLeftSquare() &&
 
-						carPosY <= currentJunc.getBotInner() &&
-						carPosY >= currentJunc.GetYPos() - (currentJunc.getWidth() * 1 / 2) &&
-						carPosX <= currentJunc.getXRightSquare() &&
-						carPosX >= currentJunc.getXLeftSquare()
-						) {
-						//cout << "MATRIX DODGE" << endl;
-						//goto noCar;
-					}
-				}
+				//		carPosY <= currentJunc.getBotInner() &&
+				//		carPosY >= currentJunc.GetYPos() - (currentJunc.getWidth() * 1 / 2) &&
+				//		carPosX <= currentJunc.getXRightSquare() &&
+				//		carPosX >= currentJunc.getXLeftSquare()
+				//		) {
+				//		//cout << "MATRIX DODGE" << endl;
+				//		//goto noCar;
+				//	}
+				//}
 				Car toSpawn = Car(glm::mat4(1.0f));
 				toSpawn.SetWidth(scale * (500 / 264.0f));
 				toSpawn.SetHeight(scale);
@@ -290,25 +292,34 @@ noCar:
 	
 	for (int i = 0; i < cars.size(); i++) {
 		//std::cout << "display junction = " << cars[i].getJunction()->getIdentifier() << std::endl;
-		int direction = cars[i].decideDirection(cars[i].getEntryTurning());
-		ModelMatrix =  cars[i].rotate(12.0f / fps, direction, cars[i].getEntryTurning(), fps, cars);
 		for (int j = 0; j < cars.size(); j++) {
 			if (j == i) {
 				continue;
 			}
-			//if (cars[i].IsInCollision(cars[j].GetOBB())) {
-			//	int direction = cars[i].decideDirection(cars[i].getEntryTurning());
-			//	ModelMatrix = cars[i].rotate(12.0f / fps, direction, cars[i].getEntryTurning(), fps, cars);
-			//}
+			if (cars[i].IsInCollision(cars[j].GetOBB())) {
+				std::cout << "When we collide we cum together" << std::endl;
+				int carY = stoi( cars[i].getJunction()->getIdentifier().substr(0,1) );
+				int carX = stoi( cars[i].getJunction()->getIdentifier().substr(1, 1) );
+				pair<int, int> carIndicies;
+				carIndicies.first = carY;
+				carIndicies.second = carX;
+				for (int k = 0; k < mapClass.getSpawns().size(); k++) {
+					if (mapClass.getSpawns()[k] == carIndicies) {
+						buffer.at(k).push_back(cars[i]);
+						goto noRenderForYou;
+					}
+				}
+			}
 		}
+		int direction = cars[i].decideDirection(cars[i].getEntryTurning());
+		ModelMatrix = cars[i].rotate(12.0f / fps, direction, cars[i].getEntryTurning(), fps, cars);
 		ModelViewMatrix = ViewMatrix * ModelMatrix;
-		//for (int j = 0; j < cars.size(); j++) {
-		//	if (cars[i].IsInCollision(cars[j].GetOBB()) && i != j) {
-		//		//delete cars[i];
-		//	}
-		//}
 		cars[i].Render(shader, ModelViewMatrix, ProjectionMatrix, ModelMatrix);
-		
+		goto hopSkipAndAJump;
+	noRenderForYou:
+		std::cout << "YEEEET" << endl;
+	hopSkipAndAJump:
+		cout;
 	}
 
 	glDisable(GL_BLEND);
@@ -406,6 +417,7 @@ void init()
 		}
 	}
 	mapClass.initialiseSpawns();
+	buffer.resize(mapClass.getSpawns().size());
 
 	for (int i = 0; i < cars.size(); i++) {
 		cars[i].Init(shader, red, "textures/car.png");
