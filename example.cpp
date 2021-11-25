@@ -289,7 +289,7 @@ noCar:
 
 	
 	for (int i = 0; i < cars.size(); i++) {
-		std::cout << "display junction = " << cars[i].getJunction()->getIdentifier() << std::endl;
+		//std::cout << "display junction = " << cars[i].getJunction()->getIdentifier() << std::endl;
 		int direction = cars[i].decideDirection(cars[i].getEntryTurning());
 		ModelMatrix =  cars[i].rotate(12.0f / fps, direction, cars[i].getEntryTurning(), fps, cars);
 		for (int j = 0; j < cars.size(); j++) {

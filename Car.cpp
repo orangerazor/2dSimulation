@@ -100,8 +100,7 @@ int Car::entryPoint()
 }
 
 int Car::decideDirection(int entryPoint) {
-	std::cout << "currentJunction = " << currentJunction << std::endl;
-	std::cout << "identifier = " << this->junction->getIdentifier() << std::endl;
+
 
 	if (currentJunction == this->junction->getIdentifier()) {
 		return exit;
@@ -349,10 +348,7 @@ int Car::setSpawn(int entry)
 			possibleTurnings.push_back(i);
 		}
 	}
-	
-	int random = rand() % possibleTurnings.size();
-	//random = 0;
-	int turningIndex = possibleTurnings.at(random);
+
 	//std::cout << "X coord junc centre = " << (*junction).GetXPos() << std::endl;
 	//std::cout << "Y coord junc centre = " << (*junction).GetYPos() << std::endl;
 	//std::cout << "Junc height = " << junction->getHeight() << std::endl;
@@ -412,12 +408,12 @@ void Car::mapCarRespawn(Map map)
 {
 
 	std::pair<int, int> spawnJunctionIndex = map.getSpawns()[rand() % map.getSpawns().size()];
-	std::cout << "first = " << spawnJunctionIndex.first << ", second = " << spawnJunctionIndex.second << std::endl;
-	std::cout << "identifier = " << (map.getMapJunction(spawnJunctionIndex.first, spawnJunctionIndex.second)->getIdentifier()) << std::endl;
+	//std::cout << "first = " << spawnJunctionIndex.first << ", second = " << spawnJunctionIndex.second << std::endl;
+	//std::cout << "identifier = " << (map.getMapJunction(spawnJunctionIndex.first, spawnJunctionIndex.second)->getIdentifier()) << std::endl;
 
 	this->junction = (map.getMapJunction(spawnJunctionIndex.first, spawnJunctionIndex.second));
 	this->respawn(this->junction, this->junction->getSpawnable().second);
-	std::cout << "thisJunc = " << this->junction->getIdentifier() << std::endl;
+	//std::cout << "thisJunc = " << this->junction->getIdentifier() << std::endl;
 	//(*car).setJunction(mapClass.getMapJunction(spawnJunctionIndex.first, spawnJunctionIndex.second));
 }
 
