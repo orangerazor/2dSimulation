@@ -375,6 +375,13 @@ int Car::setSpawn(int entry)
 		correctVert = 1;
 		break;
 	}
+	if (entry = -1) {
+		spawnEntrance = rand() % possibleTurnings.size();
+	}
+	else {
+		spawnEntrance = entry;
+	}
+	int turningIndex = possibleTurnings.at(spawnEntrance);
 	switch (turningIndex) {
 	case(0):
 		this->SetXpos((*junction).GetOBB().vert[correctVert].x);
