@@ -1,7 +1,11 @@
 #pragma once
 #include "glm\glm.hpp"
-#include "Junction.h"
+#include "Map.h"
+#include "glm/ext/matrix_transform.hpp"
+#include <vector>
+#include <random>
 #include "Sprite.h"
+
 
 class Car : public Sprite
 {
@@ -12,21 +16,20 @@ private:
 	int exitTurning = -1;
 	int exit;
 	float angle;
+	Junction* junction;
+	std::string previousJunction;
+
 public:
 	Car();
 	Car(glm::mat4 rotation);
-	glm::mat4 turn(float speed, int direction);
-	glm::mat4 rotate(float speed, int direction, int entryPoint, Junction junction, float fps, std::vector<Car> collideCheck);
-	glm::mat4 move(glm::mat4& rotation, glm::vec3& position, float& speed);
-	glm::mat4 moveJunction(Junction junction, int desiredTurning, glm::mat4 objectRotation, glm::vec3 pos, float speed);
-	glm::mat4 drive(float speed, int direction, float angle);
+	glm::mat4 rotate(float speed, int direction, int entryPoint, float fps, std::vector<Car> collideCheck);
 
-	int entryPoint(Junction junction);
-	glm::mat4 faceJunction(int entryPoint, glm::mat4);
-	int decideDirection(Junction junction, int entryPoint);
-	void respawn(Junction junction, int presetEntry = -1);
-	void newSpawn(Junction junction, int entry);
-	int setSpawn(Junction junction);
+	int entryPoint();
+	int decideDirection(int entryPoint);
+	void respawn(Junction *junction, int presetEntry = -1);
+	void newSpawn(int entry);
+	int setSpawn(int entry = -1);
+	void mapCarRespawn(Map map);
 
 	void setCurrentJunction(std::string name);
 	std::string getCurrentJunction();
@@ -63,4 +66,22 @@ public:
 	inline float getAngle() {
 		return angle;
 	}
+
+	inline void setJunction(Junction *junction) {
+		this->junction = junction;
+		this->currentJunction = "";
+	}
+
+	inline Junction* getJunction() {
+		return this->junction;
+	}
+
+	inline void setPreviousJunction(std::string junctionIdentifier) {
+		this->previousJunction = junctionIdentifier;
+	}
+
+	inline std::string getPreviousJunction() {
+		return this->previousJunction;
+	}
+
 };
