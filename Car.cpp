@@ -35,7 +35,7 @@ Car::Car(glm::mat4 rotation) {
 
 int Car::entryPoint()
 {
-	std::cout << "Are you ever called deerie?" << std::endl;
+	//std::cout << "Are you ever called deerie?" << std::endl;
 	//convert to use a junction variable
 	if (currentJunction == (*junction).getIdentifier()) {
 		return entryTurning;
@@ -191,7 +191,7 @@ void Car::respawn(Junction *junction, int presetEntry) {
 		if (m_xpos <= ((*junction).GetXPos() - ((*junction).getWidth() / 2))) {
 			std::cout << "reset time " << std::endl;
 			std::cout << "0" << std::endl;
-			int newSpawn = this->setSpawn();
+			int newSpawn = this->setSpawn(presetEntry);
 			switch (newSpawn) {
 			case(0):
 				angle -= glm::radians(180.0f);
@@ -212,7 +212,7 @@ void Car::respawn(Junction *junction, int presetEntry) {
 		if (m_xpos >= ((*junction).GetXPos() + ((*junction).getWidth() / 2))) {
 			std::cout << "reset time " << std::endl;
 			std::cout << "1" << std::endl;
-			int newSpawn = this->setSpawn();
+			int newSpawn = this->setSpawn(presetEntry);
 			switch (newSpawn) {
 			case(0):
 				break;
@@ -233,7 +233,7 @@ void Car::respawn(Junction *junction, int presetEntry) {
 		if (m_ypos >= ((*junction).GetYPos() + ((*junction).getHeight() / 2))) {
 			std::cout << "reset time " << std::endl;
 			std::cout << "2" << std::endl;
-			int newSpawn = this->setSpawn();
+			int newSpawn = this->setSpawn(presetEntry);
 			switch (newSpawn) {
 			case(0):
 				angle -= glm::radians(90.0f);
@@ -254,7 +254,7 @@ void Car::respawn(Junction *junction, int presetEntry) {
 		if (m_ypos <= ((*junction).GetYPos() - ((*junction).getHeight() / 2))) {
 			std::cout << "reset time " << std::endl;
 			std::cout << "3" << std::endl;
-			int newSpawn = this->setSpawn();
+			int newSpawn = this->setSpawn(presetEntry);
 			switch (newSpawn) {
 			case(0):
 				angle -= glm::radians(270.0f);
@@ -273,7 +273,7 @@ void Car::respawn(Junction *junction, int presetEntry) {
 		break;
 	default:
 		if (presetEntry == -1) {
-			entryTurning = this->setSpawn();
+			entryTurning = this->setSpawn(presetEntry);
 			//entryTurning = this->entryPoint();
 			//std::cout << "entryTurning = " << entryTurning << std::endl;
 			//int direction = this->decideDirection(junction, entryTurning);
@@ -340,6 +340,7 @@ void Car::newSpawn(int entry) {
 
 int Car::setSpawn(int entry)
 {
+	
 	int spawnEntrance;
 	int numTurns = (*junction).getTurnings().size();
 	std::vector<int> possibleTurnings;
@@ -348,14 +349,6 @@ int Car::setSpawn(int entry)
 			possibleTurnings.push_back(i);
 		}
 	}
-
-	//std::cout << "X coord junc centre = " << (*junction).GetXPos() << std::endl;
-	//std::cout << "Y coord junc centre = " << (*junction).GetYPos() << std::endl;
-	//std::cout << "Junc height = " << junction->getHeight() << std::endl;
-	//std::cout << "Fool me one time, shame on you " << junction->GetOBB().vert[3].x << std::endl;
-	//std::cout << "Fool me twice time, can't put the blame on you " << junction->GetOBB().vert[3].y << std::endl;
-	//std::cout << "junc height = " << (*junction).GetOBB().vertOriginal[0].y << ", " << ((*junction).getHeight() * 7 / 12) << std::endl;
-	//std::cout << "Fool me three times, fuck the peace sign, load the choppers let it rain on you " << junction->GetXPos() << ", " << junction->GetYPos() << std::endl;
 	int correctVert = 0;
 	switch (junction->getOrientation()) {
 	case 0:
@@ -370,15 +363,18 @@ int Car::setSpawn(int entry)
 	case 3:
 		correctVert = 1;
 		break;
+
 	}
-	if (entry = -1) {
+	
+	if (entry == -1) {
 		spawnEntrance = rand() % possibleTurnings.size();
 	}
 	else {
 		spawnEntrance = entry;
 	}
-	int turningIndex = possibleTurnings.at(spawnEntrance);
-	switch (turningIndex) {
+	std::cout << "entry = " << entry << std::endl;
+	//int turningIndex = possibleTurnings.at(spawnEntrance);
+	switch (entry) {
 	case(0):
 		this->SetXpos((*junction).GetOBB().vert[correctVert].x);
 		this->SetYpos((*junction).GetOBB().vert[correctVert].y + ((*junction).getHeight() * 7 / 12));
@@ -400,8 +396,8 @@ int Car::setSpawn(int entry)
 	
 	//std::cout << "X coord car centre = " << m_xpos << std::endl;
 	//std::cout << "Y coord car centre = " << m_ypos << std::endl;
-	std::cout << "Set spawn = " << turningIndex << std::endl;
-	return turningIndex;
+	std::cout << "Set spawn = " << entry << std::endl;
+	return entry;
 }
 
 void Car::mapCarRespawn(Map map)

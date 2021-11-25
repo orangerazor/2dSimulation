@@ -125,7 +125,7 @@ void display()
 		}
 		hourElapsed = 0;
 	}
-	if (hour > 14 && hour < 16) {
+	if (hour > 16 && hour < 18) {
 		if (secondElapsed >= 500000) {
 			if (cars.size() < 16) {
 				Car toSpawn = Car(glm::mat4(1.0f));
@@ -180,6 +180,9 @@ void display()
 				toSpawn.Init(shader, red, "textures/car.png");
 				//toSpawn.setJunction(mapClass.getMapJunction(1, 0));
 				//toSpawn.respawn((mapClass.getMapJunction(1, 0)));
+				//std::pair<int, int> spawnJunctionIndex = mapClass.getSpawns()[rand() % mapClass.getSpawns().size()];
+				//toSpawn.setJunction((mapClass.getMapJunction(spawnJunctionIndex.first, spawnJunctionIndex.second)));
+				//toSpawn.respawn(toSpawn.getJunction(), toSpawn.getJunction()->getSpawnable().second);
 				cars.push_back(toSpawn);
 			}
 		}
@@ -260,7 +263,9 @@ noCar:
 				if (cars[i].IsInCollision(mapClass.getMapJunction(j, k)->GetOBB())) {					
 					if (cars[i].getJunction() != mapClass.getMapJunction(j, k) && mapClass.getMapJunction(j, k)->getIdentifier() != cars[i].getPreviousJunction()) {
 						if (mapClass.getMapJunction(j, k)->getType() != RoadType::N) {
+							//cout << "previous1 = " << cars[i].getPreviousJunction() << endl;
 							cars[i].setPreviousJunction(cars[i].getJunction()->getIdentifier());
+							//cout << "previous2 = " << cars[i].getPreviousJunction() << endl;
 							cars[i].setJunction((mapClass.getMapJunction(j, k)));
 							cars[i].getJunction()->setIdentifier(mapClass.getMapJunction(j, k)->getIdentifier());
 							//int entry = cars[i].entryPoint();
@@ -282,6 +287,11 @@ noCar:
 		std::pair<int, int> spawnJunctionIndex = mapClass.getSpawns()[rand() % mapClass.getSpawns().size()];
 		cars[i].setJunction((mapClass.getMapJunction(spawnJunctionIndex.first, spawnJunctionIndex.second)));
 		cars[i].respawn(cars[i].getJunction(), cars[i].getJunction()->getSpawnable().second);
+		cars[i].setPreviousJunction("");
+		cout << "spawnJunction = " << cars[i].getJunction()->getIdentifier() << endl;
+		cout << "spawn entrance = " << cars[i].getJunction()->getSpawnable().second << endl;
+		cout << "x = " << cars[i].GetXPos() << ", y = " << cars[i].GetYPos() << endl;
+		//cout << "previous0 = " << cars[i].getPreviousJunction() << endl;
 		/*cars[i].mapCarRespawn(mapClass);*/
 
 	end:
@@ -385,6 +395,7 @@ void init()
 			(*mapClass.getMapJunction(i, j)).SetXpos(j* (*mapClass.getMapJunction(i, j)).getWidth());
 			(*mapClass.getMapJunction(i, j)).SetYpos(-i* (*mapClass.getMapJunction(i, j)).getHeight());
 			(*mapClass.getMapJunction(i, j)).calculateLines();
+			(*mapClass.getMapJunction(i, j)).setIdentifier(std::to_string(i) + std::to_string(j));
 
 			switch ((*mapClass.getMapJunction(i, j)).getType())
 			{
