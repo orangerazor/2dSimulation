@@ -131,6 +131,64 @@ public:
 
     inline void setOrientation(int orientation) {
         this->orientation = orientation;
+        switch (type) {
+        case(RoadType::S):
+            switch (orientation) {
+            case(0):
+            case(2):
+                this->turnings[0] = false;
+                this->turnings[1] = false;
+                this->turnings[2] = true;
+                this->turnings[3] = true;
+                break;
+            case(1):
+            case(3):
+            default:
+                this->turnings[0] = true;
+                this->turnings[1] = true;
+                this->turnings[2] = false;
+                this->turnings[3] = false;
+                break;
+            }
+            break;
+        case(RoadType::T):
+            switch (orientation) {
+            case(1):
+                this->turnings[0] = true;
+                this->turnings[1] = false;
+                this->turnings[2] = true;
+                this->turnings[3] = true;
+
+                break;
+            case(2):
+                this->turnings[0] = true;
+                this->turnings[1] = true;
+                this->turnings[2] = true;
+                this->turnings[3] = false;
+                break;
+            case(3):
+                this->turnings[0] = false;
+                this->turnings[1] = true;
+                this->turnings[2] = true;
+                this->turnings[3] = true;
+                break;
+            case(0):
+            default:
+                this->turnings[0] = true;
+                this->turnings[1] = true;
+                this->turnings[2] = false;
+                this->turnings[3] = true;
+                break;
+            }
+            break;
+        case(RoadType::X):
+            this->turnings[0] = true;
+            this->turnings[1] = true;
+            this->turnings[2] = true;
+            this->turnings[3] = true;
+            break;
+
+        }
     }
 
     inline RoadType getType() {
