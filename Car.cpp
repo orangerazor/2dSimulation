@@ -322,6 +322,7 @@ void Car::respawn(Junction *junction, int presetEntry) {
 		}
 		else {
 			entryTurning = this->setSpawn(presetEntry);
+			//entryTurning = this->entryPoint();
 			//int direction = this->decideDirection(junction, entryTurning);
 			switch (entryTurning) {
 			case(0):
