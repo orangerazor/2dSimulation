@@ -68,10 +68,42 @@ int Car::entryPoint()
 			}
 		}
 	}
+	std::cout << "entrypoint 1 = " << entryPoint2 << std::endl;
+	std::cout << "orientation = " << junction->getOrientation() << std::endl;
 	switch (junction->getOrientation()) {
-	case 0:
-		break;
 	case 1:
+		switch (entryPoint2) {
+		case 0:
+			entryPoint2 = 2;
+			break;
+		case 1:
+			entryPoint2 = 3;
+			break;
+		case 2:
+			entryPoint2 = 1;
+			break;
+		case 3:
+			entryPoint2 = 0;
+			break;
+		}
+		break;
+	case 2:
+		switch (entryPoint2) {
+		case 0:
+			entryPoint2 = 1;
+			break;
+		case 1:
+			entryPoint2 = 0;
+			break;
+		case 2:
+			entryPoint2 = 3;
+			break;
+		case 3:
+			entryPoint2 = 2;
+			break;
+		}
+		break;
+	case 3:
 		switch (entryPoint2) {
 		case 0:
 			entryPoint2 = 3;
@@ -87,20 +119,16 @@ int Car::entryPoint()
 			break;
 		}
 		break;
-	case 2:
-		break;
-	case 3:
-		break;
-	case 4:
-		break;
 	}
 	entryTurning = entryPoint2;
+	std::cout << "entrypoint 2 = " << entryPoint2 << std::endl;
 	std::cout << "entry = " << entryPoint2 << std::endl;
 	return entryPoint2;
 }
 
 int Car::decideDirection(int entryPoint) {
 
+	//std::cout << "entryPoint = " << entryPoint << std::endl;
 
 	if (currentJunction == this->junction->getIdentifier()) {
 		return exit;
@@ -116,6 +144,7 @@ int Car::decideDirection(int entryPoint) {
 		}
 	}
 	//srand(time(NULL));
+	std::cout << "possibleTurnings = " << possibleTurnings.size() << std::endl;
 	int random = rand() % possibleTurnings.size();
 
 	currentJunction = (*junction).getIdentifier();

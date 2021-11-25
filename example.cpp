@@ -266,6 +266,8 @@ noCar:
 							//cout << "previous2 = " << cars[i].getPreviousJunction() << endl;
 							cars[i].setJunction((mapClass.getMapJunction(j, k)));
 							cars[i].getJunction()->setIdentifier(mapClass.getMapJunction(j, k)->getIdentifier());
+							cars[i].entryPoint();
+							std::cout << "current junction = " << cars[i].getJunction()->getType() << std::endl;
 							//int entry = cars[i].entryPoint();
 							//cars[i].decideDirection(entry);
 							//cars[i].decideDirection(entry);
@@ -286,9 +288,11 @@ noCar:
 		cars[i].setJunction((mapClass.getMapJunction(spawnJunctionIndex.first, spawnJunctionIndex.second)));
 		cars[i].respawn(cars[i].getJunction(), cars[i].getJunction()->getSpawnable().second);
 		cars[i].setPreviousJunction("");
-		cout << "spawnJunction = " << cars[i].getJunction()->getIdentifier() << endl;
-		cout << "spawn entrance = " << cars[i].getJunction()->getSpawnable().second << endl;
-		cout << "x = " << cars[i].GetXPos() << ", y = " << cars[i].GetYPos() << endl;
+
+		std::cout << "current junction = " << cars[i].getJunction()->getType() << std::endl;
+		//cout << "spawnJunction = " << cars[i].getJunction()->getIdentifier() << endl;
+		//cout << "spawn entrance = " << cars[i].getJunction()->getSpawnable().second << endl;
+		//cout << "x = " << cars[i].GetXPos() << ", y = " << cars[i].GetYPos() << endl;
 		//cout << "previous0 = " << cars[i].getPreviousJunction() << endl;
 		/*cars[i].mapCarRespawn(mapClass);*/
 
