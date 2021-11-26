@@ -306,14 +306,19 @@ noCar:
 	int numSpawns = mapClass.getSpawns().size();
 	vector<bool> filledSpawns;
 	filledSpawns.resize(numSpawns);
+	vector<int> alreadyChecked;
 	for (int i = 0; i < cars.size(); i++) {
-		//std::cout << "display junction = " << cars[i].getJunction()->getIdentifier() << std::endl;
 		for (int j = 0; j < cars.size(); j++) {
 			if (j == i) {
 				continue;
 			}
-			if (cars[i].IsInCollision(cars[j].GetOBB())) {
-				//std::cout << "When we collide we cum together" << std::endl;
+			bool avoidDoubleCheck = false;
+			for (int k = 0; k < alreadyChecked.size(); k++) {
+				if (alreadyChecked.at(k) == i) {
+					avoidDoubleCheck = true;
+				}
+			}
+			if (cars[i].IsInCollision(cars[j].GetOBB()) && !avoidDoubleCheck) {
 				int carY = stoi( cars[i].getJunction()->getIdentifier().substr(0,1) );
 				int carX = stoi( cars[i].getJunction()->getIdentifier().substr(1, 1) );
 				pair<int, int> carIndicies;
@@ -321,6 +326,7 @@ noCar:
 				carIndicies.second = carX;
 				for (int k = 0; k < mapClass.getSpawns().size(); k++) {
 					if (mapClass.getSpawns()[k] == carIndicies) {
+						alreadyChecked.push_back(j);
 						buffer.at(k).push_back(cars[i]);
 						goto noRenderForYou;
 					}
@@ -424,8 +430,8 @@ void init()
 	mapClass.addJunction(road, 0, 1);
 	(*mapClass.getMapJunction(0, 1)).setOrientation(1);
 	(*mapClass.getMapJunction(0, 1)).setSpawnable(true, 0);
-	mapClass.addJunction(road, 0, 2);
-	(*mapClass.getMapJunction(0, 2)).setOrientation(1);
+	//mapClass.addJunction(road, 0, 2);
+	//(*mapClass.getMapJunction(0, 2)).setOrientation(1);
 	//mapClass.addJunction(road, 0, 1);
 	//(*mapClass.getMapJunction(0, 1)).setOrientation(0);
 	//(*mapClass.getMapJunction(0, 1)).setSpawnable(true, 2);
