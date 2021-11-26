@@ -308,6 +308,7 @@ noCar:
 	vector<bool> filledSpawns;
 	filledSpawns.resize(numSpawns);
 	vector<int> alreadyChecked;
+	alreadyChecked.resize(cars.size());
 	for (int i = 0; i < cars.size(); i++) {
 		for (int j = 0; j < cars.size(); j++) {
 			if (j == i) {
