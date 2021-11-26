@@ -142,7 +142,7 @@ void display()
 	}
 	else {
 		if (secondElapsed >= 1000000) {
-			if (cars.size() < 200) {
+			if (cars.size() < 7) {
 				//for (int i = 0; i < cars.size(); i++) {
 				//	Junction currentJunc = *mapClass.getMapJunction(1, 0);
 				//	float carPosX = cars[i].GetXPos();
@@ -310,15 +310,15 @@ noCar:
 	vector<int> alreadyChecked;
 	alreadyChecked.resize(cars.size());
 	for (int i = 0; i < cars.size(); i++) {
+		bool avoidDoubleCheck = false;
+		for (int k = 0; k < alreadyChecked.size(); k++) {
+			if (alreadyChecked.at(k) == i) {
+				avoidDoubleCheck = true;
+			}
+		}
 		for (int j = 0; j < cars.size(); j++) {
 			if (j == i) {
 				continue;
-			}
-			bool avoidDoubleCheck = false;
-			for (int k = 0; k < alreadyChecked.size(); k++) {
-				if (alreadyChecked.at(k) == i) {
-					avoidDoubleCheck = true;
-				}
 			}
 			if (cars[i].IsInCollision(cars[j].GetOBB()) && !avoidDoubleCheck) {
 				int carY = stoi( cars[i].getJunction()->getIdentifier().substr(0,1) );
@@ -330,6 +330,7 @@ noCar:
 					if (mapClass.getSpawns()[k] == carIndicies) {
 						alreadyChecked.push_back(j);
 						buffer.at(k).push_back(cars[i]);
+						cars.erase(cars.begin() + i);
 						goto noRenderForYou;
 					}
 				}
@@ -375,10 +376,13 @@ noCar:
 		int direction = cars[i].decideDirection(cars[i].getEntryTurning());
 		ModelMatrix = cars[i].rotate(12.0f / fps, direction, cars[i].getEntryTurning(), fps, cars);
 		ModelViewMatrix = ViewMatrix * ModelMatrix;
+		cout << "i = " << i << endl;
 		cars[i].Render(shader, ModelViewMatrix, ProjectionMatrix, ModelMatrix);
 		goto hopSkipAndAJump;
 	noRenderForYou:
-		//std::cout << "When we collide we come together" << endl;
+		//cars[i].SetXpos(INT_MAX);
+		//cars[i].SetYpos(INT_MAX);
+		//cout << "" << endl;
 		continue;
 	hopSkipAndAJump:
 		cout;
@@ -388,7 +392,7 @@ noCar:
 			int direction = buffer.at(i).at(0).decideDirection(buffer.at(i).at(0).getEntryTurning());
 			ModelMatrix = buffer.at(i).at(0).rotate(12.0f / fps, direction, cars[i].getEntryTurning(), fps, cars);
 			ModelViewMatrix = ViewMatrix * ModelMatrix;
-			buffer.at(i).at(0).Render(shader, ModelViewMatrix, ProjectionMatrix, ModelMatrix);
+			//buffer.at(i).at(0).Render(shader, ModelViewMatrix, ProjectionMatrix, ModelMatrix);
 		}
 	}
 

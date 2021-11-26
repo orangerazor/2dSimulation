@@ -145,7 +145,7 @@ int Car::decideDirection(int entryPoint) {
 		}
 	}
 	//srand(time(NULL));
-	std::cout << "possibleTurnings = " << possibleTurnings.size() << std::endl;
+	//std::cout << "possibleTurnings = " << possibleTurnings.size() << std::endl;
 	int random = rand() % possibleTurnings.size();
 
 	currentJunction = (*junction).getIdentifier();
@@ -209,7 +209,7 @@ int Car::decideDirection(int entryPoint) {
 	}
 	//std::cout << random << std::endl;
 	exit = random;
-	std::cout << "direction = " << exit << std::endl;
+	//std::cout << "direction = " << exit << std::endl;
 	return random;
 }
 
