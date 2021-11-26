@@ -269,7 +269,8 @@ noCar:
 							cars[i].setJunction((mapClass.getMapJunction(j, k)));
 							cars[i].getJunction()->setIdentifier(mapClass.getMapJunction(j, k)->getIdentifier());
 							cars[i].entryPoint();
-							std::cout << "current junction = " << cars[i].getJunction()->getType() << std::endl;
+							std::cout << "entry = " << cars[i].getEntryTurning() << std::endl;
+							//std::cout << "current junction = " << cars[i].getJunction()->getType() << std::endl;
 							//int entry = cars[i].entryPoint();
 							//cars[i].decideDirection(entry);
 							//cars[i].decideDirection(entry);
@@ -291,7 +292,7 @@ noCar:
 		cars[i].respawn(cars[i].getJunction(), cars[i].getJunction()->getSpawnable().second);
 		cars[i].setPreviousJunction("");
 
-		std::cout << "current junction = " << cars[i].getJunction()->getType() << std::endl;
+		//std::cout << "current junction = " << cars[i].getJunction()->getType() << std::endl;
 		//cout << "spawnJunction = " << cars[i].getJunction()->getIdentifier() << endl;
 		//cout << "spawn entrance = " << cars[i].getJunction()->getSpawnable().second << endl;
 		//cout << "x = " << cars[i].GetXPos() << ", y = " << cars[i].GetYPos() << endl;
@@ -376,7 +377,8 @@ noCar:
 		cars[i].Render(shader, ModelViewMatrix, ProjectionMatrix, ModelMatrix);
 		goto hopSkipAndAJump;
 	noRenderForYou:
-		std::cout << "When we collide we come together" << endl;
+		//std::cout << "When we collide we come together" << endl;
+		continue;
 	hopSkipAndAJump:
 		cout;
 	}
@@ -427,6 +429,11 @@ void init()
 		cars[i].SetHeight(scale);
 		cars[i].setIdentifier(i);
 	}
+	//mapClass.addJunction(road, 0, 1);
+	//(*mapClass.getMapJunction(0, 1)).setOrientation(1);
+	//(*mapClass.getMapJunction(0, 1)).setSpawnable(true, 0);
+	//mapClass.addJunction(road, 0, 2);
+	//(*mapClass.getMapJunction(0, 2)).setOrientation(1);
 	mapClass.addJunction(road, 0, 1);
 	(*mapClass.getMapJunction(0, 1)).setOrientation(1);
 	(*mapClass.getMapJunction(0, 1)).setSpawnable(true, 0);

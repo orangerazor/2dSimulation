@@ -46,12 +46,12 @@ int Car::entryPoint()
 		float xVert = INT_MAX;
 		float yVert = INT_MAX;
 		if (i < 3) {
-			xVert = ((*junction).GetOBB().vertOriginal[i].x + (*junction).GetOBB().vertOriginal[i + 1].x) / 2;
-			yVert = ((*junction).GetOBB().vertOriginal[i].y + (*junction).GetOBB().vertOriginal[i + 1].y) / 2;
+			xVert = ((*junction).GetOBB().vert[i].x + (*junction).GetOBB().vert[i + 1].x) / 2;
+			yVert = ((*junction).GetOBB().vert[i].y + (*junction).GetOBB().vert[i + 1].y) / 2;
 		}
 		else {
-			xVert = ((*junction).GetOBB().vertOriginal[i].x + (*junction).GetOBB().vertOriginal[0].x) / 2;
-			yVert = ((*junction).GetOBB().vertOriginal[i].y + (*junction).GetOBB().vertOriginal[0].y) / 2;
+			xVert = ((*junction).GetOBB().vert[i].x + (*junction).GetOBB().vert[0].x) / 2;
+			yVert = ((*junction).GetOBB().vert[i].y + (*junction).GetOBB().vert[0].y) / 2;
 		}
 		//std::cout << xVert << ", " << yVert << std::endl;
 		float distanceFromEdge = ((m_xpos - xVert) * (m_xpos - xVert)) + ((m_ypos - yVert) * (m_ypos - yVert));
@@ -68,22 +68,23 @@ int Car::entryPoint()
 			}
 		}
 	}
-	std::cout << "entrypoint 1 = " << entryPoint2 << std::endl;
-	std::cout << "orientation = " << junction->getOrientation() << std::endl;
+
+	//std::cout << "entrypoint 1 = " << entryPoint2 << std::endl;
+	//std::cout << "orientation = " << junction->getOrientation() << std::endl;
 	switch (junction->getOrientation()) {
 	case 1:
 		switch (entryPoint2) {
 		case 0:
-			entryPoint2 = 2;
-			break;
-		case 1:
 			entryPoint2 = 3;
 			break;
+		case 1:
+			entryPoint2 = 2;
+			break;
 		case 2:
-			entryPoint2 = 1;
+			entryPoint2 = 0;
 			break;
 		case 3:
-			entryPoint2 = 0;
+			entryPoint2 = 1;
 			break;
 		}
 		break;
@@ -106,23 +107,23 @@ int Car::entryPoint()
 	case 3:
 		switch (entryPoint2) {
 		case 0:
-			entryPoint2 = 3;
-			break;
-		case 1:
 			entryPoint2 = 2;
 			break;
+		case 1:
+			entryPoint2 = 3;
+			break;
 		case 2:
-			entryPoint2 = 0;
+			entryPoint2 = 1;
 			break;
 		case 3:
-			entryPoint2 = 1;
+			entryPoint2 = 0;
 			break;
 		}
 		break;
 	}
 	entryTurning = entryPoint2;
-	std::cout << "entrypoint 2 = " << entryPoint2 << std::endl;
-	std::cout << "entry = " << entryPoint2 << std::endl;
+	//std::cout << "entrypoint 2 = " << entryPoint2 << std::endl;
+	//std::cout << "entry = " << entryPoint2 << std::endl;
 	return entryPoint2;
 }
 
