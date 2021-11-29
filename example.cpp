@@ -49,7 +49,7 @@ float speed = 0;
 const double PI = 3.141592653589793238463;
 float angle = 0;
 float scale = 4.0f;
-float zoom = 0.25;
+float zoom = 0.5;
 float xpos = 0;
 float ypos = 0;
 
@@ -382,7 +382,7 @@ noCar:
 		int direction = cars[i].decideDirection(cars[i].getEntryTurning());
 		ModelMatrix = cars[i].rotate(12.0f / fps, direction, cars[i].getEntryTurning(), fps, cars);
 		ModelViewMatrix = ViewMatrix * ModelMatrix;
-		cout << "i = " << i << endl;
+		//cout << "i = " << i << endl;
 		cars[i].Render(shader, ModelViewMatrix, ProjectionMatrix, ModelMatrix);
 		goto hopSkipAndAJump;
 	noRenderForYou:

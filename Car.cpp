@@ -460,11 +460,11 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 	if ((*junction).getType() == RoadType::T || (*junction).getType() == RoadType::X) { //for checking that the road actually has traffic lights to obey by
 		switch (entryPoint) {
 		case(0):
-			if (m_xpos <= (*junction).getXLeftSquare() && m_xpos > ((*junction).getXLeftSquare() - (m_Height)) && !(*junction).getTrafficLights()[entryPoint].isGreen()) {
+			if ((m_xpos + m_Width / 2) <= (*junction).getXLeftSquare() && m_xpos > ((*junction).getXLeftSquare() - (m_Height)) && !(*junction).getTrafficLights()[entryPoint].isGreen()) {
 				//std::cout << "Bug A" << std::endl;
 				speed = 0;
 			}
-			else if (m_xpos >= (*junction).getXLeftSquare() + ((*junction).getWidth() * 1 / 12) && m_xpos <= (*junction).GetXPos() && (*junction).getTrafficLights()[1].getLights()[2] && direction == 1) {
+			else if ((m_xpos+m_Width/2) >= (*junction).getXLeftSquare() + ((*junction).getWidth() * 1 / 12) && m_xpos <= (*junction).GetXPos() && (*junction).getTrafficLights()[1].getLights()[2] && direction == 1) {
 				//std::cout << "Bug B" << std::endl;
 				//std::cout << (*junction).getTrafficLights()[1].isGreen() << std::endl;
 				speed = 0;
@@ -474,10 +474,10 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 			}
 			break;
 		case(1):
-			if (m_xpos >= (*junction).getXRightSquare() && m_xpos < ((*junction).getXRightSquare() + (m_Height)) && !(*junction).getTrafficLights()[entryPoint].getLights()[2]) {
+			if ((m_xpos - m_Width / 2) >= (*junction).getXRightSquare() && m_xpos < ((*junction).getXRightSquare() + (m_Height)) && !(*junction).getTrafficLights()[entryPoint].getLights()[2]) {
 				speed = 0;
 			}
-			else if (m_xpos <= (*junction).getXRightSquare() - ((*junction).getWidth() * 1 / 12) && m_xpos >= (*junction).GetXPos() && (*junction).getTrafficLights()[0].isGreen() && direction == 1) {
+			else if ((m_xpos - m_Width / 2) <= (*junction).getXRightSquare() - ((*junction).getWidth() * 1 / 12) && m_xpos >= (*junction).GetXPos() && (*junction).getTrafficLights()[0].isGreen() && direction == 1) {
 				speed = 0;
 			}
 			else {
@@ -485,10 +485,10 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 			}
 			break;
 		case(2):
-			if (m_ypos >= (*junction).getYTopSquare() && m_ypos < ((*junction).getYTopSquare() + (m_Height)) && !(*junction).getTrafficLights()[entryPoint].getLights()[2]) {
+			if ((m_ypos-m_Width/2) >= (*junction).getYTopSquare() && m_ypos < ((*junction).getYTopSquare() + (m_Height)) && !(*junction).getTrafficLights()[entryPoint].getLights()[2]) {
 				speed = 0;
 			}
-			else if (m_ypos <= (*junction).getYTopSquare() - ((*junction).getHeight() * 1 / 12) && m_ypos >= (*junction).GetYPos() && (*junction).getTrafficLights()[3].isGreen() && direction == 1) {
+			else if ((m_ypos - m_Width / 2) <= (*junction).getYTopSquare() - ((*junction).getHeight() * 1 / 12) && m_ypos >= (*junction).GetYPos() && (*junction).getTrafficLights()[3].isGreen() && direction == 1) {
 				speed = 0;
 			}
 			else {
@@ -496,10 +496,10 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 			}
 			break;
 		case(3):
-			if (m_ypos <= (*junction).getYBotSquare() && m_ypos > ((*junction).getYBotSquare() - (m_Height)) && !(*junction).getTrafficLights()[entryPoint].getLights()[2]) {
+			if ((m_ypos + m_Width / 2) <= (*junction).getYBotSquare() && m_ypos > ((*junction).getYBotSquare() - (m_Height)) && !(*junction).getTrafficLights()[entryPoint].getLights()[2]) {
 				speed = 0;
 			}
-			else if (m_ypos >= (*junction).getYBotSquare() + ((*junction).getHeight() * 1 / 12) && m_ypos <= (*junction).GetYPos() && (*junction).getTrafficLights()[2].isGreen() && direction == 1) {
+			else if ((m_ypos + m_Width / 2) >= (*junction).getYBotSquare() + ((*junction).getHeight() * 1 / 12) && m_ypos <= (*junction).GetYPos() && (*junction).getTrafficLights()[2].isGreen() && direction == 1) {
 				speed = 0;
 			}
 			else {
