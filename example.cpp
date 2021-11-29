@@ -112,7 +112,7 @@ void display()
 	ModelViewMatrix = glm::mat4(1.0f);
 	ModelMatrix = glm::mat4(1.0f);
 
-	glm::vec3 pos = glm::vec3(xpos, ypos, 1.0 * zoom);
+	glm::vec3 pos = glm::vec3(xpos, ypos, 1.0);
 	ViewMatrix = glm::lookAt(pos, glm::vec3(pos.x, pos.y, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
 	//clear the colour and depth buffers
