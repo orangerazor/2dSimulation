@@ -443,7 +443,7 @@ void init()
 		cars[i].setIdentifier(i);
 	}
 	mapClass.addJunction(tJunction,0,0);
-	mapClass.getMapJunction(0, 0)->setOrientation(1);
+	mapClass.getMapJunction(0, 0)->setOrientation(3);
 	mapClass.getMapJunction(0, 0)->setSpawnable(true, 2);
 	
 	//mapClass.addJunction(tJunction, 0, 0);
@@ -559,6 +559,7 @@ void init()
 					break;
 				}
 				if ((*mapClass.getMapJunction(i, j)).getTurnings()[k]) {
+
 					(*mapClass.getMapJunction(i, j)).getTrafficLights()[k].SetHeight(scale);
 					(*mapClass.getMapJunction(i, j)).getTrafficLights()[k].SetWidth(scale / 2);
 					(*mapClass.getMapJunction(i, j)).getTrafficLights()[k].Init(shader, red, "textures/blankTrafficLight.png");

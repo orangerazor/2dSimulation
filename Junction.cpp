@@ -121,24 +121,75 @@ void Junction::trafficLightFlow() {
     switch (type) {
     case(RoadType::T):
         if (state) {
+            switch (orientation)
+            {
 
-            trafficLights[0].nextLight();
-            trafficLights[1].nextLight();
-            /*std::cout << trafficLights[0].getLights()[0] << trafficLights[0].getLights()[1] << std::endl;*/
-            if (trafficLights[0].getLights()[0] && !trafficLights[0].getLights()[1] && trafficLights[0].getLights()[0] && !trafficLights[0].getLights()[1] && trafficLights[0].getTimeLeftInState()==0 && trafficLights[1].getTimeLeftInState() == 0) {
+            case(1):
+            case(3):
+                trafficLights[2].nextLight();
+                trafficLights[3].nextLight();
+                /*std::cout << trafficLights[0].getLights()[0] << trafficLights[0].getLights()[1] << std::endl;*/
+                if (trafficLights[2].getLights()[0] && !trafficLights[2].getLights()[1] && trafficLights[3].getLights()[0] && !trafficLights[3].getLights()[1] && trafficLights[2].getTimeLeftInState() == 0 && trafficLights[3].getTimeLeftInState() == 0) {
 
-                //std::cout << "test"<<std::endl;
-                //trafficLights[3].nextLight();
-                this->state = false;
+                    //std::cout << "test"<<std::endl;
+                    //trafficLights[3].nextLight();
+                    this->state = false;
+                }
+                break;
+            case(0):
+            case(2):
+            default:
+                trafficLights[0].nextLight();
+                trafficLights[1].nextLight();
+                /*std::cout << trafficLights[0].getLights()[0] << trafficLights[0].getLights()[1] << std::endl;*/
+                if (trafficLights[0].getLights()[0] && !trafficLights[0].getLights()[1] && trafficLights[0].getLights()[0] && !trafficLights[0].getLights()[1] && trafficLights[0].getTimeLeftInState() == 0 && trafficLights[1].getTimeLeftInState() == 0) {
+
+                    //std::cout << "test"<<std::endl;
+                    //trafficLights[3].nextLight();
+                    this->state = false;
+                }
+                break;
             }
+
+            
         }
         else {
-            trafficLights[3].nextLight();
-            if (trafficLights[3].getLights()[0] && !trafficLights[3].getLights()[1] && trafficLights[3].getTimeLeftInState() == 0) {
-                //trafficLights[0].nextLight();
-                //trafficLights[1].nextLight();
-                this->state = true;
+            switch (orientation) {
+            case(1):
+                trafficLights[0].nextLight();
+                if (trafficLights[0].getLights()[0] && !trafficLights[0].getLights()[1] && trafficLights[0].getTimeLeftInState() == 0) {
+                    //trafficLights[0].nextLight();
+                    //trafficLights[1].nextLight();
+                    this->state = true;
+                }
+                break;
+            case(2):
+                trafficLights[2].nextLight();
+                if (trafficLights[2].getLights()[0] && !trafficLights[2].getLights()[1] && trafficLights[2].getTimeLeftInState() == 0) {
+                    //trafficLights[0].nextLight();
+                    //trafficLights[1].nextLight();
+                    this->state = true;
+                }
+                break;
+            case(3):
+                trafficLights[1].nextLight();
+                if (trafficLights[1].getLights()[0] && !trafficLights[1].getLights()[1] && trafficLights[1].getTimeLeftInState() == 0) {
+                    //trafficLights[0].nextLight();
+                    //trafficLights[1].nextLight();
+                    this->state = true;
+                }
+                break;
+            case(0):
+            default:
+                trafficLights[3].nextLight();
+                if (trafficLights[3].getLights()[0] && !trafficLights[3].getLights()[1] && trafficLights[3].getTimeLeftInState() == 0) {
+                    //trafficLights[0].nextLight();
+                    //trafficLights[1].nextLight();
+                    this->state = true;
+                }
+                break;
             }
+            
         }
         break;
     case(RoadType::X):
