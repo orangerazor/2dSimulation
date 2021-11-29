@@ -49,7 +49,7 @@ float speed = 0;
 const double PI = 3.141592653589793238463;
 float angle = 0;
 float scale = 4.0f;
-float zoom = 0.25;
+float zoom = 0.5;
 float xpos = 0;
 float ypos = 0;
 
@@ -142,7 +142,7 @@ void display()
 	}
 	else {
 		if (secondElapsed >= 1000000) {
-			if (cars.size() < 7) {
+			if (cars.size() < 200) {
 				//for (int i = 0; i < cars.size(); i++) {
 				//	Junction currentJunc = *mapClass.getMapJunction(1, 0);
 				//	float carPosX = cars[i].GetXPos();
@@ -376,7 +376,7 @@ noCar:
 		int direction = cars[i].decideDirection(cars[i].getEntryTurning());
 		ModelMatrix = cars[i].rotate(12.0f / fps, direction, cars[i].getEntryTurning(), fps, cars);
 		ModelViewMatrix = ViewMatrix * ModelMatrix;
-		cout << "i = " << i << endl;
+		//cout << "i = " << i << endl;
 		cars[i].Render(shader, ModelViewMatrix, ProjectionMatrix, ModelMatrix);
 		goto hopSkipAndAJump;
 	noRenderForYou:
@@ -439,24 +439,24 @@ void init()
 	//(*mapClass.getMapJunction(0, 1)).setSpawnable(true, 0);
 	//mapClass.addJunction(road, 0, 2);
 	//(*mapClass.getMapJunction(0, 2)).setOrientation(1);
-	mapClass.addJunction(road, 0, 1);
-	(*mapClass.getMapJunction(0, 1)).setOrientation(1);
-	(*mapClass.getMapJunction(0, 1)).setSpawnable(true, 0);
+	//mapClass.addJunction(road, 0, 1);
+	//(*mapClass.getMapJunction(0, 1)).setOrientation(1);
+	//(*mapClass.getMapJunction(0, 1)).setSpawnable(true, 0);
 	//mapClass.addJunction(road, 0, 2);
 	//(*mapClass.getMapJunction(0, 2)).setOrientation(1);
-	//mapClass.addJunction(road, 0, 1);
-	//(*mapClass.getMapJunction(0, 1)).setOrientation(0);
-	//(*mapClass.getMapJunction(0, 1)).setSpawnable(true, 2);
-	//mapClass.addJunction(xJunction, 1, 1);
-	//mapClass.addJunction(road, 1, 0);
-	//(*mapClass.getMapJunction(1, 0)).setOrientation(1);
-	//(*mapClass.getMapJunction(1, 0)).setSpawnable(true, 0);
-	//mapClass.addJunction(road, 1, 2);
-	//(*mapClass.getMapJunction(1, 2)).setOrientation(1);
-	//(*mapClass.getMapJunction(1, 2)).setSpawnable(true, 1);
-	//mapClass.addJunction(road, 2, 1);
-	//(*mapClass.getMapJunction(2, 1)).setOrientation(0);
-	//(*mapClass.getMapJunction(2, 1)).setSpawnable(true, 3);
+	mapClass.addJunction(road, 0, 1);
+	(*mapClass.getMapJunction(0, 1)).setOrientation(0);
+	(*mapClass.getMapJunction(0, 1)).setSpawnable(true, 2);
+	mapClass.addJunction(xJunction, 1, 1);
+	mapClass.addJunction(road, 1, 0);
+	(*mapClass.getMapJunction(1, 0)).setOrientation(1);
+	(*mapClass.getMapJunction(1, 0)).setSpawnable(true, 0);
+	mapClass.addJunction(road, 1, 2);
+	(*mapClass.getMapJunction(1, 2)).setOrientation(1);
+	(*mapClass.getMapJunction(1, 2)).setSpawnable(true, 1);
+	mapClass.addJunction(road, 2, 1);
+	(*mapClass.getMapJunction(2, 1)).setOrientation(0);
+	(*mapClass.getMapJunction(2, 1)).setSpawnable(true, 3);
 	
 	for (int i = 0; i < mapClass.getMap().size(); i++) {
 		for (int j = 0; j < mapClass.getMap()[0].size(); j++) {

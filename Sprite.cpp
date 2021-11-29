@@ -144,7 +144,7 @@ void Sprite::Init(Shader& shader, float colour[3], std::string filename)
 	obb.vertOriginal[3].y = halfHeight;
 
 	/*************************************/
-	collide.vertOriginal[0].x = -m_Width;
+	collide.vertOriginal[0].x = -3 * m_Width / 4;
 	collide.vertOriginal[0].y = -halfHeight;
 
 	collide.vertOriginal[1].x = halfWidth;
@@ -153,7 +153,7 @@ void Sprite::Init(Shader& shader, float colour[3], std::string filename)
 	collide.vertOriginal[2].x = halfWidth;
 	collide.vertOriginal[2].y = halfHeight;
 
-	collide.vertOriginal[3].x = -m_Width;
+	collide.vertOriginal[3].x = -3 * m_Width / 4;
 	collide.vertOriginal[3].y = halfHeight;
 	/*******************/
 
