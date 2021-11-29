@@ -44,8 +44,6 @@ bool Left = false;
 bool Right = false;
 bool Up = false;
 bool Down = false;
-bool zoomOut = false;
-bool zoomIn = false;
 int direction = 0;
 float speed = 0;
 const double PI = 3.141592653589793238463;
@@ -66,7 +64,7 @@ Junction tJunction = Junction::Junction("T", 0, 0, glm::mat4(1.0f), RoadType::T)
 Junction xJunction = Junction::Junction("X", 0, 0, glm::mat4(1.0f), RoadType::X);
 Junction road = Junction::Junction("R", 0, 0, glm::mat4(1.0f), RoadType::S);
 Junction emptyJunction = Junction::Junction();
-Map mapClass = Map::Map(3, 3);
+Map mapClass = Map::Map(5, 5);
 
 TrafficLight* trafficLights[1][4];
 TrafficLight trafficLight;
@@ -178,6 +176,7 @@ void display()
 				toSpawn.SetWidth(scale * (500 / 264.0f));
 				toSpawn.SetHeight(scale);
 				toSpawn.setIdentifier(cars.size());
+				toSpawn.setJunction(&emptyJunction);
 				float red[3] = { 1,0,0 };
 				toSpawn.Init(shader, red, "textures/car.png");
 				//toSpawn.setJunction(mapClass.getMapJunction(1, 0));
@@ -262,10 +261,15 @@ noCar:
 	for (int i = 0; i < cars.size(); i++) {
 		for (int j = 0; j < mapClass.getMap().size(); j++) {
 			for (int k = 0; k < mapClass.getMap()[0].size(); k++) {
+				if (cars[i].getJunction()->getType() == RoadType::N) {
+					cout << "car junction type = " << cars[i].getJunction()->getType() << endl;
+					goto respawn;
+				}
 				if (cars[i].IsInCollision(mapClass.getMapJunction(j, k)->GetOBB())) {					
 					if (cars[i].getJunction() != mapClass.getMapJunction(j, k) && mapClass.getMapJunction(j, k)->getIdentifier() != cars[i].getPreviousJunction()) {
 						if (mapClass.getMapJunction(j, k)->getType() != RoadType::N) {
 							//cout << "previous1 = " << cars[i].getPreviousJunction() << endl;
+							cout << cars[i].getJunction()->getIdentifier() << endl;
 							cars[i].setPreviousJunction(cars[i].getJunction()->getIdentifier());
 							//cout << "previous2 = " << cars[i].getPreviousJunction() << endl;
 							cars[i].setJunction((mapClass.getMapJunction(j, k)));
@@ -436,6 +440,68 @@ void init()
 		cars[i].SetHeight(scale);
 		cars[i].setIdentifier(i);
 	}
+	mapClass.addJunction(tJunction,0,0);
+	mapClass.getMapJunction(0, 0)->setOrientation(1);
+	mapClass.getMapJunction(0, 0)->setSpawnable(true, 2);
+	
+	//mapClass.addJunction(tJunction, 0, 0);
+	//mapClass.getMapJunction(0, 0)->setOrientation(1);
+	//mapClass.getMapJunction(0, 0)->setSpawnable(true, 2);
+	//mapClass.addJunction(tJunction, 1, 0);
+	//mapClass.getMapJunction(1, 0)->setOrientation(1);
+	//mapClass.addJunction(road, 2, 0);
+	//mapClass.getMapJunction(2, 0)->setOrientation(0);
+	//mapClass.addJunction(road, 3, 0);
+	//mapClass.getMapJunction(3, 0)->setOrientation(0);
+	//mapClass.addJunction(xJunction, 4, 0);
+	//mapClass.getMapJunction(4, 0)->setOrientation(1);
+	//mapClass.getMapJunction(4, 0)->setSpawnable(true, 0);
+
+	//mapClass.addJunction(road, 0, 1);
+	//mapClass.getMapJunction(0, 1)->setOrientation(3);
+	//mapClass.addJunction(tJunction, 1, 1);
+	//mapClass.getMapJunction(1, 1)->setOrientation(0);
+	//mapClass.addJunction(road, 2, 1);
+	//mapClass.getMapJunction(2, 1)->setOrientation(0);
+	//mapClass.addJunction(tJunction, 3, 1);
+	//mapClass.getMapJunction(3, 1)->setOrientation(1);
+	//mapClass.addJunction(xJunction, 4, 1);
+	//mapClass.getMapJunction(4, 1)->setOrientation(2);
+
+	//mapClass.addJunction(road, 0, 2);
+	//mapClass.getMapJunction(0, 2)->setOrientation(3);
+	//mapClass.addJunction(road, 1, 2);
+	//mapClass.getMapJunction(1, 2)->setOrientation(3);
+	//mapClass.addJunction(road, 3, 2);
+	//mapClass.getMapJunction(3, 2)->setOrientation(3);
+	//mapClass.addJunction(road, 4, 2);
+	//mapClass.getMapJunction(4, 2)->setOrientation(3);
+
+	//mapClass.addJunction(road, 0, 3);
+	//mapClass.getMapJunction(0, 3)->setOrientation(3);
+	//mapClass.addJunction(tJunction, 1, 3);
+	//mapClass.getMapJunction(1, 3)->setOrientation(0);
+	//mapClass.addJunction(road, 2, 3);
+	//mapClass.getMapJunction(2, 3)->setOrientation(0);
+	//mapClass.addJunction(tJunction, 3, 3);
+	//mapClass.getMapJunction(3, 3)->setOrientation(3);
+	//mapClass.addJunction(tJunction, 4, 3);
+	//mapClass.getMapJunction(4, 3)->setOrientation(2);
+
+	//mapClass.addJunction(xJunction, 0, 4);
+	//mapClass.getMapJunction(0, 4)->setOrientation(3);
+	//mapClass.getMapJunction(0, 4)->setSpawnable(true, 2);
+	//mapClass.addJunction(tJunction, 1, 4);
+	//mapClass.getMapJunction(1, 4)->setOrientation(3);
+	//mapClass.addJunction(tJunction, 2, 4);
+	//mapClass.getMapJunction(2, 4)->setOrientation(1);
+	//mapClass.getMapJunction(2, 4)->setSpawnable(true, 1);
+	//mapClass.addJunction(road, 3, 4);
+	//mapClass.getMapJunction(3, 4)->setOrientation(0);
+	//mapClass.addJunction(tJunction, 4, 4);
+	//mapClass.getMapJunction(4, 4)->setOrientation(3);
+	//mapClass.getMapJunction(4, 4)->setSpawnable(true, 3);
+
 	//mapClass.addJunction(road, 0, 1);
 	//(*mapClass.getMapJunction(0, 1)).setOrientation(1);
 	//(*mapClass.getMapJunction(0, 1)).setSpawnable(true, 0);
@@ -459,7 +525,7 @@ void init()
 	//mapClass.addJunction(road, 2, 1);
 	//(*mapClass.getMapJunction(2, 1)).setOrientation(0);
 	//(*mapClass.getMapJunction(2, 1)).setSpawnable(true, 3);
-	
+	//
 	for (int i = 0; i < mapClass.getMap().size(); i++) {
 		for (int j = 0; j < mapClass.getMap()[0].size(); j++) {
 			Junction pointer = *mapClass.getMapJunction(i, j);
@@ -529,30 +595,6 @@ void special(int key, int x, int y)
 	}
 }
 
-void keyboard_down(unsigned char key, int x, int y) {
-	switch (key) {
-	case(','):
-		zoomOut = true;
-		break;
-	case('.'):
-		zoomIn = true;
-		break;
-	}
-
-}
-
-void keyboard_up(unsigned char key, int x, int y) {
-	switch (key) {
-	case(','):
-		zoomOut = false;
-		break;
-	case('.'):
-		zoomIn = false;
-		break;
-	}
-
-}
-
 void specialUp(int key, int x, int y)
 {
 	switch (key)
@@ -589,15 +631,6 @@ void processKeys()
 	if (Down)
 	{
 		ypos -= 1000 / fps;
-	}
-	if (zoomIn) {
-		zoom += 0.1;
-		cout << "zoom = " << zoom << endl;
-	}
-	if (zoomOut) {
-		if (zoom > 0) {
-			zoom -= 0.1;
-		}
 	}
 }
 
@@ -641,8 +674,6 @@ int main(int argc, char **argv)
 	glutDisplayFunc(display);
 
 	glutSpecialFunc(special);
-	glutKeyboardFunc(keyboard_down);
-	glutKeyboardUpFunc(keyboard_up);
 	glutSpecialUpFunc(specialUp);
 
 	glutIdleFunc(idle);

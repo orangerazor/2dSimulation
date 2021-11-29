@@ -69,6 +69,7 @@ public:
     void trafficLightFlow();
     int getNumberTurnings();
     void calculateLines();
+    bool nullJunction();
 
     inline std::array<bool, 4> getTurnings() {
         return this->turnings;

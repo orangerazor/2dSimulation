@@ -9,6 +9,7 @@ Car::Car(glm::mat4 rotation) {
 	objectRotation = glm::rotate(glm::mat4(1.0f), -angle, glm::vec3(0,0,1));
 	srand(time(0));
 	forVec = objectRotation * glm::vec4(forVec, 1.0f);
+	junction = &Junction();
 
 
 
