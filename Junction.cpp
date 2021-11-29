@@ -175,6 +175,16 @@ void Junction::calculateLines() {
     botInner = m_ypos + (m_Height * 1 / 6);
 }
 
+bool Junction::nullJunction()
+{
+    if (type == RoadType::N) {
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
 //int main(){
 //    Junction* testJunction = new Junction("test", true, true, false, true, 60);
 //    std::cout << testJunction->getNumberTurnings();
