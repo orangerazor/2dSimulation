@@ -44,6 +44,8 @@ bool Left = false;
 bool Right = false;
 bool Up = false;
 bool Down = false;
+bool zoomOut = false;
+bool zoomIn = false;
 int direction = 0;
 float speed = 0;
 const double PI = 3.141592653589793238463;
@@ -444,19 +446,19 @@ void init()
 	//(*mapClass.getMapJunction(0, 1)).setSpawnable(true, 0);
 	//mapClass.addJunction(road, 0, 2);
 	//(*mapClass.getMapJunction(0, 2)).setOrientation(1);
-	mapClass.addJunction(road, 0, 1);
-	(*mapClass.getMapJunction(0, 1)).setOrientation(0);
-	(*mapClass.getMapJunction(0, 1)).setSpawnable(true, 2);
-	mapClass.addJunction(xJunction, 1, 1);
-	mapClass.addJunction(road, 1, 0);
-	(*mapClass.getMapJunction(1, 0)).setOrientation(1);
-	(*mapClass.getMapJunction(1, 0)).setSpawnable(true, 0);
-	mapClass.addJunction(road, 1, 2);
-	(*mapClass.getMapJunction(1, 2)).setOrientation(1);
-	(*mapClass.getMapJunction(1, 2)).setSpawnable(true, 1);
-	mapClass.addJunction(road, 2, 1);
-	(*mapClass.getMapJunction(2, 1)).setOrientation(0);
-	(*mapClass.getMapJunction(2, 1)).setSpawnable(true, 3);
+	//mapClass.addJunction(road, 0, 1);
+	//(*mapClass.getMapJunction(0, 1)).setOrientation(0);
+	//(*mapClass.getMapJunction(0, 1)).setSpawnable(true, 2);
+	//mapClass.addJunction(xJunction, 1, 1);
+	//mapClass.addJunction(road, 1, 0);
+	//(*mapClass.getMapJunction(1, 0)).setOrientation(1);
+	//(*mapClass.getMapJunction(1, 0)).setSpawnable(true, 0);
+	//mapClass.addJunction(road, 1, 2);
+	//(*mapClass.getMapJunction(1, 2)).setOrientation(1);
+	//(*mapClass.getMapJunction(1, 2)).setSpawnable(true, 1);
+	//mapClass.addJunction(road, 2, 1);
+	//(*mapClass.getMapJunction(2, 1)).setOrientation(0);
+	//(*mapClass.getMapJunction(2, 1)).setSpawnable(true, 3);
 	
 	for (int i = 0; i < mapClass.getMap().size(); i++) {
 		for (int j = 0; j < mapClass.getMap()[0].size(); j++) {
@@ -527,6 +529,30 @@ void special(int key, int x, int y)
 	}
 }
 
+void keyboard_down(unsigned char key, int x, int y) {
+	switch (key) {
+	case(','):
+		zoomOut = true;
+		break;
+	case('.'):
+		zoomIn = true;
+		break;
+	}
+
+}
+
+void keyboard_up(unsigned char key, int x, int y) {
+	switch (key) {
+	case(','):
+		zoomOut = false;
+		break;
+	case('.'):
+		zoomIn = false;
+		break;
+	}
+
+}
+
 void specialUp(int key, int x, int y)
 {
 	switch (key)
@@ -563,6 +589,15 @@ void processKeys()
 	if (Down)
 	{
 		ypos -= 1000 / fps;
+	}
+	if (zoomIn) {
+		zoom += 0.1;
+		cout << "zoom = " << zoom << endl;
+	}
+	if (zoomOut) {
+		if (zoom > 0) {
+			zoom -= 0.1;
+		}
 	}
 }
 
@@ -606,6 +641,8 @@ int main(int argc, char **argv)
 	glutDisplayFunc(display);
 
 	glutSpecialFunc(special);
+	glutKeyboardFunc(keyboard_down);
+	glutKeyboardUpFunc(keyboard_up);
 	glutSpecialUpFunc(specialUp);
 
 	glutIdleFunc(idle);
