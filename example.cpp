@@ -44,6 +44,8 @@ bool Left = false;
 bool Right = false;
 bool Up = false;
 bool Down = false;
+bool zoomOut = false;
+bool zoomIn = false;
 int direction = 0;
 float speed = 0;
 const double PI = 3.141592653589793238463;
@@ -595,6 +597,30 @@ void special(int key, int x, int y)
 	}
 }
 
+void keyboard_down(unsigned char key, int x, int y) {
+	switch (key) {
+	case(','):
+		zoomOut = true;
+		break;
+	case('.'):
+		zoomIn = true;
+		break;
+	}
+
+}
+
+void keyboard_up(unsigned char key, int x, int y) {
+	switch (key) {
+	case(','):
+		zoomOut = false;
+		break;
+	case('.'):
+		zoomIn = false;
+		break;
+	}
+
+}
+
 void specialUp(int key, int x, int y)
 {
 	switch (key)
@@ -631,6 +657,15 @@ void processKeys()
 	if (Down)
 	{
 		ypos -= 1000 / fps;
+	}
+	if (zoomIn) {
+		zoom += 0.1;
+		cout << "zoom = " << zoom << endl;
+	}
+	if (zoomOut) {
+		if (zoom > 0) {
+			zoom -= 0.1;
+		}
 	}
 }
 
@@ -674,6 +709,8 @@ int main(int argc, char **argv)
 	glutDisplayFunc(display);
 
 	glutSpecialFunc(special);
+	glutKeyboardFunc(keyboard_down);
+	glutKeyboardUpFunc(keyboard_up);
 	glutSpecialUpFunc(specialUp);
 
 	glutIdleFunc(idle);
