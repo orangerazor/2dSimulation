@@ -17,7 +17,7 @@
 class TrafficLight : public Sprite {
 private:
     std::array<bool, 3> lights; //[red, amber, green]
-    int green_duration, num_of_phases, current_phase, seconds_green, seconds_other, other_duration;
+    int num_of_phases, current_phase, phase_duration, time;
 
 protected:
 	Sprite lightsSprite[4]; // red, redAndAmber, green, amber
@@ -31,30 +31,33 @@ public:
     TrafficLight(int green_duration);
     TrafficLight(TrafficLight* old);
     TrafficLight();
-    ~TrafficLight();
     bool isRed();
 	bool isGreen();
-
+    int getTimeLeftInState();
 	void InitLights(Shader& shader, float colour[3], std::string phaseOne, std::string phaseTwo, std::string phaseThree, std::string phaseFour);
     void Render(Shader& shader, glm::mat4& ModelViewMatrix, glm::mat4& ProjectionMatrix, glm::mat4& ModelMatrix);
 
     void nextLight();
     std::array<bool, 3> getLights();
-    inline int getGreenDuration(){
-        return this->green_duration;
-    }
-
-    inline void setGreenDuration(int green_duration){
-        this->green_duration = green_duration;
-    }
 
     inline void setLights(std::array<bool, 3> lights){
         this->lights = lights;
     }
 
-    inline int getTimeLeftInState() {
-        //std::cout << this->other_duration - this->seconds_other << std::endl;
-        return this->other_duration-this->seconds_other;
+    inline int getTime() {
+        return this->time;
+    }
+
+    inline int getNumPhases() {
+        return this->num_of_phases;
+    }
+
+    inline int getCurrentPhase() {
+        return this->current_phase;
+    }
+
+    inline int getPhaseDuration() {
+        return this->phase_duration;
     }
 
 

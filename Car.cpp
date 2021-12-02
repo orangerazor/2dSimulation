@@ -406,7 +406,7 @@ int Car::setSpawn(int entry)
 	else {
 		spawnEntrance = entry;
 	}
-	std::cout << "entry = " << entry << std::endl;
+	//std::cout << "entry = " << entry << std::endl;
 	//int turningIndex = possibleTurnings.at(spawnEntrance);
 	switch (entry) {
 	case(0):
@@ -430,7 +430,7 @@ int Car::setSpawn(int entry)
 	
 	//std::cout << "X coord car centre = " << m_xpos << std::endl;
 	//std::cout << "Y coord car centre = " << m_ypos << std::endl;
-	std::cout << "Set spawn = " << entry << std::endl;
+	//std::cout << "Set spawn = " << entry << std::endl;
 	return entry;
 }
 
