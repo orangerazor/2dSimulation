@@ -51,7 +51,7 @@ float speed = 0;
 const double PI = 3.141592653589793238463;
 float angle = 0;
 float scale = 4.0f;
-float zoom = 0.5;
+float zoom = 0.25;
 float xpos = 0;
 float ypos = 0;
 
@@ -518,13 +518,6 @@ void init()
 	//mapClass.addJunction(road, 0, 1);
 	//(*mapClass.getMapJunction(0, 1)).setOrientation(1);
 	//(*mapClass.getMapJunction(0, 1)).setSpawnable(true, 0);
-	//mapClass.addJunction(road, 0, 2);
-	//(*mapClass.getMapJunction(0, 2)).setOrientation(1);
-	//mapClass.addJunction(road, 0, 1);
-	//(*mapClass.getMapJunction(0, 1)).setOrientation(1);
-	//(*mapClass.getMapJunction(0, 1)).setSpawnable(true, 0);
-	//mapClass.addJunction(road, 0, 2);
-	//(*mapClass.getMapJunction(0, 2)).setOrientation(1);
 	//mapClass.addJunction(road, 0, 1);
 	//(*mapClass.getMapJunction(0, 1)).setOrientation(0);
 	//(*mapClass.getMapJunction(0, 1)).setSpawnable(true, 2);
