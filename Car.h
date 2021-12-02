@@ -19,6 +19,8 @@ private:
 	Junction* junction;
 	std::string previousJunction;
 
+	bool currentlyRendered = false;
+
 public:
 	Car();
 	Car(glm::mat4 rotation);
@@ -82,6 +84,13 @@ public:
 
 	inline std::string getPreviousJunction() {
 		return this->previousJunction;
+	}
+
+	inline bool getCurrentlyRendered() {
+		return this->currentlyRendered;
+	}
+	inline void setCurrentlyRendered(bool yesOrNo) {
+		currentlyRendered = yesOrNo;
 	}
 
 };

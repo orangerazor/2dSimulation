@@ -234,10 +234,10 @@ void Junction::calculateLines() {
     xLeftSquare = m_xpos - (m_Width * 1 / 6);
     xRightSquare = m_xpos + (m_Width * 1 / 6);
 
-    leftInner = m_xpos + (m_Width * 1 / 6);
-    rightInner = m_xpos - (m_Width * 1 / 6);
-    topInner = m_ypos - (m_Height * 1 / 6);
-    botInner = m_ypos + (m_Height * 1 / 6);
+    leftInner = m_xpos + (m_Width * 1 / 3);
+    rightInner = m_xpos - (m_Width * 1 / 3);
+    topInner = m_ypos - (m_Height * 1 / 3);
+    botInner = m_ypos + (m_Height * 1 / 3);
 }
 
 bool Junction::nullJunction()

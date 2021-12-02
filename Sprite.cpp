@@ -156,6 +156,17 @@ void Sprite::Init(Shader& shader, float colour[3], std::string filename)
 	collide.vertOriginal[3].x = -3 * m_Width / 4;
 	collide.vertOriginal[3].y = halfHeight;
 	/*******************/
+	spawnOBB.vertOriginal[0].x = -halfWidth;
+	spawnOBB.vertOriginal[0].y = -halfHeight;
+
+	spawnOBB.vertOriginal[1].x = halfWidth;
+	spawnOBB.vertOriginal[1].y = -halfHeight;
+
+	spawnOBB.vertOriginal[2].x = halfWidth;
+	spawnOBB.vertOriginal[2].y = halfHeight;
+
+	spawnOBB.vertOriginal[3].x = -halfWidth;
+	spawnOBB.vertOriginal[3].y = halfHeight;
 
 
 	float tex[12];
@@ -232,6 +243,10 @@ void Sprite::Render(Shader& shader, glm::mat4& ModelViewMatrix, glm::mat4& Proje
 	obb.transformPoints(ModelMatrix);
 	//std::cout << "X after = " << obb.vert[0].x << " Y after = " << obb.vert[0].y << std::endl;
 	collide.transformPoints(ModelMatrix);
+	for (int i = 0; i < 4; i++) {
+		spawnOBB.vert[i].x = 0;
+		spawnOBB.vert[i].y = 0;
+	}
 	//m_xpos = obb.xCentre(ModelViewMatrix);
 	//m_ypos = obb.yCentre(ModelViewMatrix);
 	//glm::vec4 vector = glm::vec4(m_xpos, m_ypos, 0.0f, 1.0f);
@@ -265,6 +280,12 @@ void Sprite::Render(Shader& shader, glm::mat4& ModelViewMatrix, glm::mat4& Proje
 OBB& Sprite::GetOBB()
 {
 	return obb;
+}
+OBB& Sprite::getCollide() {
+	return collide;
+}
+OBB& Sprite::getSpawnOBB() {
+	return spawnOBB;
 }
 
 bool Sprite::IsInCollision(OBB &anotherOBB)

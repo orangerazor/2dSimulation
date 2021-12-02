@@ -341,13 +341,16 @@ void Car::respawn(Junction *junction, int presetEntry) {
 			
 		}
 	}
+	glm::mat4 spawn = glm::translate(glm::mat4(1.0f), glm::vec3(m_xpos, m_ypos, 0));
+	spawn = glm::rotate(spawn, angle, glm::vec3(0.0, 0.0, 1.0));
+	spawnOBB.transformPoints(spawn);
 }
 
 void Car::newSpawn(int entry) {
 	switch (entry) {
 	case(0):
-		this->SetXpos((*junction).GetOBB().vertOriginal[0].x + ((*junction).getWidth() * 1/6));
-		this->SetYpos((*junction).GetOBB().vertOriginal[0].y + ((*junction).getHeight() * 7 / 12));
+		this->SetXpos((*junction).GetOBB().vertOriginal[0].x +((*junction).getWidth() * 1 / 6));
+		this->SetYpos((*junction).GetOBB().vertOriginal[0].y +((*junction).getHeight() * 7 / 12));
 		//angle += glm::radians(180.0f);
 		break;
 	case(1):
@@ -371,7 +374,7 @@ void Car::newSpawn(int entry) {
 
 int Car::setSpawn(int entry)
 {
-	
+	setCurrentlyRendered(false);
 	int spawnEntrance;
 	int numTurns = (*junction).getTurnings().size();
 	std::vector<int> possibleTurnings;
@@ -407,7 +410,7 @@ int Car::setSpawn(int entry)
 	//int turningIndex = possibleTurnings.at(spawnEntrance);
 	switch (entry) {
 	case(0):
-		this->SetXpos((*junction).GetOBB().vert[correctVert].x);
+		this->SetXpos((*junction).GetOBB().vert[correctVert].x - (m_Height / 2));
 		this->SetYpos((*junction).GetOBB().vert[correctVert].y + ((*junction).getHeight() * 7 / 12));
 		break;
 	case(1):
