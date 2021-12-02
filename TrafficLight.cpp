@@ -22,7 +22,6 @@ TrafficLight::TrafficLight(TrafficLight* old) {
 }
 
 TrafficLight::TrafficLight() {
-    std::cout << "made" << std::endl;
     this->lights = { 1,0,0 };
     this->current_phase = 0;
     this->num_of_phases = 4;

@@ -193,17 +193,17 @@ void Junction::trafficLightFlow() {
         }
         break;
     case(RoadType::X):
-        std::cout << "ident = " << this->identifier << std::endl;
-        std::cout << "state = " << this->state << std::endl;
-        std::cout << "tl0 = " << trafficLights[0].getLights()[0] << trafficLights[0].getLights()[1] << trafficLights[0].getLights()[2] << std::endl;
-        std::cout << "tl0 time left = " << trafficLights[0].getTimeLeftInState() << std::endl;
-        std::cout << "tl1 = " << trafficLights[1].getLights()[0] << trafficLights[1].getLights()[1] << trafficLights[1].getLights()[2] << std::endl;
-        std::cout << "tl1 time left = " << trafficLights[1].getTimeLeftInState() << std::endl;
-        std::cout << "tl2 = " << trafficLights[2].getLights()[0] << trafficLights[2].getLights()[1] << trafficLights[2].getLights()[2] << std::endl;
-        std::cout << "tl2 time left = " << trafficLights[2].getTimeLeftInState() << std::endl;
-        std::cout << "tl3 = " << trafficLights[3].getLights()[0] << trafficLights[3].getLights()[1] << trafficLights[3].getLights()[2] << std::endl;
-        std::cout << "tl3 time left = " << trafficLights[3].getTimeLeftInState() << std::endl;
-        std::cout << "time = " << trafficLights[0].getTime() << std::endl;
+        //std::cout << "ident = " << this->identifier << std::endl;
+        //std::cout << "state = " << this->state << std::endl;
+        //std::cout << "tl0 = " << trafficLights[0].getLights()[0] << trafficLights[0].getLights()[1] << trafficLights[0].getLights()[2] << std::endl;
+        //std::cout << "tl0 time left = " << trafficLights[0].getTimeLeftInState() << std::endl;
+        //std::cout << "tl1 = " << trafficLights[1].getLights()[0] << trafficLights[1].getLights()[1] << trafficLights[1].getLights()[2] << std::endl;
+        //std::cout << "tl1 time left = " << trafficLights[1].getTimeLeftInState() << std::endl;
+        //std::cout << "tl2 = " << trafficLights[2].getLights()[0] << trafficLights[2].getLights()[1] << trafficLights[2].getLights()[2] << std::endl;
+        //std::cout << "tl2 time left = " << trafficLights[2].getTimeLeftInState() << std::endl;
+        //std::cout << "tl3 = " << trafficLights[3].getLights()[0] << trafficLights[3].getLights()[1] << trafficLights[3].getLights()[2] << std::endl;
+        //std::cout << "tl3 time left = " << trafficLights[3].getTimeLeftInState() << std::endl;
+        //std::cout << "time = " << trafficLights[0].getTime() << std::endl;
         
         if (this->state) {
             
