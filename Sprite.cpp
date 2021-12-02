@@ -266,6 +266,12 @@ OBB& Sprite::GetOBB()
 {
 	return obb;
 }
+OBB& Sprite::getCollide() {
+	return collide;
+}
+OBB& Sprite::getSpawnOBB() {
+	return spawnOBB;
+}
 
 bool Sprite::IsInCollision(OBB &anotherOBB)
 {

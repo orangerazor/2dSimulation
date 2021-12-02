@@ -20,6 +20,7 @@ protected:
 
 	OBB obb; //obb object for oriented bounding box collision
 	OBB collide;
+	OBB spawnOBB;
 
 	//Dimensions of the sprite.
 	float m_Width;
@@ -48,5 +49,7 @@ public:
 	glm::mat4 transform(float speed, int direction);
 	virtual void Render(Shader& shader, glm::mat4& ModelViewMatrix, glm::mat4& ProjectionMatrix, glm::mat4& ModelMatrix);
 	OBB& GetOBB();
+	OBB& getCollide();
+	OBB& getSpawnOBB();
 	bool IsInCollision(OBB &anotherOBB);
 };

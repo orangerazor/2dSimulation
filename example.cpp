@@ -51,7 +51,7 @@ float speed = 0;
 const double PI = 3.141592653589793238463;
 float angle = 0;
 float scale = 4.0f;
-float zoom = 0.25;
+float zoom = 0.5;
 float xpos = 0;
 float ypos = 0;
 
@@ -144,7 +144,7 @@ void display()
 	}
 	else {
 		if (secondElapsed >= 1000000) {
-			if (cars.size() < 200) {
+			if (cars.size() < 3) {
 				//for (int i = 0; i < cars.size(); i++) {
 				//	Junction currentJunc = *mapClass.getMapJunction(1, 0);
 				//	float carPosX = cars[i].GetXPos();
@@ -225,13 +225,7 @@ noCar:
 			//	std::cout << std::endl;
 			//}
 			ModelViewMatrix = ViewMatrix * junctionRender;
-			if (i == 1 && j == 0) {
-				//std::cout << "LOOK HERE YA BIG BAFOON" << std::endl;
-			}
 			(*mapClass.getMapJunction(i, j)).Render(shader, ModelViewMatrix, ProjectionMatrix, junctionRender);
-			if (i == 1 && j == 0) {
-				//std::cout << "ENDS HERE YA BIG FLAFOON" << std::endl;
-			}
 			for (int k = 0; k < 4; k++) {
 				if ((*mapClass.getMapJunction(i, j)).getType() != (RoadType::N)){
 					glm::mat4 moveLight = glm::mat4(1.0f);
@@ -313,96 +307,217 @@ noCar:
 	}
 
 	int numSpawns = mapClass.getSpawns().size();
-	vector<bool> filledSpawns;
+	vector<vector<pair<Car, int>>> filledSpawns;
 	filledSpawns.resize(numSpawns);
-	vector<int> alreadyChecked;
-	alreadyChecked.resize(cars.size());
-	for (int i = 0; i < cars.size(); i++) {
-		bool avoidDoubleCheck = false;
-		for (int k = 0; k < alreadyChecked.size(); k++) {
-			if (alreadyChecked.at(k) == i) {
-				avoidDoubleCheck = true;
-			}
-		}
-		for (int j = 0; j < cars.size(); j++) {
-			if (j == i) {
-				continue;
-			}
-			if (cars[i].IsInCollision(cars[j].GetOBB()) && !avoidDoubleCheck) {
-				int carY = stoi( cars[i].getJunction()->getIdentifier().substr(0,1) );
-				int carX = stoi( cars[i].getJunction()->getIdentifier().substr(1, 1) );
-				pair<int, int> carIndicies;
-				carIndicies.first = carY;
-				carIndicies.second = carX;
-				for (int k = 0; k < mapClass.getSpawns().size(); k++) {
-					if (mapClass.getSpawns()[k] == carIndicies) {
-						alreadyChecked.push_back(j);
-						buffer.at(k).push_back(cars[i]);
-						cars.erase(cars.begin() + i);
-						goto noRenderForYou;
-					}
-				}
-			}
-		}
-		for (int k = 0; k < numSpawns; k++) {
-			if (!buffer.at(k).empty()) {
-				Junction* check = mapClass.getMapJunction(mapClass.getSpawns().at(k).first, mapClass.getSpawns().at(k).second);
-				int spawnEntry = check->getSpawnable().second;
-				bool freeSpawn = false;
-				switch (spawnEntry) {
+	//vector<int> alreadyChecked;
+	//alreadyChecked.resize(cars.size());
+	for (int k = 0; k < numSpawns; k++) {
+		OBB boxCheck;
+		for (int i = 0; i < cars.size(); i++) {
+			int carY = stoi(cars[i].getJunction()->getIdentifier().substr(0, 1));
+			int carX = stoi(cars[i].getJunction()->getIdentifier().substr(1, 1));
+			pair<int, int> carIndicies;
+			carIndicies.first = carY;
+			carIndicies.second = carX;
+			if (mapClass.getSpawns()[k] == carIndicies) {
+				Junction* current = mapClass.getMapJunction(carX, carY);
+				int entryPointBox = current->getSpawnable().second;
+				switch (entryPointBox) {
 				case 0:
-					if (cars[i].GetXPos() <= check->getLeftInner() && cars[i].GetXPos() >= check->GetXPos() - (check->getWidth() / 2) &&
-						cars[i].GetYPos() <= check->getYTopSquare() && cars[i].GetYPos() >= check->getYBotSquare()
-						) {
-						filledSpawns.at(k) = true;
-					}
+					boxCheck.vert[0].x = current->GetXPos() - (current->getWidth() / 2);
+					boxCheck.vert[0].y = current->getYBotSquare();
+					boxCheck.vert[1].x = current->getRightInner();
+					boxCheck.vert[1].y = current->getYBotSquare();
+					boxCheck.vert[2].x = current->getRightInner();
+					boxCheck.vert[2].y = current->getYTopSquare();
+					boxCheck.vert[3].x = current->GetXPos() - (current->getWidth() / 2);
+					boxCheck.vert[3].y = current->getYTopSquare();
 					break;
 				case 1:
-					if (cars[i].GetXPos() >= check->getRightInner() && cars[i].GetXPos() <= check->GetXPos() + (check->getWidth() / 2) &&
-						cars[i].GetYPos() <= check->getYTopSquare() && cars[i].GetYPos() >= check->getYBotSquare()
-						) {
-						filledSpawns.at(k) = true;
-					}
 					break;
 				case 2:
-					if (cars[i].GetYPos() >= check->getTopInner() && cars[i].GetYPos() <= check->GetYPos() + (check->getHeight() / 2) &&
-						cars[i].GetXPos() <= check->getXRightSquare() && cars[i].GetXPos() >= check->getXLeftSquare()
-						) {
-						filledSpawns.at(k) = true;
-					}
 					break;
 				case 3:
-					if (cars[i].GetYPos() <= check->getBotInner() && cars[i].GetYPos() >= check->GetYPos() - (check->getHeight() / 2) &&
-						cars[i].GetXPos() <= check->getXRightSquare() && cars[i].GetXPos() >= check->getXLeftSquare()
-						) {
-						filledSpawns.at(k) = true;
-					}
 					break;
+				}
+				//cout << "Vert 0 x = " << cars[i].getSpawnOBB().vert[0].x << ", Y = " << cars[i].getSpawnOBB().vert[0].y << endl;
+				//cout << "Vert 1 x = " << cars[i].getSpawnOBB().vert[1].x << ", Y = " << cars[i].getSpawnOBB().vert[1].y << endl;
+				//cout << "Vert 2 x = " << cars[i].getSpawnOBB().vert[2].x << ", Y = " << cars[i].getSpawnOBB().vert[2].y << endl;
+				//cout << "Vert 3 x = " << cars[i].getSpawnOBB().vert[3].x << ", Y = " << cars[i].getSpawnOBB().vert[3].y << endl;
+
+				if (cars[i].IsInCollision(boxCheck)) {
+					pair<Car, int> carInBox;
+					carInBox.first = cars[i];
+					carInBox.second = i;
+					filledSpawns.at(k).push_back(carInBox);
+					cout << "Inside the box is " << i << endl;
+				}
+			}
+			int indexOfBestCar = 0;
+			float bestDist = INT_MAX;
+			for (int i = 0; i < filledSpawns.at(k).size(); i++) {
+				// Check which car is closer to the centre of the junction and keep that car
+				Car next = filledSpawns.at(k).at(i).first;
+				Junction* current = next.getJunction();
+				float distX = (next.GetXPos() - current->GetXPos()) * (next.GetXPos() - current->GetXPos());
+				float distY = (next.GetYPos() - current->GetYPos()) * (next.GetYPos() - current->GetYPos());
+				if (distX + distY < bestDist) {
+					bestDist = distX + distY;
+					indexOfBestCar = filledSpawns.at(k).at(i).second;
+				}
+			}
+			for (int i = 0; i < filledSpawns.at(k).size(); i++) {
+				Car next = filledSpawns.at(k).at(i).first;
+				int index = filledSpawns.at(k).at(i).second;
+				if (index != indexOfBestCar) {
+					buffer.at(k).push_back(next);
+					cars.erase(cars.begin() + index);
 				}
 			}
 		}
+	}
+
+	for (int i = 0; i < cars.size(); i++) {
 		int direction = cars[i].decideDirection(cars[i].getEntryTurning());
 		ModelMatrix = cars[i].rotate(12.0f / fps, direction, cars[i].getEntryTurning(), fps, cars);
 		ModelViewMatrix = ViewMatrix * ModelMatrix;
-		//cout << "i = " << i << endl;
 		cars[i].Render(shader, ModelViewMatrix, ProjectionMatrix, ModelMatrix);
-		goto hopSkipAndAJump;
-	noRenderForYou:
-		//cars[i].SetXpos(INT_MAX);
-		//cars[i].SetYpos(INT_MAX);
-		//cout << "" << endl;
-		continue;
-	hopSkipAndAJump:
-		cout;
+		cars[i].setCurrentlyRendered(true);
 	}
-	for (int i = 0; i < numSpawns; i++) {
-		if (filledSpawns.at(i) == false && !buffer.at(i).empty()) {
-			int direction = buffer.at(i).at(0).decideDirection(buffer.at(i).at(0).getEntryTurning());
-			ModelMatrix = buffer.at(i).at(0).rotate(12.0f / fps, direction, cars[i].getEntryTurning(), fps, cars);
-			ModelViewMatrix = ViewMatrix * ModelMatrix;
-			//buffer.at(i).at(0).Render(shader, ModelViewMatrix, ProjectionMatrix, ModelMatrix);
-		}
-	}
+
+	//for (int i = 0; i < cars.size(); i++) {
+	//	//cout << "i = " << i << endl;
+	//	//bool avoidDoubleCheck = false;
+	//	//for (int k = 0; k < alreadyChecked.size(); k++) {
+	//	//	if (alreadyChecked.at(k) == i) {
+	//	//		avoidDoubleCheck = true;
+	//	//	}
+	//	//}
+	//	for (int j = 0; j < cars.size(); j++) {
+	//		if (j == i) {
+	//			continue;
+	//		}
+	//		//if (cars[i].IsInCollision(cars[j].getCollide()) && !avoidDoubleCheck) {
+	//			int carY = stoi( cars[i].getJunction()->getIdentifier().substr(0,1) );
+	//			int carX = stoi( cars[i].getJunction()->getIdentifier().substr(1, 1) );
+	//			pair<int, int> carIndicies;
+	//			carIndicies.first = carY;
+	//			carIndicies.second = carX;
+	//			for (int k = 0; k < numSpawns; k++) {
+	//				if (mapClass.getSpawns()[k] == carIndicies) {
+	//					// Determine which car is on the junction already and which one isn't so that the one not on the junction is never spawned rather than the one already spawned despawning
+	//					OBB boxCheck;
+	//					Junction* current = mapClass.getMapJunction(carX, carY);
+	//					int entryPointBox = current->getSpawnable().second;
+	//					switch (entryPointBox) {
+	//					case 0:
+	//						boxCheck.vert[0].x = current->GetXPos() - (current->getWidth() / 2);
+	//						boxCheck.vert[0].y = current->getYBotSquare();
+	//						boxCheck.vert[1].x = current->getRightInner();
+	//						boxCheck.vert[1].y = current->getYBotSquare();
+	//						boxCheck.vert[2].x = current->getRightInner();
+	//						boxCheck.vert[2].y = current->getYTopSquare();
+	//						boxCheck.vert[3].x = current->GetXPos() - (current->getWidth() / 2);
+	//						boxCheck.vert[3].y = current->getYTopSquare();
+	//						break;
+	//					case 1:
+	//						break;
+	//					case 2:
+	//						break;
+	//					case 3:
+	//						break;
+	//					}
+	//					if (cars[i].IsInCollision(boxCheck)) {
+	//						filledSpawns.at(k).push_back(cars[i]);
+	//						cout << "Inside the box is " << i << endl;
+	//					}
+	//					//cout << "Box check vert 0 = " << boxCheck.vert[0].x << ", " << boxCheck.vert[0].y << endl;
+	//					//cout << "Box check vert 1 = " << boxCheck.vert[1].x << ", " << boxCheck.vert[1].y << endl;
+	//					//cout << "Box check vert 2 = " << boxCheck.vert[2].x << ", " << boxCheck.vert[2].y << endl;
+	//					//cout << "Box check vert 3 = " << boxCheck.vert[3].x << ", " << boxCheck.vert[3].y << endl;
+	//					//cout << "Car vertex 0 = " << cars[i].GetOBB().vert[0].x << ", " << cars[i].GetOBB().vert[0].y << endl;
+	//					//cout << "Car vertex 1 = " << cars[i].GetOBB().vert[1].x << ", " << cars[i].GetOBB().vert[1].y << endl;
+	//					//cout << "Car vertex 2 = " << cars[i].GetOBB().vert[2].x << ", " << cars[i].GetOBB().vert[2].y << endl;
+	//					//cout << "Car vertex 3 = " << cars[i].GetOBB().vert[3].x << ", " << cars[i].GetOBB().vert[3].y << endl;
+
+	//					//cout << "i = " << i << " Render status = " << cars[i].getCurrentlyRendered() << endl;
+
+	//						//alreadyChecked.push_back(j);
+	//						//buffer.at(k).push_back(cars[i]);
+	//						//cars.erase(cars.begin() + i);
+	//						//if(!cars[j].IsInCollision(boxCheck)) {
+	//						//	alreadyChecked.push_back(i);
+	//						//	buffer.at(k).push_back(cars[j]);
+	//						//	cars.erase(cars.begin() + j);
+	//						//}
+
+	//						//goto noRenderForYou;
+	//					//}
+	//					//cout << "Outside the box is " << i << endl;
+	//				}
+	//			//}
+	//		}
+	//	}
+	//	for (int k = 0; k < numSpawns; k++) {
+	//		if (!buffer.at(k).empty()) {
+	//			Junction* check = mapClass.getMapJunction(mapClass.getSpawns().at(k).first, mapClass.getSpawns().at(k).second);
+	//			int spawnEntry = check->getSpawnable().second;
+	//			bool freeSpawn = false;
+	//			switch (spawnEntry) {
+	//			case 0:
+	//				if (cars[i].GetXPos() <= check->getLeftInner() && cars[i].GetXPos() >= check->GetXPos() - (check->getWidth() / 2) &&
+	//					cars[i].GetYPos() <= check->getYTopSquare() && cars[i].GetYPos() >= check->getYBotSquare()
+	//					) {
+	//					//filledSpawns.at(k) = true;
+	//				}
+	//				break;
+	//			case 1:
+	//				if (cars[i].GetXPos() >= check->getRightInner() && cars[i].GetXPos() <= check->GetXPos() + (check->getWidth() / 2) &&
+	//					cars[i].GetYPos() <= check->getYTopSquare() && cars[i].GetYPos() >= check->getYBotSquare()
+	//					) {
+	//					//filledSpawns.at(k) = true;
+	//				}
+	//				break;
+	//			case 2:
+	//				if (cars[i].GetYPos() >= check->getTopInner() && cars[i].GetYPos() <= check->GetYPos() + (check->getHeight() / 2) &&
+	//					cars[i].GetXPos() <= check->getXRightSquare() && cars[i].GetXPos() >= check->getXLeftSquare()
+	//					) {
+	//					//filledSpawns.at(k) = true;
+	//				}
+	//				break;
+	//			case 3:
+	//				if (cars[i].GetYPos() <= check->getBotInner() && cars[i].GetYPos() >= check->GetYPos() - (check->getHeight() / 2) &&
+	//					cars[i].GetXPos() <= check->getXRightSquare() && cars[i].GetXPos() >= check->getXLeftSquare()
+	//					) {
+	//					//filledSpawns.at(k) = true;
+	//				}
+	//				break;
+	//			}
+	//		}
+	//	}
+	//	int direction = cars[i].decideDirection(cars[i].getEntryTurning());
+	//	ModelMatrix = cars[i].rotate(12.0f / fps, direction, cars[i].getEntryTurning(), fps, cars);
+	//	ModelViewMatrix = ViewMatrix * ModelMatrix;
+	//	//cout << "i = " << i << endl;
+	//	cars[i].Render(shader, ModelViewMatrix, ProjectionMatrix, ModelMatrix);
+	//	cars[i].setCurrentlyRendered(true);
+	//	goto hopSkipAndAJump;
+	//noRenderForYou:
+	//	//cars[i].SetXpos(INT_MAX);
+	//	//cars[i].SetYpos(INT_MAX);
+	//	//cout << "" << endl;
+	//	continue;
+	//hopSkipAndAJump:
+	//	cout;
+	//}
+	//for (int i = 0; i < numSpawns; i++) {
+	//	//if (filledSpawns.at(i) == false && !buffer.at(i).empty()) {
+	//		//int direction = buffer.at(i).at(0).decideDirection(buffer.at(i).at(0).getEntryTurning());
+	//		//ModelMatrix = buffer.at(i).at(0).rotate(12.0f / fps, direction, cars[i].getEntryTurning(), fps, cars);
+	//		//ModelViewMatrix = ViewMatrix * ModelMatrix;
+	//		//buffer.at(i).at(0).Render(shader, ModelViewMatrix, ProjectionMatrix, ModelMatrix);
+	//	//}
+	//}
 
 	glDisable(GL_BLEND);
 
@@ -442,67 +557,67 @@ void init()
 		cars[i].SetHeight(scale);
 		cars[i].setIdentifier(i);
 	}
-	//mapClass.addJunction(tJunction,0,0);
-	//mapClass.getMapJunction(0, 0)->setOrientation(3);
-	//mapClass.getMapJunction(0, 0)->setSpawnable(true, 2);
+	mapClass.addJunction(xJunction,0,0);
+	mapClass.getMapJunction(0, 0)->setOrientation(0);
+	mapClass.getMapJunction(0, 0)->setSpawnable(true, 0);
 	
-	mapClass.addJunction(tJunction, 0, 0);
-	mapClass.getMapJunction(0, 0)->setOrientation(1);
-	mapClass.getMapJunction(0, 0)->setSpawnable(true, 2);
-	mapClass.addJunction(tJunction, 1, 0);
-	mapClass.getMapJunction(1, 0)->setOrientation(1);
-	mapClass.addJunction(road, 2, 0);
-	mapClass.getMapJunction(2, 0)->setOrientation(0);
-	mapClass.addJunction(road, 3, 0);
-	mapClass.getMapJunction(3, 0)->setOrientation(0);
-	mapClass.addJunction(xJunction, 4, 0);
-	mapClass.getMapJunction(4, 0)->setOrientation(1);
-	mapClass.getMapJunction(4, 0)->setSpawnable(true, 0);
+	//mapClass.addJunction(tJunction, 0, 0);
+	//mapClass.getMapJunction(0, 0)->setOrientation(1);
+	//mapClass.getMapJunction(0, 0)->setSpawnable(true, 2);
+	//mapClass.addJunction(tJunction, 1, 0);
+	//mapClass.getMapJunction(1, 0)->setOrientation(1);
+	//mapClass.addJunction(road, 2, 0);
+	//mapClass.getMapJunction(2, 0)->setOrientation(0);
+	//mapClass.addJunction(road, 3, 0);
+	//mapClass.getMapJunction(3, 0)->setOrientation(0);
+	//mapClass.addJunction(xJunction, 4, 0);
+	//mapClass.getMapJunction(4, 0)->setOrientation(1);
+	//mapClass.getMapJunction(4, 0)->setSpawnable(true, 0);
 
-	mapClass.addJunction(road, 0, 1);
-	mapClass.getMapJunction(0, 1)->setOrientation(3);
-	mapClass.addJunction(tJunction, 1, 1);
-	mapClass.getMapJunction(1, 1)->setOrientation(0);
-	mapClass.addJunction(road, 2, 1);
-	mapClass.getMapJunction(2, 1)->setOrientation(0);
-	mapClass.addJunction(tJunction, 3, 1);
-	mapClass.getMapJunction(3, 1)->setOrientation(1);
-	mapClass.addJunction(xJunction, 4, 1);
-	mapClass.getMapJunction(4, 1)->setOrientation(2);
+	//mapClass.addJunction(road, 0, 1);
+	//mapClass.getMapJunction(0, 1)->setOrientation(3);
+	//mapClass.addJunction(tJunction, 1, 1);
+	//mapClass.getMapJunction(1, 1)->setOrientation(0);
+	//mapClass.addJunction(road, 2, 1);
+	//mapClass.getMapJunction(2, 1)->setOrientation(0);
+	//mapClass.addJunction(tJunction, 3, 1);
+	//mapClass.getMapJunction(3, 1)->setOrientation(1);
+	//mapClass.addJunction(xJunction, 4, 1);
+	//mapClass.getMapJunction(4, 1)->setOrientation(2);
 
-	mapClass.addJunction(road, 0, 2);
-	mapClass.getMapJunction(0, 2)->setOrientation(3);
-	mapClass.addJunction(road, 1, 2);
-	mapClass.getMapJunction(1, 2)->setOrientation(3);
-	mapClass.addJunction(road, 3, 2);
-	mapClass.getMapJunction(3, 2)->setOrientation(3);
-	mapClass.addJunction(road, 4, 2);
-	mapClass.getMapJunction(4, 2)->setOrientation(3);
+	//mapClass.addJunction(road, 0, 2);
+	//mapClass.getMapJunction(0, 2)->setOrientation(3);
+	//mapClass.addJunction(road, 1, 2);
+	//mapClass.getMapJunction(1, 2)->setOrientation(3);
+	//mapClass.addJunction(road, 3, 2);
+	//mapClass.getMapJunction(3, 2)->setOrientation(3);
+	//mapClass.addJunction(road, 4, 2);
+	//mapClass.getMapJunction(4, 2)->setOrientation(3);
 
-	mapClass.addJunction(road, 0, 3);
-	mapClass.getMapJunction(0, 3)->setOrientation(3);
-	mapClass.addJunction(tJunction, 1, 3);
-	mapClass.getMapJunction(1, 3)->setOrientation(0);
-	mapClass.addJunction(road, 2, 3);
-	mapClass.getMapJunction(2, 3)->setOrientation(0);
-	mapClass.addJunction(tJunction, 3, 3);
-	mapClass.getMapJunction(3, 3)->setOrientation(3);
-	mapClass.addJunction(tJunction, 4, 3);
-	mapClass.getMapJunction(4, 3)->setOrientation(2);
+	//mapClass.addJunction(road, 0, 3);
+	//mapClass.getMapJunction(0, 3)->setOrientation(3);
+	//mapClass.addJunction(tJunction, 1, 3);
+	//mapClass.getMapJunction(1, 3)->setOrientation(0);
+	//mapClass.addJunction(road, 2, 3);
+	//mapClass.getMapJunction(2, 3)->setOrientation(0);
+	//mapClass.addJunction(tJunction, 3, 3);
+	//mapClass.getMapJunction(3, 3)->setOrientation(3);
+	//mapClass.addJunction(tJunction, 4, 3);
+	//mapClass.getMapJunction(4, 3)->setOrientation(2);
 
-	mapClass.addJunction(xJunction, 0, 4);
-	mapClass.getMapJunction(0, 4)->setOrientation(3);
-	mapClass.getMapJunction(0, 4)->setSpawnable(true, 2);
-	mapClass.addJunction(tJunction, 1, 4);
-	mapClass.getMapJunction(1, 4)->setOrientation(3);
-	mapClass.addJunction(tJunction, 2, 4);
-	mapClass.getMapJunction(2, 4)->setOrientation(1);
-	mapClass.getMapJunction(2, 4)->setSpawnable(true, 1);
-	mapClass.addJunction(road, 3, 4);
-	mapClass.getMapJunction(3, 4)->setOrientation(0);
-	mapClass.addJunction(tJunction, 4, 4);
-	mapClass.getMapJunction(4, 4)->setOrientation(3);
-	mapClass.getMapJunction(4, 4)->setSpawnable(true, 3);
+	//mapClass.addJunction(xJunction, 0, 4);
+	//mapClass.getMapJunction(0, 4)->setOrientation(3);
+	//mapClass.getMapJunction(0, 4)->setSpawnable(true, 2);
+	//mapClass.addJunction(tJunction, 1, 4);
+	//mapClass.getMapJunction(1, 4)->setOrientation(3);
+	//mapClass.addJunction(tJunction, 2, 4);
+	//mapClass.getMapJunction(2, 4)->setOrientation(1);
+	//mapClass.getMapJunction(2, 4)->setSpawnable(true, 1);
+	//mapClass.addJunction(road, 3, 4);
+	//mapClass.getMapJunction(3, 4)->setOrientation(0);
+	//mapClass.addJunction(tJunction, 4, 4);
+	//mapClass.getMapJunction(4, 4)->setOrientation(3);
+	//mapClass.getMapJunction(4, 4)->setSpawnable(true, 3);
 
 	//mapClass.addJunction(road, 0, 1);
 	//(*mapClass.getMapJunction(0, 1)).setOrientation(1);
