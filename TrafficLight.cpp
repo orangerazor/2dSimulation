@@ -5,70 +5,31 @@
 #include "TrafficLight.h"
 #include "ImageLoading.h"
 
-TrafficLight::TrafficLight(int green_duration){
+TrafficLight::TrafficLight(int phase_duration){
     this->lights = {1,0,0};
     this->current_phase = 0;
     this->num_of_phases = 4;
-    this->green_duration = green_duration;
-    this->seconds_green = 0;
-    this->other_duration = 2;
-    this->seconds_other = 0;
+    this->phase_duration = phase_duration;
+
 }
 
 TrafficLight::TrafficLight(TrafficLight* old) {
     this->lights = old->lights;
     this->current_phase = old->current_phase;
     this->num_of_phases = old->num_of_phases;
-    this->green_duration = old->green_duration;
-    this->seconds_green = old->seconds_green;
-    this->other_duration = old->other_duration;
-    this->seconds_other = old->seconds_other;
+    this->phase_duration = old->phase_duration;
+
 }
 
-TrafficLight::TrafficLight()  {
+TrafficLight::TrafficLight() {
+    std::cout << "made" << std::endl;
     this->lights = { 1,0,0 };
     this->current_phase = 0;
     this->num_of_phases = 4;
-    this->green_duration = 2;
-    this->seconds_green = 0;
-    this->other_duration = 2;
-    this->seconds_other = 0;
+    this->phase_duration = 2;
+    this->time = 0;
 }
 
-TrafficLight::~TrafficLight()
-{
-
-}
-
-//void TrafficLight::initTrafficTex() {
-//
-//    //THis is for red
-//    {
-//        //load png image
-//        int imageHeight = 0;
-//        int imageWidth = 0;
-//
-//        //create the texture on the GPU
-//        glGenTextures(1, &texRed);
-//        glBindTexture(GL_TEXTURE_2D, texRed);
-//
-//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);  //or use GL_CLAMP
-//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-//
-//        bool success = ImageLoading::loadImage("textures/redTrafficLight");
-//        if (!success) {
-//            std::cout << "Unable to load image file" << std::endl;
-//            glDeleteTextures(1, &texRed);
-//            return;
-//        }
-//        else
-//        {
-//            std::cout << "Image loaded " << std::endl;
-//        }
-//    }
-//}
 
 bool TrafficLight::isRed() {
     if (this->lights[0] && !this->lights[1]) {
@@ -135,27 +96,16 @@ std::array<bool, 3> TrafficLight::getLights() {
 }
 
 void TrafficLight::nextLight() {
-    if(this->current_phase == this->num_of_phases-2&&this->seconds_green<this->green_duration){
-        this->seconds_green+=1;
+    this->time++;
+    if (this->time == this->num_of_phases * this->phase_duration) {
+        this->time = 0;
     }
-    else if(this->current_phase == this->num_of_phases-2&&this->seconds_green==this->green_duration){
-        this->current_phase+=1;
-        this->seconds_other=1;
-    }
-    else if(this->seconds_other<this->other_duration){
-        this->seconds_other += 1;
-    }
-    else if(this->current_phase<this->num_of_phases-1){
-        this->current_phase += 1;
-        this->seconds_other = 1;
-        if(this->current_phase == this->num_of_phases-2){
-            this->seconds_green = 1;
-        }
-    }
-    else{
-        this->current_phase = 0;
-        this->seconds_other = 1;
-    }
+    this->current_phase = this->time / this->phase_duration;
+
+}
+
+int TrafficLight::getTimeLeftInState() {
+    return this->time % this->phase_duration;
 }
 
 //void TrafficLight::Render(Shader& shader, glm::mat4& ModelViewMatrix, glm::mat4& ProjectionMatrix)
