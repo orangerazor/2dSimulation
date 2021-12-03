@@ -4,6 +4,42 @@
 
 #include "Junction.h"
 
+Junction::Junction(Junction* old)
+{
+    this->m_vaoID = old->m_vaoID;
+    this->m_vboID[3] = old->m_vboID[3];
+    this->m_NumberOfVerts = old->m_NumberOfVerts;
+
+    this->m_TexName = old->m_TexName;
+
+    this->obb = old->obb;
+    this->collide = old->collide;
+    this->spawnOBB = old->spawnOBB;
+
+    this->m_Width = old->m_Width;
+    this->m_Height = old->m_Height;
+
+    this->m_xpos = old->m_xpos;
+    this->m_ypos = old->m_ypos;
+
+    this->objectRotation = old->objectRotation;
+
+    this->name = old->name;
+    this->type = old->type;
+    this->turnings = old->turnings;
+    for (int i = 0; i < this->turnings.size(); i++) {
+        if (this->type == RoadType::S) {
+            break;
+        }
+        if (this->turnings[i]) {
+            this->trafficLights[i] = TrafficLight::TrafficLight();
+        }
+    }
+    this->identifier = (&this->name)->c_str();
+    this->spawnable.first = false;
+    this->spawnable.second = NULL;
+}
+
 Junction::Junction() {
     this->name = "N";
     this->orientation = 0;

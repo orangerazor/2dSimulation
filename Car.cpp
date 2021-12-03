@@ -2,6 +2,35 @@
 const double PI = 3.141592653589793238463;
 
 
+Car::Car(Car* old)
+{
+	this->m_vaoID = old->m_vaoID;
+	this->m_vboID[3] = old->m_vboID[3];
+	this->m_NumberOfVerts = old->m_NumberOfVerts;
+
+	this->m_TexName = old->m_TexName;
+
+	this->obb = old->obb;
+	this->collide = old->collide;
+	this->spawnOBB = old->spawnOBB;
+
+	this->m_Width = old->m_Width;
+	this->m_Height = old->m_Height;
+
+	this->m_xpos = old->m_xpos;
+	this->m_ypos = old->m_ypos;
+
+	this->objectRotation = old->objectRotation;
+
+	rayStart = glm::vec3(0, 0, 0);
+	rayDirection = glm::vec3(0, 1, 0);
+	angle = 0;// 1.5708;
+	objectRotation = glm::rotate(glm::mat4(1.0f), -angle, glm::vec3(0, 0, 1));
+	srand(time(0));
+	forVec = objectRotation * glm::vec4(forVec, 1.0f);
+	junction = &Junction();
+}
+
 Car::Car(glm::mat4 rotation) {
 	rayStart = glm::vec3(0, 0, 0);
 	rayDirection = glm::vec3(0, 1, 0);
@@ -715,6 +744,8 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 	//	break;
 	//}
 }
+
+
 
 Car::Car()
 {

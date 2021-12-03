@@ -103,15 +103,15 @@ void Sprite::Init(Shader& shader, float colour[3], std::string filename)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	
 	bool success = ImageLoading::loadImage(filename);
-	//if (!success) {
-	//	std::cout << "Unable to load image file" << std::endl;
-	//	glDeleteTextures(1, &m_TexName);
-	//	return;
-	//}
-	//else
-	//{
-	//	std::cout << "Image loaded " << std::endl;
-	//}
+	if (!success) {
+		std::cout << "Unable to load image file" << std::endl;
+		glDeleteTextures(1, &m_TexName);
+		return;
+	}
+	else
+	{
+		std::cout << "Image loaded " << std::endl;
+	}
 	
 
 	//Create the geometry

@@ -62,6 +62,7 @@ private:
 
 public:
 
+    Junction(Junction* old);
     Junction();
     Junction(std::string name, int orientation, int speedLimit, glm::mat4 rotation, RoadType type);
     ~Junction();

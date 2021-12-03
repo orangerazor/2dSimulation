@@ -28,6 +28,7 @@ protected:
 public:
     //static void initTrafficTex();
 
+    void copyTexture(TrafficLight* old);
     TrafficLight(int green_duration);
     TrafficLight(TrafficLight* old);
     TrafficLight();

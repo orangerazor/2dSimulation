@@ -57,16 +57,15 @@ float ypos = 0;
 
 
 Shader shader;
-Car mySquare = Car::Car(glm::mat4(1.0f));
-Car car2 = Car::Car(glm::mat4(1.0f));
 std::vector<Car> cars(0);
 //std::vector<Junction> map(0);
 //std::vector< std::vector<Junction> > map(2, column);
+Car basicCar = Car::Car(glm::mat4(1.0f));
 Junction tJunction = Junction::Junction("T", 0, 0, glm::mat4(1.0f), RoadType::T);
 Junction xJunction = Junction::Junction("X", 0, 0, glm::mat4(1.0f), RoadType::X);
-Junction x1Junction = Junction::Junction("X", 0, 0, glm::mat4(1.0f), RoadType::X);
 Junction road = Junction::Junction("R", 0, 0, glm::mat4(1.0f), RoadType::S);
 Junction emptyJunction = Junction::Junction();
+TrafficLight basicTrafficLight = TrafficLight::TrafficLight();
 Map mapClass = Map::Map(7, 7);
 
 //TrafficLight* trafficLights[1][4];
@@ -140,16 +139,9 @@ void display()
 		
 		if (secondElapsed >= 1000000) {
 			if (cars.size() < 6) {
-				cout << "test" << endl;
-				Car toSpawn = Car(glm::mat4(1.0f));
-				toSpawn.SetWidth(scale * (500 / 264.0f));
-				toSpawn.SetHeight(scale);
+				Car toSpawn = Car(basicCar);
 				toSpawn.setIdentifier(cars.size());
 				toSpawn.setJunction(&emptyJunction);
-				float red[3] = { 1,0,0 };
-				toSpawn.Init(shader, red, "textures/car.png");
-				//toSpawn.setJunction(mapClass.getMapJunction(1, 0));
-				//toSpawn.respawn((mapClass.getMapJunction(1, 0)));
 				cars.push_back(toSpawn);
 			}
 		}
@@ -165,15 +157,9 @@ void display()
 	case 18:
 		if (secondElapsed >= 500000) {
 			if (cars.size() < 200) {
-				Car toSpawn = Car(glm::mat4(1.0f));
-				toSpawn.SetWidth(scale * (500 / 264.0f));
-				toSpawn.SetHeight(scale);
+				Car toSpawn = Car(basicCar);
 				toSpawn.setIdentifier(cars.size());
 				toSpawn.setJunction(&emptyJunction);
-				float red[3] = { 1,0,0 };
-				toSpawn.Init(shader, red, "textures/car.png");
-				//toSpawn.setJunction(mapClass.getMapJunction(1, 0));
-				//toSpawn.respawn((mapClass.getMapJunction(1, 0)));
 				cars.push_back(toSpawn);
 			}
 		}
@@ -188,15 +174,9 @@ void display()
 	case 21:
 		if (secondElapsed >= 1000000) {
 			if (cars.size() < 75) {
-				Car toSpawn = Car(glm::mat4(1.0f));
-				toSpawn.SetWidth(scale * (500 / 264.0f));
-				toSpawn.SetHeight(scale);
+				Car toSpawn = Car(basicCar);
 				toSpawn.setIdentifier(cars.size());
 				toSpawn.setJunction(&emptyJunction);
-				float red[3] = { 1,0,0 };
-				toSpawn.Init(shader, red, "textures/car.png");
-				//toSpawn.setJunction(mapClass.getMapJunction(1, 0));
-				//toSpawn.respawn((mapClass.getMapJunction(1, 0)));
 				cars.push_back(toSpawn);
 			}
 		}
@@ -204,133 +184,19 @@ void display()
 	default:
 		if (secondElapsed >= 1000000) {
 			if (cars.size() < 75) {
-				Car toSpawn = Car(glm::mat4(1.0f));
-				toSpawn.SetWidth(scale * (500 / 264.0f));
-				toSpawn.SetHeight(scale);
+				Car toSpawn = Car(basicCar);
 				toSpawn.setIdentifier(cars.size());
 				toSpawn.setJunction(&emptyJunction);
-				float red[3] = { 1,0,0 };
-				toSpawn.Init(shader, red, "textures/car.png");
-				//toSpawn.setJunction(mapClass.getMapJunction(1, 0));
-				//toSpawn.respawn((mapClass.getMapJunction(1, 0)));
 				cars.push_back(toSpawn);
 			}
 		}
 	}
-
-	//if (hour > 16 && hour < 18) {
-	//	if (secondElapsed >= 500000) {
-	//		if (cars.size() < 200) {
-	//			Car toSpawn = Car(glm::mat4(1.0f));
-	//			toSpawn.SetWidth(scale * (500 / 264.0f));
-	//			toSpawn.SetHeight(scale);
-	//			toSpawn.setJunction(&emptyJunction);
-	//			toSpawn.setIdentifier(cars.size());
-	//			float red[3] = { 1,0,0 };
-	//			toSpawn.Init(shader, red, "textures/car.png");
-	//			//toSpawn.setJunction(mapClass.getMapJunction(1, 0));
-	//			//toSpawn.respawn((mapClass.getMapJunction(1, 0)));
-	//			cars.push_back(toSpawn);
-	//		}
-	//	}
-	//	break;
-	//case 10:
-	//case 11:
-	//case 12:
-	//case 13:
-	//case 14:
-	//case 19:
-	//case 20:
-	//case 21:
-	//	if (secondElapsed >= 1000000) {
-	//		if (cars.size() < 75) {
-	//			Car toSpawn = Car(glm::mat4(1.0f));
-	//			toSpawn.SetWidth(scale * (500 / 264.0f));
-	//			toSpawn.SetHeight(scale);
-	//			toSpawn.setIdentifier(cars.size());
-	//			float red[3] = { 1,0,0 };
-	//			toSpawn.Init(shader, red, "textures/car.png");
-	//			//toSpawn.setJunction(mapClass.getMapJunction(1, 0));
-	//			//toSpawn.respawn((mapClass.getMapJunction(1, 0)));
-	//			cars.push_back(toSpawn);
-	//		}
-	//	}
-	//	break;
-	//}
-
-	//if (hour > 16 && hour < 18) {
-	//	if (secondElapsed >= 500000) {
-	//		if (cars.size() < 16) {
-	//			Car toSpawn = Car(glm::mat4(1.0f));
-	//			toSpawn.SetWidth(scale * (500 / 264.0f));
-	//			toSpawn.SetHeight(scale);
-	//			toSpawn.setIdentifier(cars.size());
-	//			float red[3] = { 1,0,0 };
-	//			toSpawn.Init(shader, red, "textures/car.png");
-	//			//toSpawn.setJunction(mapClass.getMapJunction(1, 0));
-	//			//toSpawn.respawn((mapClass.getMapJunction(1, 0)));
-	//			cars.push_back(toSpawn);
-	//		}
-	//	}
-	//}
-	//else {
-		if (secondElapsed >= 1000000) {
-			if (cars.size() < 3) {
-				//for (int i = 0; i < cars.size(); i++) {
-				//	Junction currentJunc = *mapClass.getMapJunction(1, 0);
-				//	float carPosX = cars[i].GetXPos();
-				//	float carPosY = cars[i].GetYPos();
-				//	if (
-				//		carPosX <= currentJunc.getLeftInner() && 
-				//		carPosX >= (currentJunc.GetXPos() - (currentJunc.getWidth() * 1/2)) &&
-				//		carPosY <= currentJunc.getYTopSquare() &&
-				//		carPosY >= currentJunc.getYBotSquare() &&
-
-				//		carPosX >= currentJunc.getRightInner() &&
-				//		carPosX <= currentJunc.GetXPos() + (currentJunc.getWidth() * 1/2) &&
-				//		carPosY <= currentJunc.getYTopSquare() &&
-				//		carPosY >= currentJunc.getYBotSquare() &&
-
-				//		carPosY >= currentJunc.getTopInner() &&
-				//		carPosY <= currentJunc.GetYPos() + (currentJunc.getHeight() * 1/2) &&
-				//		carPosX <= currentJunc.getXRightSquare() &&
-				//		carPosX >= currentJunc.getXLeftSquare() &&
-
-				//		carPosY <= currentJunc.getBotInner() &&
-				//		carPosY >= currentJunc.GetYPos() - (currentJunc.getWidth() * 1 / 2) &&
-				//		carPosX <= currentJunc.getXRightSquare() &&
-				//		carPosX >= currentJunc.getXLeftSquare()
-				//		) {
-				//		//cout << "MATRIX DODGE" << endl;
-				//		//goto noCar;
-				//	}
-				//}
-				Car toSpawn = Car(glm::mat4(1.0f));
-				toSpawn.SetWidth(scale * (500 / 264.0f));
-				toSpawn.SetHeight(scale);
-				toSpawn.setIdentifier(cars.size());
-				toSpawn.setJunction(&emptyJunction);
-				float red[3] = { 1,0,0 };
-				toSpawn.Init(shader, red, "textures/car.png");
-				//toSpawn.setJunction(mapClass.getMapJunction(1, 0));
-				//toSpawn.respawn((mapClass.getMapJunction(1, 0)));
-				//std::pair<int, int> spawnJunctionIndex = mapClass.getSpawns()[rand() % mapClass.getSpawns().size()];
-				//toSpawn.setJunction((mapClass.getMapJunction(spawnJunctionIndex.first, spawnJunctionIndex.second)));
-				//toSpawn.respawn(toSpawn.getJunction(), toSpawn.getJunction()->getSpawnable().second);
-				cars.push_back(toSpawn);
-			}
-		}
-	//}
-//noCar:
-//	cout;
 	if (secondElapsed >= 1000000) {
 		for (int i = 0; i < mapClass.getMap().size(); i++) {
 			for (int j = 0; j < mapClass.getMap()[i].size(); j++) {
 				if ((*mapClass.getMapJunction(i, j)).getType() == RoadType::X || (*mapClass.getMapJunction(i, j)).getType() == RoadType::T) {
-					//cout << "i = " << i << ", j = " << j << endl;
 					(*mapClass.getMapJunction(i, j)).trafficLightFlow();
 				}
-				
 			}
 		}
 		secondElapsed = 0;
@@ -408,20 +274,10 @@ void display()
 			}
 		}
 	respawn:
-		//cars[i].setJunction(mapClass.getMapJunction(1, 0));
-		//cars[i].respawn((mapClass.getMapJunction(1, 0)));
 		std::pair<int, int> spawnJunctionIndex = mapClass.getSpawns()[rand() % mapClass.getSpawns().size()];
 		cars[i].setJunction((mapClass.getMapJunction(spawnJunctionIndex.first, spawnJunctionIndex.second)));
 		cars[i].respawn(cars[i].getJunction(), cars[i].getJunction()->getSpawnable().second);
 		cars[i].setPreviousJunction("");
-
-		//std::cout << "current junction = " << cars[i].getJunction()->getType() << std::endl;
-		//cout << "spawnJunction = " << cars[i].getJunction()->getIdentifier() << endl;
-		//cout << "spawn entrance = " << cars[i].getJunction()->getSpawnable().second << endl;
-		//cout << "x = " << cars[i].GetXPos() << ", y = " << cars[i].GetYPos() << endl;
-		//cout << "previous0 = " << cars[i].getPreviousJunction() << endl;
-		/*cars[i].mapCarRespawn(mapClass);*/
-
 	end:
 		//cars[i].entryPoint();
 		continue;
@@ -664,13 +520,14 @@ void display()
 	secondElapsed += chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
 	hourElapsed += chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
 	fps = 1000000.0f / chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
-
+	cout << "fps = " << fps << endl;
 	//std::this_thread::sleep_for(std::chrono::milliseconds((1000 / fps) - chrono::duration_cast<std::chrono::milliseconds>(end - begin).count()));
 
 }
 
 void init()
 {
+	float red[3] = { 1,0,0 };
 	FreeImage_Initialise();
 
 	glClearColor(0.0,153.0f/256.0f,68.0f/256.0f,0.0);						//sets the clear colour to black
@@ -680,27 +537,35 @@ void init()
 	{
 		std::cout << "failed to load shader" << std::endl;
 	}
-	float red[3] = { 1,0,0 };
 	///This part commented is to scale the width of the sprite to match the dimensions of the car.png image.
-	mySquare.SetWidth(scale *(500 / 264.0f));
-	mySquare.SetHeight(scale);
-	car2.SetWidth(scale * (500 / 264.0f));
-	car2.SetHeight(scale);
-	for (int i = 0; i < cars.size(); i++) {
-		cars[i].SetWidth(scale * (500 / 264.0f));
-		cars[i].SetHeight(scale);
-		cars[i].setIdentifier(i);
-	}
 
 	//mapClass.addJunction(Junction::Junction("X", 0, 0, glm::mat4(1.0f), RoadType::X),0,1);
 	//mapClass.addJunction(Junction::Junction("X", 0, 0, glm::mat4(1.0f), RoadType::X),0,2);
 	//mapClass.getMapJunction(0, 2)->setSpawnable(true, 1);
 	//mapClass.getMapJunction(0, 2)->setOrientation(2);
 
-	mapClass.addJunction(Junction::Junction("X", 0, 0, glm::mat4(1.0f), RoadType::X), 0, 0);
-	mapClass.getMapJunction(0, 0)->setSpawnable(true, 0);
-
-
+	//mapClass.addJunction(Junction::Junction("X", 0, 0, glm::mat4(1.0f), RoadType::X), 0, 0);
+	//mapClass.getMapJunction(0, 0)->setSpawnable(true, 0);
+	tJunction.SetWidth(15.0f * scale * (2481 / 2481.0f));
+	tJunction.SetHeight(15.0f * scale);
+	tJunction.Init(shader, red, "textures/Tjunction.png");
+	xJunction.SetWidth(15.0f * scale * (2481 / 2481.0f));
+	xJunction.SetHeight(15.0f * scale);
+	xJunction.Init(shader, red, "textures/Xjunction.png");
+	road.SetWidth(15.0f * scale * (2481 / 2481.0f));
+	road.SetHeight(15.0f * scale);
+	road.Init(shader, red, "textures/Road.png");
+	emptyJunction.SetWidth(15.0f * scale * (2481 / 2481.0f));
+	emptyJunction.SetHeight(15.0f * scale);
+	emptyJunction.Init(shader, red, "textures/blank.png");
+	basicTrafficLight.SetHeight(2.0f * scale);
+	basicTrafficLight.SetWidth(2.0f * scale / 2);
+	basicTrafficLight.Init(shader, red, "textures/blankTrafficLight.png");
+	basicTrafficLight.InitLights(shader, red, "textures/redTrafficLight.png", "textures/rAndATrafficLight.png", 
+		"textures/greenTrafficLight.png", "textures/blankTrafficLight.png");
+	basicCar.SetWidth(scale * (500 / 264.0f));
+	basicCar.SetHeight(scale);
+	basicCar.Init(shader, red, "textures/car.png");
 
 	//begin map
 	
@@ -765,68 +630,68 @@ void init()
 	//end map
 
 	//row 1
-	mapClass.addJunction(Junction::Junction("R", 0, 1, glm::mat4(1.0f), RoadType::S), 0, 1);
+	mapClass.addJunction(Junction::Junction(road), 0, 1);
 	mapClass.getMapJunction(0, 1)->setSpawnable(true, 2);
-	mapClass.addJunction(Junction::Junction("R", 0, 1, glm::mat4(1.0f), RoadType::S), 0, 5);
+	mapClass.addJunction(Junction::Junction(road), 0, 5);
 	mapClass.getMapJunction(0, 5)->setSpawnable(true, 2);
 	//row 2
-	mapClass.addJunction(Junction::Junction("T", 0, 0, glm::mat4(1.0f), RoadType::T), 1, 1);
+	mapClass.addJunction(Junction::Junction(tJunction), 1, 1);
 	mapClass.getMapJunction(1, 1)->setOrientation(1);
-	mapClass.addJunction(Junction::Junction("R", 0, 0, glm::mat4(1.0f), RoadType::S), 1, 2);
+	mapClass.addJunction(Junction::Junction(road), 1, 2);
 	mapClass.getMapJunction(1, 2)->setOrientation(1);
-	mapClass.addJunction(Junction::Junction("R", 0, 0, glm::mat4(1.0f), RoadType::S), 1, 3);
+	mapClass.addJunction(Junction::Junction(road), 1, 3);
 	mapClass.getMapJunction(1, 3)->setOrientation(1);
-	mapClass.addJunction(Junction::Junction("R", 0, 0, glm::mat4(1.0f), RoadType::S), 1, 4);
+	mapClass.addJunction(Junction::Junction(road), 1, 4);
 	mapClass.getMapJunction(1, 4)->setOrientation(1);
-	mapClass.addJunction(Junction::Junction("X", 0, 0, glm::mat4(1.0f), RoadType::X), 1, 5);
-	mapClass.addJunction(Junction::Junction("S", 0, 0, glm::mat4(1.0f), RoadType::S), 1, 6);
+	mapClass.addJunction(Junction::Junction(xJunction), 1, 5);
+	mapClass.addJunction(Junction::Junction(road), 1, 6);
 	mapClass.getMapJunction(1, 6)->setOrientation(1);
 	mapClass.getMapJunction(1, 6)->setSpawnable(true, 1);
 	//row 3 
-	mapClass.addJunction(Junction::Junction("T", 0, 0, glm::mat4(1.0f), RoadType::T), 2, 1);
+	mapClass.addJunction(Junction::Junction(tJunction), 2, 1);
 	mapClass.getMapJunction(2, 1)->setOrientation(1);
-	mapClass.addJunction(Junction::Junction("T", 0, 0, glm::mat4(1.0f), RoadType::T), 2, 2);
-	mapClass.addJunction(Junction::Junction("R", 0, 0, glm::mat4(1.0f), RoadType::S), 2, 3);
+	mapClass.addJunction(Junction::Junction(tJunction), 2, 2);
+	mapClass.addJunction(Junction::Junction(road), 2, 3);
 	mapClass.getMapJunction(2, 3)->setOrientation(1);
-	mapClass.addJunction(Junction::Junction("T", 0, 0, glm::mat4(1.0f), RoadType::T), 2, 4);
-	mapClass.addJunction(Junction::Junction("T", 0, 0, glm::mat4(1.0f), RoadType::T), 2, 5);
+	mapClass.addJunction(Junction::Junction(tJunction), 2, 4);
+	mapClass.addJunction(Junction::Junction(tJunction), 2, 5);
 	mapClass.getMapJunction(2, 5)->setOrientation(3);
 	//row 4
-	mapClass.addJunction(Junction::Junction("R", 0, 0, glm::mat4(1.0f), RoadType::S), 3, 1);
-	mapClass.addJunction(Junction::Junction("R", 0, 0, glm::mat4(1.0f), RoadType::S), 3, 2);
-	mapClass.addJunction(Junction::Junction("R", 0, 0, glm::mat4(1.0f), RoadType::S), 3, 4);
-	mapClass.addJunction(Junction::Junction("T", 0, 0, glm::mat4(1.0f), RoadType::T), 3, 5);
+	mapClass.addJunction(Junction::Junction(road), 3, 1);
+	mapClass.addJunction(Junction::Junction(road), 3, 2);
+	mapClass.addJunction(Junction::Junction(road), 3, 4);
+	mapClass.addJunction(Junction::Junction(tJunction), 3, 5);
 	mapClass.getMapJunction(3, 5)->setOrientation(1);
-	mapClass.addJunction(Junction::Junction("R", 0, 0, glm::mat4(1.0f), RoadType::S), 3, 6);
+	mapClass.addJunction(Junction::Junction(road), 3, 6);
 	mapClass.getMapJunction(3, 6)->setOrientation(1);
 	mapClass.getMapJunction(3, 6)->setSpawnable(true, 1);
 	//row 5
-	mapClass.addJunction(Junction::Junction("R", 0, 0, glm::mat4(1.0f), RoadType::S), 4, 1);
-	mapClass.addJunction(Junction::Junction("T", 0, 0, glm::mat4(1.0f), RoadType::T), 4, 2);
+	mapClass.addJunction(Junction::Junction(road), 4, 1);
+	mapClass.addJunction(Junction::Junction(tJunction), 4, 2);
 	mapClass.getMapJunction(4, 2)->setOrientation(1);
-	mapClass.addJunction(Junction::Junction("R", 0, 0, glm::mat4(1.0f), RoadType::S), 4, 3);
+	mapClass.addJunction(Junction::Junction(road), 4, 3);
 	mapClass.getMapJunction(4, 3)->setOrientation(1);
-	mapClass.addJunction(Junction::Junction("T", 0, 0, glm::mat4(1.0f), RoadType::T), 4, 4);
+	mapClass.addJunction(Junction::Junction(tJunction), 4, 4);
 	mapClass.getMapJunction(4, 4)->setOrientation(3);
-	mapClass.addJunction(Junction::Junction("R", 0, 0, glm::mat4(1.0f), RoadType::S), 4, 5);
+	mapClass.addJunction(Junction::Junction(road), 4, 5);
 	//row 6
-	mapClass.addJunction(Junction::Junction("R", 0, 0, glm::mat4(1.0f), RoadType::S), 5, 0);
+	mapClass.addJunction(Junction::Junction(road), 5, 0);
 	mapClass.getMapJunction(5, 0)->setOrientation(1);
 	mapClass.getMapJunction(5, 0)->setSpawnable(true, 0);
-	mapClass.addJunction(Junction::Junction("X", 0, 0, glm::mat4(1.0f), RoadType::X), 5, 1);
-	mapClass.addJunction(Junction::Junction("X", 0, 0, glm::mat4(1.0f), RoadType::X), 5, 2);
-	mapClass.addJunction(Junction::Junction("R", 0, 0, glm::mat4(1.0f), RoadType::S), 5, 3);
+	mapClass.addJunction(Junction::Junction(xJunction), 5, 1);
+	mapClass.addJunction(Junction::Junction(xJunction), 5, 2);
+	mapClass.addJunction(Junction::Junction(road), 5, 3);
 	mapClass.getMapJunction(5, 3)->setOrientation(1);
-	mapClass.addJunction(Junction::Junction("T", 0, 0, glm::mat4(1.0f), RoadType::T), 5, 4);
+	mapClass.addJunction(Junction::Junction(tJunction), 5, 4);
 	mapClass.getMapJunction(5, 4)->setOrientation(2);
-	mapClass.addJunction(Junction::Junction("T", 0, 0, glm::mat4(1.0f), RoadType::T), 5, 5);
+	mapClass.addJunction(Junction::Junction(tJunction), 5, 5);
 	mapClass.getMapJunction(5, 5)->setOrientation(3);
 	//row 7
-	mapClass.addJunction(Junction::Junction("R", 0, 0, glm::mat4(1.0f), RoadType::S), 6, 1);
+	mapClass.addJunction(Junction::Junction(road), 6, 1);
 	mapClass.getMapJunction(6, 1)->setSpawnable(true, 3);
-	mapClass.addJunction(Junction::Junction("R", 0, 0, glm::mat4(1.0f), RoadType::S), 6, 2);
+	mapClass.addJunction(Junction::Junction(road), 6, 2);
 	mapClass.getMapJunction(6, 2)->setSpawnable(true, 3);
-	mapClass.addJunction(Junction::Junction("R", 0, 0, glm::mat4(1.0f), RoadType::S), 6, 5);
+	mapClass.addJunction(Junction::Junction(road), 6, 5);
 	mapClass.getMapJunction(6, 5)->setSpawnable(true, 3);
 
 
@@ -859,39 +724,34 @@ void init()
 	for (int i = 0; i < mapClass.getMap().size(); i++) {
 		for (int j = 0; j < mapClass.getMap()[0].size(); j++) {
 			Junction pointer = *mapClass.getMapJunction(i, j);
-			(*mapClass.getMapJunction(i, j)).SetWidth(15.0f * scale * (2481 / 2481.0f));
-			(*mapClass.getMapJunction(i, j)).SetHeight(15.0f * scale);
+
 			(*mapClass.getMapJunction(i, j)).SetXpos(j* (*mapClass.getMapJunction(i, j)).getWidth());
 			(*mapClass.getMapJunction(i, j)).SetYpos(-i* (*mapClass.getMapJunction(i, j)).getHeight());
 			(*mapClass.getMapJunction(i, j)).calculateLines();
 			(*mapClass.getMapJunction(i, j)).setIdentifier(std::to_string(i) + std::to_string(j));
 
-			switch ((*mapClass.getMapJunction(i, j)).getType())
-			{
-			case(RoadType::N):
-				(*mapClass.getMapJunction(i, j)).Init(shader, red, "textures/blank.png");
-				break;
-			case(RoadType::S):
-				(*mapClass.getMapJunction(i, j)).Init(shader, red, "textures/Road.png");
-				break;
-			case(RoadType::T):
-				(*mapClass.getMapJunction(i, j)).Init(shader, red, "textures/Tjunction.png");
-				break;
-			case(RoadType::X):
-			default:
-				(*mapClass.getMapJunction(i, j)).Init(shader, red, "textures/Xjunction.png");
-				break;
-			}
+			//switch ((*mapClass.getMapJunction(i, j)).getType())
+			//{
+			//case(RoadType::N):
+			//	(*mapClass.getMapJunction(i, j)).Init(shader, red, "textures/blank.png");
+			//	break;
+			//case(RoadType::S):
+			//	(*mapClass.getMapJunction(i, j)).Init(shader, red, "textures/Road.png");
+			//	break;
+			//case(RoadType::T):
+			//	(*mapClass.getMapJunction(i, j)).Init(shader, red, "textures/Tjunction.png");
+			//	break;
+			//case(RoadType::X):
+			//default:
+			//	(*mapClass.getMapJunction(i, j)).Init(shader, red, "textures/Xjunction.png");
+			//	break;
+			//}
 			for (int k = 0; k < 4; k++) {
 				if ((*mapClass.getMapJunction(i, j)).getType() == RoadType::S) {
 					break;
 				}
 				if ((*mapClass.getMapJunction(i, j)).getTurnings()[k]) {
-					(*mapClass.getMapJunction(i, j)).getTrafficLights()[k].SetHeight(2.0f * scale);
-					(*mapClass.getMapJunction(i, j)).getTrafficLights()[k].SetWidth(2.0f * scale / 2);
-					(*mapClass.getMapJunction(i, j)).getTrafficLights()[k].Init(shader, red, "textures/blankTrafficLight.png");
-					(*mapClass.getMapJunction(i, j)).getTrafficLights()[k].InitLights(shader, red, "textures/redTrafficLight.png", "textures/rAndATrafficLight.png",
-						"textures/greenTrafficLight.png", "textures/blankTrafficLight.png");
+					(*mapClass.getMapJunction(i, j)).getTrafficLights()[k].copyTexture(&basicTrafficLight);
 				}
 			}
 		}
