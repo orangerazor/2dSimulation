@@ -29,19 +29,40 @@ void TrafficLight::copyTexture(TrafficLight* old)
     this->lightsSprite[3] = old->lightsSprite[3];
 }
 
+TrafficLight::TrafficLight(TrafficLight* old) {
+    this->m_vaoID = old->m_vaoID;
+    this->m_vboID[3] = old->m_vboID[3];
+    this->m_NumberOfVerts = old->m_NumberOfVerts;
+
+    this->m_TexName = old->m_TexName;
+
+    this->obb = old->obb;
+    this->collide = old->collide;
+    this->spawnOBB = old->spawnOBB;
+
+    this->m_Width = old->m_Width;
+    this->m_Height = old->m_Height;
+
+    this->m_xpos = old->m_xpos;
+    this->m_ypos = old->m_ypos;
+
+    this->lightsSprite[0] = old->lightsSprite[0];
+    this->lightsSprite[1] = old->lightsSprite[1];
+    this->lightsSprite[2] = old->lightsSprite[2];
+    this->lightsSprite[3] = old->lightsSprite[3];
+
+    this->lights = old->lights;
+    this->current_phase = old->current_phase;
+    this->num_of_phases = old->num_of_phases;
+    this->phase_duration = old->phase_duration;
+    this->time = old->time;
+}
+
 TrafficLight::TrafficLight(int phase_duration){
     this->lights = {1,0,0};
     this->current_phase = 0;
     this->num_of_phases = 4;
     this->phase_duration = phase_duration;
-
-}
-
-TrafficLight::TrafficLight(TrafficLight* old) {
-    this->lights = old->lights;
-    this->current_phase = old->current_phase;
-    this->num_of_phases = old->num_of_phases;
-    this->phase_duration = old->phase_duration;
 
 }
 
@@ -124,7 +145,6 @@ void TrafficLight::nextLight() {
         this->time = 0;
     }
     this->current_phase = this->time / this->phase_duration;
-
 }
 
 int TrafficLight::getTimeLeftInState() {

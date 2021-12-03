@@ -62,7 +62,7 @@ private:
 
 public:
 
-    Junction(Junction* old);
+    Junction(Junction* oldJ, TrafficLight* oldTL);
     Junction();
     Junction(std::string name, int orientation, int speedLimit, glm::mat4 rotation, RoadType type);
     ~Junction();
@@ -71,7 +71,7 @@ public:
     int getNumberTurnings();
     void calculateLines();
     bool nullJunction();
-    void setOrientation(int orientation);
+    void setOrientation(int orientation, TrafficLight *old);
 
     inline std::array<bool, 4> getTurnings() {
         return this->turnings;

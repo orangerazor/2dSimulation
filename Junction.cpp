@@ -4,37 +4,38 @@
 
 #include "Junction.h"
 
-Junction::Junction(Junction* old)
+Junction::Junction(Junction* oldJ, TrafficLight* oldTL)
 {
-    this->m_vaoID = old->m_vaoID;
-    this->m_vboID[3] = old->m_vboID[3];
-    this->m_NumberOfVerts = old->m_NumberOfVerts;
+    this->m_vaoID = oldJ->m_vaoID;
+    this->m_vboID[3] = oldJ->m_vboID[3];
+    this->m_NumberOfVerts = oldJ->m_NumberOfVerts;
 
-    this->m_TexName = old->m_TexName;
+    this->m_TexName = oldJ->m_TexName;
 
-    this->obb = old->obb;
-    this->collide = old->collide;
-    this->spawnOBB = old->spawnOBB;
+    this->obb = oldJ->obb;
+    this->collide = oldJ->collide;
+    this->spawnOBB = oldJ->spawnOBB;
 
-    this->m_Width = old->m_Width;
-    this->m_Height = old->m_Height;
+    this->m_Width = oldJ->m_Width;
+    this->m_Height = oldJ->m_Height;
 
-    this->m_xpos = old->m_xpos;
-    this->m_ypos = old->m_ypos;
+    this->m_xpos = oldJ->m_xpos;
+    this->m_ypos = oldJ->m_ypos;
 
-    this->objectRotation = old->objectRotation;
+    this->objectRotation = oldJ->objectRotation;
 
-    this->name = old->name;
-    this->type = old->type;
-    this->turnings = old->turnings;
+    this->name = oldJ->name;
+    this->type = oldJ->type;
+    this->turnings = oldJ->turnings;
     for (int i = 0; i < this->turnings.size(); i++) {
         if (this->type == RoadType::S) {
             break;
         }
         if (this->turnings[i]) {
-            this->trafficLights[i] = TrafficLight::TrafficLight();
+            this->trafficLights[i] = TrafficLight::TrafficLight(oldTL);
         }
     }
+    this->state = true;
     this->identifier = (&this->name)->c_str();
     this->spawnable.first = false;
     this->spawnable.second = NULL;
@@ -162,11 +163,11 @@ void Junction::trafficLightFlow() {
 
             case(1):
             case(3):
+                
                 trafficLights[2].nextLight();
                 trafficLights[3].nextLight();
                 /*std::cout << trafficLights[0].getLights()[0] << trafficLights[0].getLights()[1] << std::endl;*/
                 if (trafficLights[2].getLights()[0] && !trafficLights[2].getLights()[1] && trafficLights[3].getLights()[0] && !trafficLights[3].getLights()[1] && trafficLights[2].getTimeLeftInState() == 0 && trafficLights[3].getTimeLeftInState() == 0) {
-
                     //std::cout << "test"<<std::endl;
                     //trafficLights[3].nextLight();
                     this->state = false;
@@ -192,8 +193,8 @@ void Junction::trafficLightFlow() {
         else {
             switch (orientation) {
             case(1):
-                trafficLights[0].nextLight();
-                if (trafficLights[0].getLights()[0] && !trafficLights[0].getLights()[1] && trafficLights[0].getTimeLeftInState() == 0) {
+                trafficLights[1].nextLight();
+                if (trafficLights[1].getLights()[0] && !trafficLights[1].getLights()[1] && trafficLights[1].getTimeLeftInState() == 0) {
                     //trafficLights[0].nextLight();
                     //trafficLights[1].nextLight();
                     this->state = true;
@@ -208,8 +209,8 @@ void Junction::trafficLightFlow() {
                 }
                 break;
             case(3):
-                trafficLights[1].nextLight();
-                if (trafficLights[1].getLights()[0] && !trafficLights[1].getLights()[1] && trafficLights[1].getTimeLeftInState() == 0) {
+                trafficLights[0].nextLight();
+                if (trafficLights[0].getLights()[0] && !trafficLights[0].getLights()[1] && trafficLights[0].getTimeLeftInState() == 0) {
                     //trafficLights[0].nextLight();
                     //trafficLights[1].nextLight();
                     this->state = true;
@@ -286,7 +287,7 @@ bool Junction::nullJunction()
     }
 }
 
-void Junction::setOrientation(int orientation) {
+void Junction::setOrientation(int orientation, TrafficLight* old) {
     this->orientation = orientation;
     switch (type) {
     case(RoadType::S):
@@ -351,7 +352,7 @@ void Junction::setOrientation(int orientation) {
             break;
         }
         if (this->turnings[i]) {
-            this->trafficLights[i] = TrafficLight::TrafficLight(2);
+            this->trafficLights[i] = TrafficLight::TrafficLight(old);
         }
     }
 }
