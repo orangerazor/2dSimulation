@@ -139,7 +139,7 @@ void display()
 	case 23:
 		
 		if (secondElapsed >= 1000000) {
-			if (cars.size() < 1) {
+			if (cars.size() < 6) {
 				//cout << "test" << endl;
 				Car toSpawn = Car(glm::mat4(1.0f));
 				toSpawn.SetWidth(scale * (500 / 264.0f));
@@ -164,7 +164,7 @@ void display()
 	case 17:
 	case 18:
 		if (secondElapsed >= 500000) {
-			if (cars.size() < 1) {
+			if (cars.size() < 6) {
 				Car toSpawn = Car(glm::mat4(1.0f));
 				toSpawn.SetWidth(scale * (500 / 264.0f));
 				toSpawn.SetHeight(scale);
@@ -187,7 +187,7 @@ void display()
 	case 20:
 	case 21:
 		if (secondElapsed >= 1000000) {
-			if (cars.size() < 1) {
+			if (cars.size() < 6) {
 				Car toSpawn = Car(glm::mat4(1.0f));
 				toSpawn.SetWidth(scale * (500 / 264.0f));
 				toSpawn.SetHeight(scale);
@@ -203,7 +203,7 @@ void display()
 		break;
 	default:
 		if (secondElapsed >= 1000000) {
-			if (cars.size() < 1) {
+			if (cars.size() < 6) {
 				Car toSpawn = Car(glm::mat4(1.0f));
 				toSpawn.SetWidth(scale * (500 / 264.0f));
 				toSpawn.SetHeight(scale);
@@ -697,9 +697,9 @@ void init()
 	//mapClass.getMapJunction(0, 2)->setSpawnable(true, 1);
 	//mapClass.getMapJunction(0, 2)->setOrientation(2);
 
-	mapClass.addJunction(Junction::Junction("T", 0, 0, glm::mat4(1.0f), RoadType::T), 0, 0);
+	mapClass.addJunction(Junction::Junction("X", 0, 0, glm::mat4(1.0f), RoadType::X), 0, 0);
 	mapClass.getMapJunction(0, 0)->setOrientation(0);
-	mapClass.getMapJunction(0, 0)->setSpawnable(true, 3);
+	mapClass.getMapJunction(0, 0)->setSpawnable(true, 1);
 
 
 

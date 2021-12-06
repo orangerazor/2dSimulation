@@ -481,44 +481,44 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 	//angle += 0.4f / fps;
 	switch (junction->getType()) {
 	case RoadType::S:
-		switch (junction->getOrientation()) {
-		case 0:
-			if (abs(intersectDistLeft) < 2) {
-				angle += 6.8f / fps;
-			}
-			if (abs(intersectDistRight) < 2) {
-				angle -= 6.8f / fps;
-			}
-			break;
-		case 1:
-			if (abs(intersectDistBot) < 2) {
-				angle += 6.8f / fps;
-			}
-			if (abs(intersectDistTop) < 2) {
-				angle -= 6.8f / fps;
-			}
-			break;
-		case 2:
-			intersectDistRight = (junction->getXRightSquare() - m_xpos) / (forVec2.x);
-			intersectDistLeft = (junction->getXLeftSquare() - m_xpos) / (forVec2.x);
-			if (abs(intersectDistLeft) < 2) {
-				angle += 6.8f / fps;
-			}
-			if (abs(intersectDistRight) < 2) {
-				angle -= 6.8f / fps;
-			}
-			break;
-		case 3:
-			intersectDistTop = (junction->getYTopSquare() - m_ypos) / (forVec2.y);
-			intersectDistBot = (junction->getYBotSquare() - m_ypos) / (forVec2.y);
-			if (abs(intersectDistBot) < 2) {
-				angle += 6.8f / fps;
-			}
-			if (abs(intersectDistTop) < 2) {
-				angle -= 6.8f / fps;
-			}
-			break;
-		}
+		//switch (junction->getOrientation()) {
+		//case 0:
+		//	if (abs(intersectDistLeft) < 2) {
+		//		angle += 6.8f / fps;
+		//	}
+		//	if (abs(intersectDistRight) < 2) {
+		//		angle -= 6.8f / fps;
+		//	}
+		//	break;
+		//case 1:
+		//	if (abs(intersectDistBot) < 2) {
+		//		angle += 6.8f / fps;
+		//	}
+		//	if (abs(intersectDistTop) < 2) {
+		//		angle -= 6.8f / fps;
+		//	}
+		//	break;
+		//case 2:
+		//	intersectDistRight = (junction->getXRightSquare() - m_xpos) / (forVec2.x);
+		//	intersectDistLeft = (junction->getXLeftSquare() - m_xpos) / (forVec2.x);
+		//	if (abs(intersectDistLeft) < 2) {
+		//		angle += 6.8f / fps;
+		//	}
+		//	if (abs(intersectDistRight) < 2) {
+		//		angle -= 6.8f / fps;
+		//	}
+		//	break;
+		//case 3:
+		//	intersectDistTop = (junction->getYTopSquare() - m_ypos) / (forVec2.y);
+		//	intersectDistBot = (junction->getYBotSquare() - m_ypos) / (forVec2.y);
+		//	if (abs(intersectDistBot) < 2) {
+		//		angle += 6.8f / fps;
+		//	}
+		//	if (abs(intersectDistTop) < 2) {
+		//		angle -= 6.8f / fps;
+		//	}
+		//	break;
+		//}
 		break;
 	case RoadType::T:
 		//Check for lights
@@ -618,6 +618,100 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 		}
 		break;
 	case RoadType::X:
+		switch (entryPoint) {
+		case 0:
+			// If the distance in x from the car is less than the 2/3 width of the car stop unless the lights are green 
+			if (abs(intersectDistLeft) < (m_Width * 4 / 6) && !junction->getTrafficLights()[entryPoint].getLights()[2]) {
+				speed = 0;
+			}
+			else {
+				speed = speed;
+			}
+			//In the box and need to turn correctly
+			if (intersectDistLeft <= 0) {
+				switch (direction) {
+				case -1:
+					angle += 2.4 / fps;
+					break;
+				case 0:
+					break;
+				case 1:
+					if (m_xpos >= junction->GetXPos()) {
+						angle -= 2.4 / fps;
+					}
+					break;
+				}
+			}
+			break;
+		case 1:
+			if (abs(intersectDistRight) < (m_Width * 4 / 6) && !junction->getTrafficLights()[entryPoint].getLights()[2]) {
+				speed = 0;
+			}
+			else {
+				speed = speed;
+			}
+			//In box so turn
+			if (intersectDistRight <= 0) {
+				switch (direction) {
+				case -1:
+					angle += 2.4 / fps;
+					break;
+				case 0:
+					break;
+				case 1:
+					if (m_xpos <= junction->GetXPos()) {
+						angle -= 2.4 / fps;
+					}
+					break;
+				}
+			}
+			break;
+		case 2:
+			if (abs(intersectDistTop) < (m_Width * 4 / 6) && !junction->getTrafficLights()[entryPoint].getLights()[2]) {
+				speed = 0;
+			}
+			else {
+				speed = speed;
+			}
+			//In box so turn
+			if (intersectDistTop <= 0) {
+				switch (direction) {
+				case -1:
+					angle += 2.4 / fps;
+					break;
+				case 0:
+					break;
+				case 1:
+					if (m_ypos <= junction->GetYPos()) {
+						angle -= 2.4 / fps;
+					}
+					break;
+				}
+			}
+			break;
+		case 3:
+			if (abs(intersectDistBot) < (m_Width * 4 / 6) && !junction->getTrafficLights()[entryPoint].getLights()[2]) {
+				speed = 0;
+			}
+			else {
+				speed = speed;
+			}
+			if (intersectDistBot <= 0) {
+				switch (direction) {
+				case -1:
+					angle += 2.4 / fps;
+					break;
+				case 0:
+					break;
+				case 1:
+					if (m_ypos >= junction->GetYPos()) {
+						angle -= 2.4 / fps;
+					}
+					break;
+				}
+			}
+			break;
+		}
 		break;
 	case RoadType::N:
 		break;
@@ -794,7 +888,7 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 			//Check for imminent collisions in front along road lines
 			if (abs(intersectDistHorizontal) < 2) {
 				if (tValCentre > 0) {
-					angle += 2.4 / fps;
+					angle -= 2.4 / fps;
 				}
 				else {
 					angle -= 2.4 / fps;
@@ -803,15 +897,102 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 		}
 		//Right
 		if (m_xpos >= junction->getXRightSquare()) {
-
+			float tValCentre = (junction->GetXPos() - m_xpos) / forVec2.x;
+			if (abs(intersectDistBot) < 2) {
+				//Check which way the car is facing
+				// Facing centre of junction
+				if (tValCentre > 0) {
+					angle += 2.4 / fps;
+				}
+				//Facing out of junction
+				else {
+					angle -= 2.4 / fps;
+				}
+			}
+			if (abs(intersectDistTop) < 2) {
+				//Check which way the car is facing
+				if (tValCentre > 0) {
+					angle -= 2.4 / fps;
+				}
+				else {
+					angle += 2.4 / fps;
+				}
+			}
+			//Check for imminent collisions in front along road lines
+			if (abs(intersectDistHorizontal) < 2) {
+				if (tValCentre > 0) {
+					angle -= 2.4 / fps;
+				}
+				else {
+					angle -= 2.4 / fps;
+				}
+			}
 		}
 		//Top
 		if (m_ypos >= junction->getYTopSquare()) {
-
+			float tValCentre = (junction->GetXPos() - m_xpos) / forVec2.x;
+			if (abs(intersectDistLeft) < 2) {
+				//Check which way the car is facing
+				// Facing centre of junction
+				if (tValCentre > 0) {
+					angle -= 2.4 / fps;
+				}
+				//Facing out of junction
+				else {
+					angle += 2.4 / fps;
+				}
+			}
+			if (abs(intersectDistRight) < 2) {
+				//Check which way the car is facing
+				if (tValCentre > 0) {
+					angle += 2.4 / fps;
+				}
+				else {
+					angle -= 2.4 / fps;
+				}
+			}
+			//Check for imminent collisions in front along road lines
+			if (abs(intersectDistVertical) < 2) {
+				if (tValCentre > 0) {
+					angle -= 2.4 / fps;
+				}
+				else {
+					angle -= 2.4 / fps;
+				}
+			}
 		}
 		//Bottom
 		if (m_ypos <= junction->getYBotSquare()) {
-
+			float tValCentre = (junction->GetXPos() - m_xpos) / forVec2.x;
+			if (abs(intersectDistLeft) < 2) {
+				//Check which way the car is facing
+				// Facing centre of junction
+				if (tValCentre > 0) {
+					angle += 2.4 / fps;
+				}
+				//Facing out of junction
+				else {
+					angle -= 2.4 / fps;
+				}
+			}
+			if (abs(intersectDistRight) < 2) {
+				//Check which way the car is facing
+				if (tValCentre > 0) {
+					angle -= 2.4 / fps;
+				}
+				else {
+					angle += 2.4 / fps;
+				}
+			}
+			//Check for imminent collisions in front along road lines
+			if (abs(intersectDistVertical) < 2) {
+				if (tValCentre > 0) {
+					angle -= 2.4 / fps;
+				}
+				else {
+					angle -= 2.4 / fps;
+				}
+			}
 		}
 	}
 
@@ -841,12 +1022,46 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 			//Facing centre
 			if (tValCentre > 0) {
 				if (abs(perpDistTop) < 6) {
-					std::cout << "Estoy aqui" << std::endl;
 					angle -= 2.4 / fps;
 				}
 				if (abs(perpDistHorizontal) < 6) {
-					std::cout << "Estoy aqui" << std::endl;
 					angle += 2.4 / fps;
+				}
+			}
+		}
+		//Right
+		if (m_xpos > junction->getXRightSquare()) {
+			float tValCentre = (junction->GetXPos() - m_xpos) / forVec2.x;
+			if (tValCentre > 0) {
+				if (abs(perpDistBot) < 6) {
+					angle += 2.4 / fps;
+				}
+				if (abs(perpDistHorizontal) < 6) {
+					angle -= 2.4 / fps;
+				}
+			}
+		}
+		//Top
+		if (m_ypos > junction->getYTopSquare()) {
+			float tValCentre = (junction->GetYPos() - m_ypos) / forVec2.y;
+			if (tValCentre > 0) {
+				if (abs(perpDistRight) < 6) {
+					angle += 2.4 / fps;
+				}
+				if (abs(perpDistVertical) < 6) {
+					angle -= 2.4 / fps;
+				}
+			}
+		}
+		//Bottom
+		if (m_ypos < junction->getYBotSquare()) {
+			float tValCentre = (junction->GetYPos() - m_ypos) / forVec2.y;
+			if (tValCentre > 0) {
+				if (abs(perpDistLeft) < 6) {
+					angle += 2.4 / fps;
+				}
+				if (abs(perpDistVertical) < 6) {
+					angle -= 2.4 / fps;
 				}
 			}
 		}
@@ -912,6 +1127,8 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 		angle -= 360;
 	}
 	return glm::rotate(transform, angle, glm::vec3(0, 0, 1));
+
+
 	//return glm::mat4(1.0f);
 
 	////std::cout << std::endl;
