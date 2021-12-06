@@ -299,8 +299,8 @@ void display()
 	for (int k = 0; k < numSpawns; k++) {
 		OBB boxCheck;
 		for (int i = 0; i < cars.size(); i++) {
-			int carY = stoi(cars[i].getJunction()->getIdentifier().substr(0, 1));
-			int carX = stoi(cars[i].getJunction()->getIdentifier().substr(1, 1));
+			int carY = cars[i].getJunction()->getYPosition();
+			int carX = cars[i].getJunction()->getXPosition();
 			pair<int, int> carIndicies;
 			carIndicies.first = carY;
 			carIndicies.second = carX;
@@ -595,7 +595,7 @@ void init()
 	basicTrafficLight.SetWidth(2.0f * scale / 2);
 	basicTrafficLight.Init(shader, red, "textures/blankTrafficLight.png");
 	basicTrafficLight.InitLights(shader, red, "textures/redTrafficLight.png", "textures/rAndATrafficLight.png", 
-		"textures/greenTrafficLight.png", "textures/blankTrafficLight.png");
+		"textures/greenTrafficLight.png", "textures/amberTrafficLight.png");
 	basicCar.SetWidth(scale * (500 / 264.0f));
 	basicCar.SetHeight(scale);
 	basicCar.Init(shader, red, "textures/car.png");
@@ -762,7 +762,7 @@ void init()
 	for (int i = 0; i < mapClass.getMap().size(); i++) {
 		for (int j = 0; j < mapClass.getMap()[0].size(); j++) {
 			Junction pointer = *mapClass.getMapJunction(i, j);
-
+			(*mapClass.getMapJunction(i, j)).setPosition(j, i);
 			(*mapClass.getMapJunction(i, j)).SetXpos(j* (*mapClass.getMapJunction(i, j)).getWidth());
 			(*mapClass.getMapJunction(i, j)).SetYpos(-i* (*mapClass.getMapJunction(i, j)).getHeight());
 			(*mapClass.getMapJunction(i, j)).calculateLines();
@@ -800,6 +800,7 @@ void init()
 	for (int i = 0; i < cars.size(); i++) {
 		cars[i].Init(shader, red, "textures/car.png");
 	}
+	mapClass.possibleMoves(*mapClass.getMapJunction(1, 1), 2);
 	Junction middle = mapClass.getMiddle();
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }

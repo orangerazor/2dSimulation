@@ -38,6 +38,8 @@ Junction::Junction(Junction* oldJ, TrafficLight* oldTL)
     this->state = true;
     this->identifier = (&this->name)->c_str();
     this->spawnable.first = false;
+    this->xPosition = -1;
+    this->yPosition = -1;
 
 }
 
@@ -52,6 +54,8 @@ Junction::Junction() {
     this->state = true;
     this->spawnable.first = false;
     this->identifier = (&this->name)->c_str();
+    this->xPosition = -1;
+    this->yPosition = -1;
 }
 
 Junction::Junction(std::string name, int orientation, int speedLimit, glm::mat4 rotation, RoadType type) {
@@ -128,6 +132,8 @@ Junction::Junction(std::string name, int orientation, int speedLimit, glm::mat4 
     }
     this->identifier = (&this->name)->c_str();
     this->spawnable.first = false;
+    this->xPosition = -1;
+    this->yPosition = -1;
 }
 
 Junction::~Junction()

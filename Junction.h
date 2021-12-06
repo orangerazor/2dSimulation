@@ -72,6 +72,8 @@ public:
     void calculateLines();
     bool nullJunction();
     void setOrientation(int orientation, TrafficLight *old);
+    int xPosition;
+    int yPosition;
 
     inline std::array<bool, 4> getTurnings() {
         return this->turnings;
@@ -155,6 +157,30 @@ public:
         return this->spawnable;
     }
 
+    inline void setXPosition(int x) {
+        this->xPosition = x;
+    }
+
+    inline void setYPosition(int y) {
+        this->yPosition = y;
+    }
+
+    inline int getXPosition() {
+        return this->xPosition;
+    }
+
+    inline int getYPosition() {
+        return this->yPosition;
+    }
+
+    inline void setPosition(int x, int y) {
+        this->xPosition = x;
+        this->yPosition = y;
+    }
+
+    inline std::pair<int, int> getPosition() {
+        return std::make_pair(this->xPosition, this->yPosition);
+    }
    
 
     

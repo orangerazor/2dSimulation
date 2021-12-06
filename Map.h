@@ -16,9 +16,11 @@ public:
     Map();
     ~Map();
     void initialiseSpawns();
+    std::vector<int> pathfinder(Junction start, int entryPoint, Junction goal, int exitPoint);
     void addJunction(Junction junction, int posX, int posY);
     void removeJunction(int posX, int posY);
     Junction* getMapJunction(int y, int x);
+    std::vector<Junction> possibleMoves(Junction origin, int entryPoint);
 
     inline int getWidth() {
         return this->width;

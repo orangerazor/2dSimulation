@@ -70,3 +70,55 @@ void Map::initialiseSpawns() {
 		}
 	}
 }
+
+std::vector<int> Map::pathfinder(Junction start, int entryPoint, Junction goal, int exitPoint) {
+
+	return { 1 };
+}
+
+std::vector<Junction> Map::possibleMoves(Junction origin, int entryPoint) {
+	std::vector<Junction> potentialNewJunctions;
+	std::vector<int> possibleTurnings;
+	std::pair<int, int> originPosition = origin.getPosition();
+	for (int i = 0; i < origin.getTurnings().size(); i++) {
+		if (i == entryPoint) {
+			continue;
+		}
+		if (origin.getTurning(i) == true) {
+			possibleTurnings.push_back(i);
+		}
+	}
+
+	for (int i = 0; i < possibleTurnings.size(); i++) {
+		switch (possibleTurnings[i])
+		{
+		case 0:
+			if (origin.getXPosition() - 1 >= 0 && this->map[origin.getYPosition()][origin.getXPosition()-1].getType() != RoadType::N) {
+				potentialNewJunctions.push_back(this->map[origin.getYPosition()][origin.getXPosition() - 1]);
+			}			
+			break;
+		case 1:
+			if (origin.getXPosition() + 1 >= 0 && this->map[origin.getYPosition()][origin.getXPosition()+1].getType() != RoadType::N) {
+				potentialNewJunctions.push_back(this->map[origin.getYPosition()][origin.getXPosition() + 1]);
+			}
+			break;
+		case 2:
+			if (origin.getYPosition() - 1 >= 0 && this->map[origin.getYPosition()-1][origin.getXPosition()].getType() != RoadType::N) {
+				potentialNewJunctions.push_back(this->map[origin.getYPosition()-1][origin.getXPosition()]);
+			}
+			break;
+		case 3:
+			if (origin.getYPosition() + 1 >= 0 != this->map[origin.getYPosition()+1][origin.getXPosition()].getType() != RoadType::N) {
+				potentialNewJunctions.push_back(this->map[origin.getYPosition() + 1][origin.getXPosition()]);
+			}
+			break;
+		}
+	}
+
+	std::cout << "size = " << potentialNewJunctions.size() << std::endl;
+	for (int i = 0; i < potentialNewJunctions.size(); i++) {
+		std::cout << i << " = " << potentialNewJunctions[i].getIdentifier() << std::endl;
+	}
+	return potentialNewJunctions;
+
+}
