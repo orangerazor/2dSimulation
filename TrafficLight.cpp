@@ -5,29 +5,6 @@
 #include "TrafficLight.h"
 #include "ImageLoading.h"
 
-void TrafficLight::copyTexture(TrafficLight* old)
-{
-    this->m_vaoID = old->m_vaoID;
-    this->m_vboID[3] = old->m_vboID[3];
-    this->m_NumberOfVerts = old->m_NumberOfVerts;
-
-    this->m_TexName = old->m_TexName;
-
-    this->obb = old->obb;
-    this->collide = old->collide;
-    this->spawnOBB = old->spawnOBB;
-
-    this->m_Width = old->m_Width;
-    this->m_Height = old->m_Height;
-
-    this->m_xpos = old->m_xpos;
-    this->m_ypos = old->m_ypos;
-
-    this->lightsSprite[0] = old->lightsSprite[0];
-    this->lightsSprite[1] = old->lightsSprite[1];
-    this->lightsSprite[2] = old->lightsSprite[2];
-    this->lightsSprite[3] = old->lightsSprite[3];
-}
 
 TrafficLight::TrafficLight(TrafficLight* old) {
     this->m_vaoID = old->m_vaoID;

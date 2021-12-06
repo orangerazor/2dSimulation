@@ -38,7 +38,7 @@ Junction::Junction(Junction* oldJ, TrafficLight* oldTL)
     this->state = true;
     this->identifier = (&this->name)->c_str();
     this->spawnable.first = false;
-    this->spawnable.second = NULL;
+
 }
 
 Junction::Junction() {
@@ -51,10 +51,6 @@ Junction::Junction() {
     this->type = RoadType::N;
     this->state = true;
     this->spawnable.first = false;
-    this->spawnable.second = NULL;
-    ////https://www.codegrepper.com/code-examples/cpp/convert+pointer+address+to+string+c%2B%2B
-    //std::stringstream ss;
-    //ss << &this->name;
     this->identifier = (&this->name)->c_str();
 }
 
@@ -132,7 +128,6 @@ Junction::Junction(std::string name, int orientation, int speedLimit, glm::mat4 
     }
     this->identifier = (&this->name)->c_str();
     this->spawnable.first = false;
-    this->spawnable.second = NULL;
 }
 
 Junction::~Junction()

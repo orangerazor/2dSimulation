@@ -8,7 +8,7 @@ private:
     int width;
     int height;
     std::vector<std::vector<Junction>> map;
-    std::vector<std::pair<int, int>> spawns;
+    std::vector<std::pair<std::pair<int, int>, int>> spawns;
 
 public:
     Map(int height, int width);
@@ -39,7 +39,7 @@ public:
     inline void setMap(std::vector<std::vector<Junction>> map) {
         this->map = map;
     }
-    inline std::vector<std::pair<int, int>> getSpawns() {
+    inline std::vector<std::pair<std::pair<int, int>, int>> getSpawns() {
         return this->spawns;
     }
     Junction getMiddle();

@@ -46,7 +46,7 @@ private:
     float xRightSquare;
     float ySideCentre;
     float xVerticalCentre;
-    std::pair<bool, int> spawnable;
+    std::pair<bool, std::vector<int>> spawnable;
 
     // Respawn boxes
     // Left
@@ -146,12 +146,12 @@ public:
         this->identifier = identifier;
     }
 
-    inline void setSpawnable(bool spawnable, int entrance) {
+    inline void setSpawnable(bool spawnable, std::vector<int> entrance) {
         this->spawnable.first = spawnable;
         this->spawnable.second = entrance;
     }
 
-    inline std::pair<bool, int> getSpawnable() {
+    inline std::pair<bool, std::vector<int>> getSpawnable() {
         return this->spawnable;
     }
 

@@ -57,10 +57,15 @@ void Map::initialiseSpawns() {
 	for (int i = 0; i < this->height; i++){
 		for (int j = 0; j < this->width; j++) {
 			if (this->map[i][j].getSpawnable().first == true) {
-				std::pair<int, int> temp;
-				temp.first = i;
-				temp.second = j;
-				this->spawns.push_back(temp);
+				for (int k = 0; k < this->map[i][j].getSpawnable().second.size(); k++) {
+					std::pair<int, int> coords;
+					coords.first = i;
+					coords.second = j;
+					std::pair<std::pair<int, int>, int> temp;
+					temp.first = coords;
+					temp.second = this->map[i][j].getSpawnable().second[k];
+					this->spawns.push_back(temp);
+				}
 			}
 		}
 	}

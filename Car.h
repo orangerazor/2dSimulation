@@ -32,7 +32,6 @@ public:
 	void respawn(Junction *junction, int presetEntry = -1);
 	void newSpawn(int entry);
 	int setSpawn(int entry = -1);
-	void mapCarRespawn(Map map);
 
 	void setCurrentJunction(std::string name);
 	std::string getCurrentJunction();
