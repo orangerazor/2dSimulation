@@ -699,7 +699,7 @@ void init()
 
 	mapClass.addJunction(Junction::Junction("T", 0, 0, glm::mat4(1.0f), RoadType::T), 0, 0);
 	mapClass.getMapJunction(0, 0)->setOrientation(0);
-	mapClass.getMapJunction(0, 0)->setSpawnable(true, 0);
+	mapClass.getMapJunction(0, 0)->setSpawnable(true, 3);
 
 
 

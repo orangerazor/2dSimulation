@@ -483,56 +483,40 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 	case RoadType::S:
 		switch (junction->getOrientation()) {
 		case 0:
-			//std::cout << "forVec2 x = " << forVec2.x << " forVec2 y = " << forVec2.y << std::endl;
-			//std::cout << "Intersect right dist = " << intersectDistRight << " Intersect left dist = " << intersectDistLeft << std::endl;
 			if (abs(intersectDistLeft) < 2) {
-				//std::cout << "Correcting" << std::endl;
 				angle += 6.8f / fps;
 			}
 			if (abs(intersectDistRight) < 2) {
-				//std::cout << "Correcting" << std::endl;
 				angle -= 6.8f / fps;
 			}
 			break;
 		case 1:
-			//std::cout << "forVec2 y = " << forVec2.y << std::endl;
-			//std::cout << "Intersect top dist = " << intersectDistTop << " Intersect bot dist = " << intersectDistBot << std::endl;
 			if (abs(intersectDistBot) < 2) {
-				//std::cout << "Correcting" << std::endl;
 				angle += 6.8f / fps;
 			}
 			if (abs(intersectDistTop) < 2) {
-				//std::cout << "Correcting" << std::endl;
 				angle -= 6.8f / fps;
 			}
 			break;
 		case 2:
 			intersectDistRight = (junction->getXRightSquare() - m_xpos) / (forVec2.x);
 			intersectDistLeft = (junction->getXLeftSquare() - m_xpos) / (forVec2.x);
-			//std::cout << "forVec2 x = " << forVec2.x << " forVec2 y = " << forVec2.y << std::endl;
-			//std::cout << "Intersect right dist = " << intersectDistRight << " Intersect left dist = " << intersectDistLeft << std::endl;
-			//if (abs(intersectDistLeft) < 2) {
-			//	//std::cout << "Correcting" << std::endl;
-			//	angle += 6.8f / fps;
-			//}
-			//if (abs(intersectDistRight) < 2) {
-			//	//std::cout << "Correcting" << std::endl;
-			//	angle -= 6.8f / fps;
-			//}
+			if (abs(intersectDistLeft) < 2) {
+				angle += 6.8f / fps;
+			}
+			if (abs(intersectDistRight) < 2) {
+				angle -= 6.8f / fps;
+			}
 			break;
 		case 3:
 			intersectDistTop = (junction->getYTopSquare() - m_ypos) / (forVec2.y);
 			intersectDistBot = (junction->getYBotSquare() - m_ypos) / (forVec2.y);
-			//std::cout << "forVec2 y = " << forVec2.y << std::endl;
-			//std::cout << "Intersect top dist = " << intersectDistTop << " Intersect bot dist = " << intersectDistBot << std::endl;
-			//if (abs(intersectDistBot) < 2) {
-			//	//std::cout << "Correcting" << std::endl;
-			//	angle += 6.8f / fps;
-			//}
-			//if (abs(intersectDistTop) < 2) {
-			//	//std::cout << "Correcting" << std::endl;
-			//	angle -= 6.8f / fps;
-			//}
+			if (abs(intersectDistBot) < 2) {
+				angle += 6.8f / fps;
+			}
+			if (abs(intersectDistTop) < 2) {
+				angle -= 6.8f / fps;
+			}
 			break;
 		}
 		break;
@@ -541,24 +525,22 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 		switch (entryPoint) {
 		case 0:
 			// If the distance in x from the car is less than the 2/3 width of the car stop unless the lights are green 
-			if (abs(((junction->getXLeftSquare() - m_xpos) / (forVec2.x))) < (m_Width * 4/6) && !junction->getTrafficLights()[entryPoint].getLights()[2]) {
+			if (abs(intersectDistLeft) < (m_Width * 4/6) && !junction->getTrafficLights()[entryPoint].getLights()[2]) {
 				speed = 0;
 			}
 			else {
 				speed = speed;
 			}
 			//In the box and need to turn correctly
-			if (((junction->getXLeftSquare() - m_xpos) / (forVec2.x)) <= 0) {
+			if (intersectDistLeft <= 0) {
 				switch (direction) {
 				case -1:
-					//std::cout << "Changing here?" << std::endl;
 					angle += 2.4 / fps;
 					break;
 				case 0:
 					break;
 				case 1:
 					if (m_xpos >= junction->GetXPos()) {
-						//std::cout << "Changing here?" << std::endl;
 						angle -= 2.4 / fps;
 					}
 					break;
@@ -566,10 +548,72 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 			}
 			break;
 		case 1:
+			if (abs(intersectDistRight) < (m_Width * 4/6) && !junction->getTrafficLights()[entryPoint].getLights()[2]) {
+				speed = 0;
+			}
+			else {
+				speed = speed;
+			}
+			//In box so turn
+			if (intersectDistRight <= 0) {
+				switch (direction) {
+				case -1:
+					angle += 2.4 / fps;
+					break;
+				case 0:
+					break;
+				case 1:
+					if (m_xpos <= junction->GetXPos()) {
+						angle -= 2.4 / fps;
+					}
+					break;
+				}
+			}
 			break;
 		case 2:
+			if (abs(intersectDistTop) < (m_Width * 4/6) && !junction->getTrafficLights()[entryPoint].getLights()[2]) {
+				speed = 0;
+			}
+			else {
+				speed = speed;
+			}
+			//In box so turn
+			if (intersectDistTop <= 0) {
+				switch (direction) {
+				case -1:
+					angle += 2.4 / fps;
+					break;
+				case 0:
+					break;
+				case 1:
+					if (m_ypos <= junction->GetYPos()) {
+						angle -= 2.4 / fps;
+					}
+					break;
+				}
+			}
 			break;
 		case 3:
+			if (abs(intersectDistBot) < (m_Width * 4/6) && !junction->getTrafficLights()[entryPoint].getLights()[2]) {
+				speed = 0;
+			}
+			else {
+				speed = speed;
+			}
+			if (intersectDistBot <= 0) {
+				switch (direction) {
+				case -1:
+					angle += 2.4 / fps;
+					break;
+				case 0:
+					break;
+				case 1:
+					if (m_ypos >= junction->GetYPos()) {
+						angle -= 2.4 / fps;
+					}
+					break;
+				}
+			}
 			break;
 		}
 		break;
@@ -620,10 +664,106 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 			}
 			break;
 		case 1:
+			switch (direction) {
+			case -1:
+				if (abs(intersectDistHorizontal) < 2) {
+					angle -= 2.4 / fps;
+				}
+				if (abs(intersectDistVertical) < 2) {
+					angle -= 2.4 / fps;
+				}
+				break;
+			case 0:
+				if (abs(intersectDistHorizontal) < 2) {
+					angle -= 2.4 / fps;
+				}
+				if (abs(intersectDistBot) < 2) {
+					angle += 2.4 / fps;
+				}
+				break;
+			case 1:
+				if (abs(intersectDistBot) < 2) {
+					angle += 2.4 / fps;
+				}
+				if (abs(intersectDistHorizontal) < 2 && m_xpos < junction->GetXPos()) {
+					angle -= 2.4 / fps;
+				}
+				if (abs(intersectDistLeft) < 2) {
+					angle += 2.4 / fps;
+				}
+				if (abs(intersectDistVertical) < 2 && m_xpos > junction->GetXPos()) {
+					angle += 2.4 / fps;
+				}
+				break;
+			}
 			break;
 		case 2:
+			switch (direction) {
+			case -1:
+				if (abs(intersectDistVertical) < 2) {
+					angle -= 2.4 / fps;
+				}
+				if (abs(intersectDistHorizontal) < 2) {
+					angle -= 2.4 / fps;
+				}
+				break;
+			case 0:
+				if (abs(intersectDistRight) < 2) {
+					angle += 2.4 / fps;
+				}
+				if (abs(intersectDistVertical) < 2) {
+					angle -= 2.4 / fps;
+				}
+				break;
+			case 1:
+				if (abs(intersectDistRight) < 2) {
+					angle += 2.4 / fps;
+				}
+				if (abs(intersectDistVertical) < 2 && m_ypos > junction->GetYPos()) {
+					angle -= 2.4 / fps;
+				}
+				if (abs(intersectDistBot) < 2) {
+					angle += 2.4 / fps;
+				}
+				if (abs(intersectDistHorizontal) < 2 && m_ypos < junction->GetYPos()) {
+					angle -= 2.4 / fps;
+				}
+				break;
+			}
 			break;
 		case 3:
+			switch (direction) {
+			case -1:
+				if (abs(intersectDistVertical) < 2) {
+					angle -= 2.4 / fps;
+				}
+				if (abs(intersectDistHorizontal) < 2) {
+					angle -= 2.4 / fps;
+				}
+				break;
+			case 0:
+				if (abs(intersectDistLeft) < 2) {
+					angle += 2.4 / fps;
+				}
+				if (abs(intersectDistVertical) < 2) {
+					angle -= 2.4 / fps;
+				}
+				break;
+			case 1:
+				if (abs(intersectDistLeft) < 2) {
+					angle += 2.4 / fps;
+				}
+				if (abs(intersectDistVertical) < 2 && m_ypos < junction->GetYPos()) {
+					angle -= 2.4 / fps;
+				}
+				if (abs(intersectDistTop) < 2) {
+					angle += 2.4 / fps;
+				}
+				if (abs(intersectDistHorizontal) < 2 && m_ypos > junction->GetYPos()) {
+					angle += 2.4 / fps;
+				}
+				break;
+			}
 			break;
 		}
 	}
