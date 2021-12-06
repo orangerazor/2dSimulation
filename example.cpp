@@ -989,11 +989,12 @@ void processKeys()
 	}
 	if (zoomIn) {
 		zoom += 0.1;
-		cout << "zoom = " << zoom << endl;
+		reshape(screenWidth, screenHeight);
 	}
 	if (zoomOut) {
 		if (zoom > 0) {
 			zoom -= 0.1;
+			reshape(screenWidth, screenHeight);
 		}
 	}
 }
