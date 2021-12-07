@@ -800,7 +800,8 @@ void init()
 	for (int i = 0; i < cars.size(); i++) {
 		cars[i].Init(shader, red, "textures/car.png");
 	}
-	mapClass.possibleMoves(*mapClass.getMapJunction(1, 1), 2);
+	mapClass.possibleMoves(*mapClass.getMapJunction(1, 5), 0);
+	mapClass.pathfinder({ *mapClass.getMapJunction(1, 5) }, {}, 2, { *mapClass.getMapJunction(1, 6) }, 1);
 	Junction middle = mapClass.getMiddle();
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }

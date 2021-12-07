@@ -181,9 +181,14 @@ public:
     inline std::pair<int, int> getPosition() {
         return std::make_pair(this->xPosition, this->yPosition);
     }
+    bool operator==(const Junction& j) const
+    {
+        return identifier == j.identifier;
+    }
    
-
+    
     
 
 };
+bool operator==(Junction& j1, Junction& j2);
 #endif //GROUP9_JUNCTION_H

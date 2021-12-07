@@ -357,6 +357,23 @@ void Junction::setOrientation(int orientation, TrafficLight* old) {
         }
     }
 }
+
+//bool Junction::operator==(Junction& j)
+//{
+//    if (this->identifier == j.getIdentifier()) {
+//        return true;
+//    }
+//    return false;
+//}
+//
+//bool operator==(Junction& j1, Junction& j2)
+//{
+//    if (j1.getIdentifier() == j2.getIdentifier()) {
+//        return true;
+//    }
+//    return false;
+//}
+
 //int main(){
 //    Junction* testJunction = new Junction("test", true, true, false, true, 60);
 //    std::cout << testJunction->getNumberTurnings();

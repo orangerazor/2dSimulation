@@ -2,6 +2,12 @@
 #include "Sprite.h"
 #include "Junction.h"
 #include <utility>
+#include <set>
+#include <fstream>
+#include <istream>
+#include <iostream>
+#include <string>
+#include <algorithm>
 
 class Map : public Sprite {
 private:
@@ -16,11 +22,11 @@ public:
     Map();
     ~Map();
     void initialiseSpawns();
-    std::vector<int> pathfinder(Junction start, int entryPoint, Junction goal, int exitPoint);
+    std::pair<std::vector<Junction>, std::vector<int>> pathfinder(std::vector<Junction> path, std::vector<int> exits, int entryPoint, Junction goal, int exitPoint);
     void addJunction(Junction junction, int posX, int posY);
     void removeJunction(int posX, int posY);
     Junction* getMapJunction(int y, int x);
-    std::vector<Junction> possibleMoves(Junction origin, int entryPoint);
+    std::pair<std::vector<Junction>, std::vector<int>> possibleMoves(Junction origin, int entryPoint);
 
     inline int getWidth() {
         return this->width;

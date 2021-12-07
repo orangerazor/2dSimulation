@@ -71,13 +71,42 @@ void Map::initialiseSpawns() {
 	}
 }
 
-std::vector<int> Map::pathfinder(Junction start, int entryPoint, Junction goal, int exitPoint) {
+std::pair<std::vector<Junction>, std::vector<int>> Map::pathfinder(std::vector<Junction> path, std::vector<int> exits, int entryPoint, Junction goal, int exitPoint) {
 
-	return { 1 };
+	if (path[path.size()-1].getIdentifier() == goal.getIdentifier()) {
+		return std::make_pair(path, exits);
+	}
+	std::pair<std::vector<Junction>, std::vector<int>> nextMoves = possibleMoves(path[path.size() - 1], entryPoint);
+	for (int i = 0; i < nextMoves.first.size(); i++) {
+		std::cout << nextMoves.first[i].getIdentifier() << std::endl;
+		https://coduber.com/how-to-check-if-vector-contains-a-given-element-in-cpp/
+		if (std::find(path.begin(), path.end(), nextMoves.first[i]) == path.end()) {
+			exits.push_back(nextMoves.second[i]);
+			path.push_back(nextMoves.first[i]);
+			/*switch (exits[exits.size()-1])
+			{
+			case(0):
+				path = pathfinder(path, exits, 2, goal, exitPoint).first;
+				break;
+			case(1):
+				path = pathfinder(path, exits, 3, goal, exitPoint).first;
+				break;
+			case(2):
+				path = pathfinder(path, exits, 0, goal, exitPoint).first;
+				break;
+			case(3):
+				path = pathfinder(path, exits, 1, goal, exitPoint).first;
+				break;
+			}*/
+
+		}
+	}
+	return {};
 }
 
-std::vector<Junction> Map::possibleMoves(Junction origin, int entryPoint) {
+std::pair<std::vector<Junction>, std::vector<int>> Map::possibleMoves(Junction origin, int entryPoint) {
 	std::vector<Junction> potentialNewJunctions;
+	std::vector<int> potentialExits;
 	std::vector<int> possibleTurnings;
 	std::pair<int, int> originPosition = origin.getPosition();
 	for (int i = 0; i < origin.getTurnings().size(); i++) {
@@ -95,30 +124,35 @@ std::vector<Junction> Map::possibleMoves(Junction origin, int entryPoint) {
 		case 0:
 			if (origin.getXPosition() - 1 >= 0 && this->map[origin.getYPosition()][origin.getXPosition()-1].getType() != RoadType::N) {
 				potentialNewJunctions.push_back(this->map[origin.getYPosition()][origin.getXPosition() - 1]);
+				potentialExits.push_back(0);
+
 			}			
 			break;
 		case 1:
 			if (origin.getXPosition() + 1 >= 0 && this->map[origin.getYPosition()][origin.getXPosition()+1].getType() != RoadType::N) {
 				potentialNewJunctions.push_back(this->map[origin.getYPosition()][origin.getXPosition() + 1]);
+				potentialExits.push_back(1);
 			}
 			break;
 		case 2:
 			if (origin.getYPosition() - 1 >= 0 && this->map[origin.getYPosition()-1][origin.getXPosition()].getType() != RoadType::N) {
 				potentialNewJunctions.push_back(this->map[origin.getYPosition()-1][origin.getXPosition()]);
+				potentialExits.push_back(2);
 			}
 			break;
 		case 3:
 			if (origin.getYPosition() + 1 >= 0 != this->map[origin.getYPosition()+1][origin.getXPosition()].getType() != RoadType::N) {
 				potentialNewJunctions.push_back(this->map[origin.getYPosition() + 1][origin.getXPosition()]);
+				potentialExits.push_back(3);
 			}
 			break;
 		}
 	}
 
-	std::cout << "size = " << potentialNewJunctions.size() << std::endl;
-	for (int i = 0; i < potentialNewJunctions.size(); i++) {
-		std::cout << i << " = " << potentialNewJunctions[i].getIdentifier() << std::endl;
-	}
-	return potentialNewJunctions;
+	//std::cout << "size = " << potentialNewJunctions.size() << std::endl;
+	//for (int i = 0; i < potentialNewJunctions.size(); i++) {
+	//	std::cout << i << " = " << potentialNewJunctions[i].getIdentifier() << std::endl;
+	//}
+	return std::make_pair(potentialNewJunctions, potentialExits);
 
 }
