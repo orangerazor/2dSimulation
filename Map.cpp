@@ -83,7 +83,6 @@ std::pair<std::vector<Junction>, std::vector<int>> Map::pathfinder(std::vector<J
 		if (std::find(path.begin(), path.end(), nextMoves.first[i]) == path.end()) {
 			exits.push_back(nextMoves.second[i]);
 			path.push_back(nextMoves.first[i]);
-			std::cout;
 			/*switch (exits[exits.size()-1])
 			{
 			case(0):
