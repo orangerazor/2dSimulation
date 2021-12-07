@@ -72,7 +72,7 @@ void Map::initialiseSpawns() {
 }
 
 std::pair<std::vector<Junction>, std::vector<int>> Map::pathfinder(std::vector<Junction> path, std::vector<int> exits, int entryPoint, Junction goal, int exitPoint) {
-
+	std::pair<std::vector<Junction>, std::vector<int>> solution;
 	if (path[path.size()-1].getIdentifier() == goal.getIdentifier()) {
 		return std::make_pair(path, exits);
 	}
@@ -81,27 +81,31 @@ std::pair<std::vector<Junction>, std::vector<int>> Map::pathfinder(std::vector<J
 		std::cout << nextMoves.first[i].getIdentifier() << std::endl;
 		https://coduber.com/how-to-check-if-vector-contains-a-given-element-in-cpp/
 		if (std::find(path.begin(), path.end(), nextMoves.first[i]) == path.end()) {
-			exits.push_back(nextMoves.second[i]);
 			path.push_back(nextMoves.first[i]);
-			/*switch (exits[exits.size()-1])
+			exits.push_back(nextMoves.second[i]);
+			switch (exits[exits.size()-1])
 			{
 			case(0):
-				path = pathfinder(path, exits, 2, goal, exitPoint).first;
+				solution = pathfinder(path, exits, 2, goal, exitPoint);
 				break;
 			case(1):
-				path = pathfinder(path, exits, 3, goal, exitPoint).first;
+				solution = pathfinder(path, exits, 3, goal, exitPoint);
 				break;
 			case(2):
-				path = pathfinder(path, exits, 0, goal, exitPoint).first;
+				solution = pathfinder(path, exits, 0, goal, exitPoint);
 				break;
 			case(3):
-				path = pathfinder(path, exits, 1, goal, exitPoint).first;
+				solution = pathfinder(path, exits, 1, goal, exitPoint);
 				break;
-			}*/
+			}
+			if (!solution.first.empty()) {
+				return solution;
+			}
+
 
 		}
 	}
-	return {};
+	return solution;
 }
 
 std::pair<std::vector<Junction>, std::vector<int>> Map::possibleMoves(Junction origin, int entryPoint) {
