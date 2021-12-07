@@ -269,7 +269,7 @@ void Sprite::Render(Shader& shader, glm::mat4& ModelViewMatrix, glm::mat4& Proje
 	//pass the uniform for the ModelView matrix to the shader
 	glUniformMatrix4fv(glGetUniformLocation(shader.handle(), "ModelViewMatrix"), 1, GL_FALSE, &ModelViewMatrix[0][0]);
 
-	glUniform1f(glGetUniformLocation(shader.handle(), "dayVal"), 0.5);
+	glUniform1f(glGetUniformLocation(shader.handle(), "dayVal"), 0.0);
 
 	//Draw the object
 	glBindVertexArray(m_vaoID);		// select first VAO

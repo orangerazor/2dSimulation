@@ -556,7 +556,7 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 				case 0:
 					break;
 				case 1:
-					if (m_xpos >= junction->GetXPos()) {
+					if (intersectDistVertical < 0 && intersectDistBot > 0) {
 						angle -= 2.4 / fps;
 					}
 					break;
@@ -579,7 +579,7 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 				case 0:
 					break;
 				case 1:
-					if (m_xpos <= junction->GetXPos()) {
+					if (intersectDistVertical < 0 && intersectDistTop > 0) {
 						angle -= 2.4 / fps;
 					}
 					break;
@@ -602,7 +602,7 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 				case 0:
 					break;
 				case 1:
-					if (m_ypos <= junction->GetYPos()) {
+					if (intersectDistHorizontal < 0 && intersectDistLeft > 0) {
 						angle -= 2.4 / fps;
 					}
 					break;
@@ -624,7 +624,7 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 				case 0:
 					break;
 				case 1:
-					if (m_ypos >= junction->GetYPos()) {
+					if (intersectDistHorizontal < 0 && intersectDistRight > 0) {
 						angle -= 2.4 / fps;
 					}
 					break;
@@ -652,7 +652,7 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 				case 0:
 					break;
 				case 1:
-					if (m_xpos >= junction->GetXPos()) {
+					if (intersectDistVertical < 0 && intersectDistBot > 0) {
 						angle -= 2.4 / fps;
 					}
 					break;
@@ -675,7 +675,7 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 				case 0:
 					break;
 				case 1:
-					if (m_xpos <= junction->GetXPos()) {
+					if (intersectDistVertical < 0 && intersectDistTop > 0) {
 						angle -= 2.4 / fps;
 					}
 					break;
@@ -698,7 +698,7 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 				case 0:
 					break;
 				case 1:
-					if (m_ypos <= junction->GetYPos()) {
+					if (intersectDistHorizontal < 0 && intersectDistLeft > 0) {
 						angle -= 2.4 / fps;
 					}
 					break;
@@ -720,7 +720,7 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 				case 0:
 					break;
 				case 1:
-					if (m_ypos >= junction->GetYPos()) {
+					if (intersectDistHorizontal < 0 && intersectDistRight > 0) {
 						angle -= 2.4 / fps;
 					}
 					break;
@@ -793,15 +793,19 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 				break;
 			case 1:
 				if (abs(intersectDistBot) < 2) {
+					std::cout << "Moving to avoid bottom line in front" << std::endl;
 					angle += 2.4 / fps;
 				}
-				if (abs(intersectDistHorizontal) < 2 && m_xpos < junction->GetXPos()) {
+				if (abs(intersectDistHorizontal) < 2 && m_xpos > junction->GetXPos()) {
+					std::cout << "Moving to avoid middle horizontal line in front" << std::endl;
 					angle -= 2.4 / fps;
 				}
 				if (abs(intersectDistLeft) < 2) {
+					std::cout << "Moving to avoid bottom line in front" << std::endl;
 					angle += 2.4 / fps;
 				}
-				if (abs(intersectDistVertical) < 2 && m_xpos > junction->GetXPos()) {
+				if (abs(intersectDistVertical) < 2 && m_xpos < junction->GetXPos()) {
+					std::cout << "Moving to avoid middle vertical line in front" << std::endl;
 					angle += 2.4 / fps;
 				}
 				break;
@@ -904,10 +908,10 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 			//Check for imminent collisions in front along road lines
 			if (abs(intersectDistHorizontal) < 2) {
 				if (tValCentre > 0) {
-					angle -= 2.4 / fps;
+					angle += 2.4 / fps;
 				}
 				else {
-					angle -= 2.4 / fps;
+					angle += 2.4 / fps;
 				}
 			}
 		}
@@ -918,20 +922,20 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 				//Check which way the car is facing
 				// Facing centre of junction
 				if (tValCentre > 0) {
-					angle += 2.4 / fps;
+					angle -= 2.4 / fps;
 				}
 				//Facing out of junction
 				else {
-					angle -= 2.4 / fps;
+					angle += 2.4 / fps;
 				}
 			}
 			if (abs(intersectDistTop) < 2) {
 				//Check which way the car is facing
 				if (tValCentre > 0) {
-					angle -= 2.4 / fps;
+					angle += 2.4 / fps;
 				}
 				else {
-					angle += 2.4 / fps;
+					angle -= 2.4 / fps;
 				}
 			}
 			//Check for imminent collisions in front along road lines
@@ -970,10 +974,10 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 			//Check for imminent collisions in front along road lines
 			if (abs(intersectDistVertical) < 2) {
 				if (tValCentre > 0) {
-					angle -= 2.4 / fps;
+					angle += 2.4 / fps;
 				}
 				else {
-					angle -= 2.4 / fps;
+					angle += 2.4 / fps;
 				}
 			}
 		}
@@ -984,29 +988,29 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 				//Check which way the car is facing
 				// Facing centre of junction
 				if (tValCentre > 0) {
-					angle += 2.4 / fps;
+					angle -= 2.4 / fps;
 				}
 				//Facing out of junction
 				else {
-					angle -= 2.4 / fps;
+					angle += 2.4 / fps;
 				}
 			}
 			if (abs(intersectDistRight) < 2) {
 				//Check which way the car is facing
 				if (tValCentre > 0) {
-					angle -= 2.4 / fps;
+					angle += 2.4 / fps;
 				}
 				else {
-					angle += 2.4 / fps;
+					angle -= 2.4 / fps;
 				}
 			}
 			//Check for imminent collisions in front along road lines
 			if (abs(intersectDistVertical) < 2) {
 				if (tValCentre > 0) {
-					angle -= 2.4 / fps;
+					angle += 2.4 / fps;
 				}
 				else {
-					angle -= 2.4 / fps;
+					angle += 2.4 / fps;
 				}
 			}
 		}
@@ -1019,13 +1023,13 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 	float forVecMag = sqrt((forVec2.x * forVec2.x) + (forVec2.y * forVec2.y));
 	glm::vec3 perp = glm::vec3(xPerp / perpMag, 1.0 / perpMag, 0.0) * forVecMag;
 
-	float perpDistLeft = (junction->getXLeftSquare() - m_xpos) / forVec2.x;
-	float perpDistRight = (junction->getXRightSquare() - m_xpos) / forVec2.x;
-	float perpDistTop = (junction->getYTopSquare() - m_ypos) / forVec2.y;
-	float perpDistBot = (junction->getYBotSquare() - m_ypos) / forVec2.y;
+	float perpDistLeft = (junction->getXLeftSquare() - m_xpos) / perp.x;
+	float perpDistRight = (junction->getXRightSquare() - m_xpos) / perp.x;
+	float perpDistTop = (junction->getYTopSquare() - m_ypos) / perp.y;
+	float perpDistBot = (junction->getYBotSquare() - m_ypos) / perp.y;
 
-	float perpDistHorizontal = (junction->GetYPos() - m_ypos) / forVec2.y;
-	float perpDistVertical = (junction->GetXPos() - m_xpos) / forVec2.x;
+	float perpDistHorizontal = (junction->GetYPos() - m_ypos) / perp.y;
+	float perpDistVertical = (junction->GetXPos() - m_xpos) / perp.x;
 	if (m_xpos <= junction->getXRightSquare() && m_xpos >= junction->getXLeftSquare() &&
 		m_ypos <= junction->getYTopSquare() && m_ypos >= junction->getYBotSquare()
 		) {
@@ -1037,103 +1041,196 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 			float tValCentre = (junction->GetXPos() - m_xpos) / forVec2.x;
 			//Facing centre
 			if (tValCentre > 0) {
-				if (abs(perpDistTop) < 6) {
+				if (abs(m_ypos - junction->getYTopSquare()) < 4) {
 					angle -= 2.4 / fps;
 				}
-				if (abs(perpDistHorizontal) < 6) {
+				if (abs(m_ypos - junction->GetYPos()) < 4) {
 					angle += 2.4 / fps;
 				}
+				//if (abs(perpDistTop) < 4) {
+				//	//std::cout << "Moving to avoid top line to side" << std::endl;
+				//	angle -= 2.4 / fps;
+				//}
+				//if (abs(perpDistHorizontal) < 4) {
+				//	//std::cout << "Moving to avoid middle horizontal line to side" << std::endl;
+				//	angle += 2.4 / fps;
+				//}
+			}
+			else {
+				if (abs(m_ypos - junction->getYBotSquare()) < 4) {
+					angle -= 2.4 / fps;
+				}
+				if (abs(m_ypos - junction->GetYPos()) < 4) {
+					angle += 2.4 / fps;
+				}
+				//if (abs(perpDistBot) < 4) {
+				//	//std::cout << "Moving to avoid bot line to side" << std::endl;
+				//	angle -= 2.4 / fps;
+				//}
+				//if (abs(perpDistHorizontal) < 4) {
+				//	//std::cout << "Moving to avoid middle horizontal line to side" << std::endl;
+				//	angle += 2.4 / fps;
+				//}
 			}
 		}
 		//Right
 		if (m_xpos > junction->getXRightSquare()) {
 			float tValCentre = (junction->GetXPos() - m_xpos) / forVec2.x;
 			if (tValCentre > 0) {
-				if (abs(perpDistBot) < 6) {
+				if (abs(m_ypos - junction->GetYPos()) < 4) {
 					angle += 2.4 / fps;
 				}
-				if (abs(perpDistHorizontal) < 6) {
+				if (abs(m_ypos - junction->getYBotSquare()) < 4) {
 					angle -= 2.4 / fps;
 				}
+				//if (abs(perpDistBot) < 4) {
+				//	//std::cout << "Moving to avoid bot line to side" << std::endl;
+				//	angle += 2.4 / fps;
+				//}
+				//if (abs(perpDistHorizontal) < 4) {
+				//	//std::cout << "Moving to avoid middle horizontal line to side" << std::endl;
+				//	angle -= 2.4 / fps;
+				//}
+			}
+			else {
+				if (abs(m_ypos - junction->GetYPos()) < 4) {
+					angle += 2.4 / fps;
+				}
+				if (abs(m_ypos - junction->getYTopSquare()) < 4) {
+					angle -= 2.4 / fps;
+				}
+				//if (abs(perpDistTop) < 4) {
+				//	angle += 2.4 / fps;
+				//}
+				//if (abs(perpDistHorizontal) < 4) {
+				//	angle -= 2.4 / fps;
+				//}
 			}
 		}
 		//Top
 		if (m_ypos > junction->getYTopSquare()) {
 			float tValCentre = (junction->GetYPos() - m_ypos) / forVec2.y;
 			if (tValCentre > 0) {
-				if (abs(perpDistRight) < 6) {
-					angle += 2.4 / fps;
-				}
-				if (abs(perpDistVertical) < 6) {
+				if (abs(m_xpos - junction->getXRightSquare()) < 4) {
 					angle -= 2.4 / fps;
 				}
+				if (abs(m_xpos - junction->GetXPos()) < 4) {
+					angle += 2.4 / fps;
+				}
+				//if (abs(perpDistRight) < 4) {
+				//	//std::cout << "Moving to avoid right line to side" << std::endl;
+				//	angle += 2.4 / fps;
+				//}
+				//if (abs(perpDistVertical) < 4) {
+				//	//std::cout << "Moving to avoid middle vertical line to side" << std::endl;
+				//	angle -= 2.4 / fps;
+				//}
+			}
+			else {
+				if (abs(m_xpos - junction->GetXPos()) < 4) {
+					angle += 2.4 / fps;
+				}
+				if (abs(m_xpos - junction->getXLeftSquare()) < 4) {
+					angle -= 2.4 / fps;
+				}
+				//if (abs(perpDistLeft) < 4) {
+				//	angle += 2.4 / fps;
+				//}
+				//if (abs(perpDistVertical) < 4) {
+				//	angle -= 2.4 / fps;
+				//}
 			}
 		}
 		//Bottom
 		if (m_ypos < junction->getYBotSquare()) {
 			float tValCentre = (junction->GetYPos() - m_ypos) / forVec2.y;
+			//std::cout << "Perp dist Right = " << abs(perpDistRight) << " Perp dist vertical = " << abs(perpDistVertical) << std::endl;
 			if (tValCentre > 0) {
-				if (abs(perpDistLeft) < 6) {
-					angle += 2.4 / fps;
-				}
-				if (abs(perpDistVertical) < 6) {
+				if (abs(m_xpos - junction->getXLeftSquare()) < 4) {
 					angle -= 2.4 / fps;
 				}
+				if (abs(m_xpos - junction->GetXPos()) < 4) {
+					angle += 2.4 / fps;
+				}
+				//if (abs(perpDistLeft) < 4) {
+				//	//std::cout << "Moving to avoid left line to side" << std::endl;
+				//	angle += 2.4 / fps;
+				//}
+				//if (abs(perpDistVertical) < 4) {
+				//	//std::cout << "Moving to avoid middle vertical line to side" << std::endl;
+				//	angle -= 2.4 / fps;
+				//}
+			}
+			else {
+				if (abs(m_xpos - junction->getXRightSquare()) < 4) {
+					angle -= 2.4 / fps;
+				}
+				if (abs(m_xpos - junction->GetXPos()) < 4) {
+					angle += 2.4 / fps;
+				}
+				//if (abs(perpDistRight) < 4) {
+				//	std::cout << "Moving to avoid right line to side" << std::endl;
+				//	angle -= 2.4 / fps;
+				//}
+				//if (abs(perpDistVertical) < 4) {
+				//	std::cout << "Moving to avoid middle vertical line to side" << std::endl;
+				//	angle += 2.4 / fps;
+				//}
 			}
 		}
 	}
 
 	// Use on left test to determine if the car has turned correctly and correct angle
-	switch (exitTurning) {
-	case(0):
-		if (m_xpos <= (*junction).getXLeftSquare() && speed != 0.0) {
-			glm::vec3 target = glm::vec3(-1.0, 0.0, 0.0);
-			float area = (forVec2.x * target.y) - (target.x * forVec2.y);
-			if (area < -0.2) {
-				angle -= 0.6/fps;
-			}
-			if (area > 0.2) {
-				angle += 0.6 / fps;
-			}
-		}
-		break;
-	case(1):
-		if (m_xpos >= (*junction).getXRightSquare() && speed != 0) {
-			glm::vec3 target = glm::vec3(1.0, 0.0, 0.0);
-			float area = (forVec2.x * target.y) - (target.x * forVec2.y);
-			if (area < -0.2) {
-				angle -= 0.6 / fps;
-			}
-			if (area > 0.2) {
-				angle += 0.6 / fps;
-			}
-		}
-		break;
-	case(2):
-		if (m_ypos >= (*junction).getYTopSquare() && speed != 0.0) {
-			glm::vec3 target = glm::vec3(0.0, 1.0, 0.0);
-			float area = (forVec2.x * target.y) - (target.x * forVec2.y);
-			if (area < -0.2) {
-				angle -= 0.6 / fps;
-			}
-			if (area > 0.2) {
-				angle += 0.6 / fps;
-			}
-		}
-		break;
-	case(3):
-		if (m_ypos <= (*junction).getYBotSquare() && speed != 0.0) {
-			glm::vec3 target = glm::vec3(0.0, -1.0, 0.0);
-			float area = (forVec2.x * target.y) - (target.x * forVec2.y);
-			if (area < -0.2) {
-				angle -= 0.6 / fps;
-			}
-			if (area > 0.2) {
-				angle += 0.6 / fps;
-			}
-		}
-		break;
-	}
+	//switch (exitTurning) {
+	//case(0):
+	//	if (m_xpos <= (*junction).getXLeftSquare() && speed != 0.0) {
+	//		glm::vec3 target = glm::vec3(-1.0, 0.0, 0.0);
+	//		float area = (forVec2.x * target.y) - (target.x * forVec2.y);
+	//		if (area < -0.2) {
+	//			angle -= 0.6/fps;
+	//		}
+	//		if (area > 0.2) {
+	//			angle += 0.6 / fps;
+	//		}
+	//	}
+	//	break;
+	//case(1):
+	//	if (m_xpos >= (*junction).getXRightSquare() && speed != 0) {
+	//		glm::vec3 target = glm::vec3(1.0, 0.0, 0.0);
+	//		float area = (forVec2.x * target.y) - (target.x * forVec2.y);
+	//		if (area < -0.2) {
+	//			angle -= 0.6 / fps;
+	//		}
+	//		if (area > 0.2) {
+	//			angle += 0.6 / fps;
+	//		}
+	//	}
+	//	break;
+	//case(2):
+	//	if (m_ypos >= (*junction).getYTopSquare() && speed != 0.0) {
+	//		glm::vec3 target = glm::vec3(0.0, 1.0, 0.0);
+	//		float area = (forVec2.x * target.y) - (target.x * forVec2.y);
+	//		if (area < -0.2) {
+	//			angle -= 0.6 / fps;
+	//		}
+	//		if (area > 0.2) {
+	//			angle += 0.6 / fps;
+	//		}
+	//	}
+	//	break;
+	//case(3):
+	//	if (m_ypos <= (*junction).getYBotSquare() && speed != 0.0) {
+	//		glm::vec3 target = glm::vec3(0.0, -1.0, 0.0);
+	//		float area = (forVec2.x * target.y) - (target.x * forVec2.y);
+	//		if (area < -0.2) {
+	//			angle -= 0.6 / fps;
+	//		}
+	//		if (area > 0.2) {
+	//			angle += 0.6 / fps;
+	//		}
+	//	}
+	//	break;
+	//}
 
 	m_xpos += forVec2.x * speed;
 	m_ypos += forVec2.y * speed;
