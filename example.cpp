@@ -51,7 +51,7 @@ float speed = 0;
 const double PI = 3.141592653589793238463;
 float angle = 0;
 float scale = 4.0f;
-float zoom = 0.15;
+float zoom = 0.5;
 float xpos = 0;
 float ypos = 0;
 
@@ -191,6 +191,112 @@ void display()
 			}
 		}
 	}
+
+	//if (hour > 16 && hour < 18) {
+	//	if (secondElapsed >= 500000) {
+	//		if (cars.size() < 200) {
+	//			Car toSpawn = Car(glm::mat4(1.0f));
+	//			toSpawn.SetWidth(scale * (500 / 264.0f));
+	//			toSpawn.SetHeight(scale);
+	//			toSpawn.setJunction(&emptyJunction);
+	//			toSpawn.setIdentifier(cars.size());
+	//			float red[3] = { 1,0,0 };
+	//			toSpawn.Init(shader, red, "textures/car.png");
+	//			//toSpawn.setJunction(mapClass.getMapJunction(1, 0));
+	//			//toSpawn.respawn((mapClass.getMapJunction(1, 0)));
+	//			cars.push_back(toSpawn);
+	//		}
+	//	}
+	//	break;
+	//case 10:
+	//case 11:
+	//case 12:
+	//case 13:
+	//case 14:
+	//case 19:
+	//case 20:
+	//case 21:
+	//	if (secondElapsed >= 1000000) {
+	//		if (cars.size() < 75) {
+	//			Car toSpawn = Car(glm::mat4(1.0f));
+	//			toSpawn.SetWidth(scale * (500 / 264.0f));
+	//			toSpawn.SetHeight(scale);
+	//			toSpawn.setIdentifier(cars.size());
+	//			float red[3] = { 1,0,0 };
+	//			toSpawn.Init(shader, red, "textures/car.png");
+	//			//toSpawn.setJunction(mapClass.getMapJunction(1, 0));
+	//			//toSpawn.respawn((mapClass.getMapJunction(1, 0)));
+	//			cars.push_back(toSpawn);
+	//		}
+	//	}
+	//	break;
+	//}
+
+	//if (hour > 16 && hour < 18) {
+	//	if (secondElapsed >= 500000) {
+	//		if (cars.size() < 16) {
+	//			Car toSpawn = Car(glm::mat4(1.0f));
+	//			toSpawn.SetWidth(scale * (500 / 264.0f));
+	//			toSpawn.SetHeight(scale);
+	//			toSpawn.setIdentifier(cars.size());
+	//			float red[3] = { 1,0,0 };
+	//			toSpawn.Init(shader, red, "textures/car.png");
+	//			//toSpawn.setJunction(mapClass.getMapJunction(1, 0));
+	//			//toSpawn.respawn((mapClass.getMapJunction(1, 0)));
+	//			cars.push_back(toSpawn);
+	//		}
+	//	}
+	//}
+	//else {
+		if (secondElapsed >= 1000000) {
+			if (cars.size() < 1) {
+				//for (int i = 0; i < cars.size(); i++) {
+				//	Junction currentJunc = *mapClass.getMapJunction(1, 0);
+				//	float carPosX = cars[i].GetXPos();
+				//	float carPosY = cars[i].GetYPos();
+				//	if (
+				//		carPosX <= currentJunc.getLeftInner() && 
+				//		carPosX >= (currentJunc.GetXPos() - (currentJunc.getWidth() * 1/2)) &&
+				//		carPosY <= currentJunc.getYTopSquare() &&
+				//		carPosY >= currentJunc.getYBotSquare() &&
+
+				//		carPosX >= currentJunc.getRightInner() &&
+				//		carPosX <= currentJunc.GetXPos() + (currentJunc.getWidth() * 1/2) &&
+				//		carPosY <= currentJunc.getYTopSquare() &&
+				//		carPosY >= currentJunc.getYBotSquare() &&
+
+				//		carPosY >= currentJunc.getTopInner() &&
+				//		carPosY <= currentJunc.GetYPos() + (currentJunc.getHeight() * 1/2) &&
+				//		carPosX <= currentJunc.getXRightSquare() &&
+				//		carPosX >= currentJunc.getXLeftSquare() &&
+
+				//		carPosY <= currentJunc.getBotInner() &&
+				//		carPosY >= currentJunc.GetYPos() - (currentJunc.getWidth() * 1 / 2) &&
+				//		carPosX <= currentJunc.getXRightSquare() &&
+				//		carPosX >= currentJunc.getXLeftSquare()
+				//		) {
+				//		//cout << "MATRIX DODGE" << endl;
+				//		//goto noCar;
+				//	}
+				//}
+				Car toSpawn = Car(glm::mat4(1.0f));
+				toSpawn.SetWidth(scale * (500 / 264.0f));
+				toSpawn.SetHeight(scale);
+				toSpawn.setIdentifier(cars.size());
+				toSpawn.setJunction(&emptyJunction);
+				float red[3] = { 1,0,0 };
+				toSpawn.Init(shader, red, "textures/car.png");
+				//toSpawn.setJunction(mapClass.getMapJunction(1, 0));
+				//toSpawn.respawn((mapClass.getMapJunction(1, 0)));
+				//std::pair<int, int> spawnJunctionIndex = mapClass.getSpawns()[rand() % mapClass.getSpawns().size()];
+				//toSpawn.setJunction((mapClass.getMapJunction(spawnJunctionIndex.first, spawnJunctionIndex.second)));
+				//toSpawn.respawn(toSpawn.getJunction(), toSpawn.getJunction()->getSpawnable().second);
+				cars.push_back(toSpawn);
+			}
+		}
+	//}
+//noCar:
+//	cout;
 	if (secondElapsed >= 1000000) {
 		for (int i = 0; i < mapClass.getMap().size(); i++) {
 			for (int j = 0; j < mapClass.getMap()[i].size(); j++) {
@@ -552,7 +658,7 @@ void display()
 	secondElapsed += chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
 	hourElapsed += chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
 	fps = 1000000.0f / chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
-	cout << "fps = " << fps << endl;
+	//cout << "fps = " << fps << endl;
 	//cout << "hour = " << hour << endl;
 	//std::this_thread::sleep_for(std::chrono::milliseconds((1000 / fps) - chrono::duration_cast<std::chrono::milliseconds>(end - begin).count()));
 
@@ -576,7 +682,6 @@ void init()
 	//mapClass.addJunction(Junction::Junction("X", 0, 0, glm::mat4(1.0f), RoadType::X),0,2);
 	//mapClass.getMapJunction(0, 2)->setSpawnable(true, 1);
 	//mapClass.getMapJunction(0, 2)->setOrientation(2);
-
 	//mapClass.addJunction(Junction::Junction("X", 0, 0, glm::mat4(1.0f), RoadType::X), 0, 0);
 	//mapClass.getMapJunction(0, 0)->setSpawnable(true, 0);
 	tJunction.SetWidth(15.0f * scale * (2481 / 2481.0f));
@@ -599,6 +704,11 @@ void init()
 	basicCar.SetWidth(scale * (500 / 264.0f));
 	basicCar.SetHeight(scale);
 	basicCar.Init(shader, red, "textures/car.png");
+
+	//mapClass.addJunction(Junction::Junction("X", 0, 0, glm::mat4(1.0f), RoadType::X), 0, 0);
+	//mapClass.getMapJunction(0, 0)->setOrientation(0);
+	//mapClass.getMapJunction(0, 0)->setSpawnable(true, 1);
+
 
 	//begin map
 	
@@ -731,16 +841,6 @@ void init()
 	mapClass.getMapJunction(6, 2)->setSpawnable(true, { 3 });
 	mapClass.addJunction(Junction::Junction(road), 6, 5);
 	mapClass.getMapJunction(6, 5)->setSpawnable(true, { 3 });
-
-
-
-
-
-
-
-
-
-
 
 	//mapClass.addJunction(road, 0, 1);
 	//(*mapClass.getMapJunction(0, 1)).setOrientation(1);
@@ -888,11 +988,12 @@ void processKeys()
 	}
 	if (zoomIn) {
 		zoom += 0.1;
-		cout << "zoom = " << zoom << endl;
+		reshape(screenWidth, screenHeight);
 	}
 	if (zoomOut) {
 		if (zoom > 0) {
 			zoom -= 0.1;
+			reshape(screenWidth, screenHeight);
 		}
 	}
 }
@@ -921,14 +1022,14 @@ int main(int argc, char **argv)
 	GLenum err = glewInit();
 	if (GLEW_OK != err)
 	{
-		cout << " GLEW ERROR" << endl;
+		std::cout << " GLEW ERROR" << endl;
 	}
 
 	//Check the OpenGL version being used
 	int OpenGLVersion[2];
 	glGetIntegerv(GL_MAJOR_VERSION, &OpenGLVersion[0]);
 	glGetIntegerv(GL_MINOR_VERSION, &OpenGLVersion[1]);
-	cout << OpenGLVersion[0] << " " << OpenGLVersion[1] << endl;
+	std::cout << OpenGLVersion[0] << " " << OpenGLVersion[1] << endl;
 
 	//initialise the objects for rendering
 	init();

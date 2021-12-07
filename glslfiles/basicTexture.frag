@@ -8,10 +8,12 @@ in vec2 ex_TexCoord;  //texture coordinate coming from the vertex shader
 
 uniform sampler2D DiffuseMap;  //sampler 2d for the texture map
 
+uniform float dayVal;
+
 void main(void)
 {
 	//out_Color = vec4(ex_Color);
 	
 	//Set the fragment's colour to be the colour in the texture map
-	out_Color = texture(DiffuseMap, ex_TexCoord);
+	out_Color = mix(texture(DiffuseMap, ex_TexCoord),vec4(0,0,0,1),dayVal);
 }
