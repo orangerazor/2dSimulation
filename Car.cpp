@@ -29,6 +29,7 @@ Car::Car(Car* old)
 	srand(time(0));
 	forVec = objectRotation * glm::vec4(forVec, 1.0f);
 	junction = &Junction();
+	path = {};
 }
 
 Car::Car(glm::mat4 rotation) {
@@ -39,6 +40,7 @@ Car::Car(glm::mat4 rotation) {
 	srand(time(0));
 	forVec = objectRotation * glm::vec4(forVec, 1.0f);
 	junction = &Junction();
+	path = {};
 
 
 
@@ -160,87 +162,91 @@ int Car::entryPoint()
 int Car::decideDirection(int entryPoint) {
 
 	//std::cout << "entryPoint = " << entryPoint << std::endl;
-
+	int exitPoint;
 	if (currentJunction == this->junction->getIdentifier()) {
 		return exit;
 	}
-	int numTurns = (*junction).getTurnings().size();
-	std::vector<int> possibleTurnings;
-	for (int i = 0; i < numTurns; i++) {
-		if (i == entryPoint) {
-			continue;
-		}
-		if ((*junction).getTurning(i) == true) {
-			possibleTurnings.push_back(i);
-		}
-	}
-	//srand(time(NULL));
-	//std::cout << "possibleTurnings = " << possibleTurnings.size() << std::endl;
-	int random = rand() % possibleTurnings.size();
-
 	currentJunction = (*junction).getIdentifier();
-	random = possibleTurnings.at(random);
-	//std::cout << entryPoint << std::endl;
-	//std::cout << random << std::endl;
-	exitTurning = random;
+	if (this->path.empty()) {
+		std::cout << "here\n";
+		int numTurns = (*junction).getTurnings().size();
+		std::vector<int> possibleTurnings;
+		for (int i = 0; i < numTurns; i++) {
+			if (i == entryPoint) {
+				continue;
+			}
+			if ((*junction).getTurning(i) == true) {
+				possibleTurnings.push_back(i);
+			}
+		}
+		exitPoint = rand() % possibleTurnings.size();
+		exitPoint = possibleTurnings.at(exitPoint);
+		exitTurning = exitPoint;
+	}
+	else {
+		exitPoint = path[path.size()-1];
+		std::cout << "exit" << exitPoint << std::endl;
+		path.pop_back();
+	}
+	
 	switch (entryPoint) {
 	case(0):
-		switch (random) {
+		switch (exitPoint) {
 		case(1):
-			random = 0;
+			exitPoint = 0;
 			break;
 		case(2):
-			random = -1;
+			exitPoint = -1;
 			break;
 		case(3):
-			random = 1;
+			exitPoint = 1;
 			break;
 		}
 		break;
 	case(1):
-		switch (random) {
+		switch (exitPoint) {
 		case(0):
-			random = 0;
+			exitPoint = 0;
 			break;
 		case(2):
-			random = 1;
+			exitPoint = 1;
 			break;
 		case(3):
-			random = -1;
+			exitPoint = -1;
 			break;
 		}
 		break;
 	case(2):
-		switch (random) {
+		switch (exitPoint) {
 		case(0):
-			random = 1;
+			exitPoint = 1;
 			break;
 		case(1):
-			random = -1;
+			exitPoint = -1;
 			break;
 		case(3):
-			random = 0;
+			exitPoint = 0;
 			break;
 		}
 		break;
 	case(3):
-		switch (random) {
+		switch (exitPoint) {
 		case(0):
-			random = -1;
+			exitPoint = -1;
 			break;
 		case(1):
-			random = 1;
+			exitPoint = 1;
 			break;
 		case(2):
-			random = 0;
+			exitPoint = 0;
 			break;
 		}
 		break;
 	}
-	//std::cout << random << std::endl;
-	exit = random;
+	//std::cout << exitPoint << std::endl;
+	exit = exitPoint;
 	std::cout << "direction = " << exit << std::endl;
-	return random;
+	return exitPoint;
 }
 
 void Car::respawn(Junction *junction, int presetEntry) {

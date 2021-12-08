@@ -18,6 +18,7 @@ private:
 	float angle;
 	Junction* junction;
 	std::string previousJunction;
+	std::vector<int> path;
 
 	bool currentlyRendered = false;
 
@@ -93,4 +94,11 @@ public:
 		currentlyRendered = yesOrNo;
 	}
 
+	inline void setPath(std::vector<int> path) {
+		this->path = path;
+	}
+
+	inline std::vector<int> getPath() {
+		return this->path;
+	}
 };

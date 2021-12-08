@@ -74,6 +74,9 @@ void Map::initialiseSpawns() {
 std::pair<std::vector<Junction>, std::vector<int>> Map::pathfinder(std::vector<Junction> path, std::vector<int> exits, int entryPoint, Junction goal, int exitPoint) {
 	std::pair<std::vector<Junction>, std::vector<int>> solution;
 	if (path[path.size()-1].getIdentifier() == goal.getIdentifier()) {
+		std::cout << "found" << std::endl;
+		exits.push_back(exitPoint);
+		std::reverse(exits.begin(), exits.end());
 		return std::make_pair(path, exits);
 	}
 	std::pair<std::vector<Junction>, std::vector<int>> nextMoves = possibleMoves(path[path.size() - 1], entryPoint);
@@ -126,31 +129,34 @@ std::pair<std::vector<Junction>, std::vector<int>> Map::possibleMoves(Junction o
 		switch (possibleTurnings[i])
 		{
 		case 0:
-			if (origin.getXPosition() - 1 >= 0 && this->map[origin.getYPosition()][origin.getXPosition()-1].getType() != RoadType::N) {
+			if (origin.getXPosition() - 1 <= this->width - 1 && origin.getXPosition() - 1 >= 0 && this->map[origin.getYPosition()][origin.getXPosition()-1].getType() != RoadType::N) {
 				potentialNewJunctions.push_back(this->map[origin.getYPosition()][origin.getXPosition() - 1]);
 				potentialExits.push_back(0);
 
 			}			
 			break;
 		case 1:
-			if (origin.getXPosition() + 1 >= 0 && this->map[origin.getYPosition()][origin.getXPosition()+1].getType() != RoadType::N) {
+			if (origin.getXPosition() + 1 <= this->width - 1 && origin.getXPosition() + 1 >= 0 && this->map[origin.getYPosition()][origin.getXPosition()+1].getType() != RoadType::N) {
 				potentialNewJunctions.push_back(this->map[origin.getYPosition()][origin.getXPosition() + 1]);
 				potentialExits.push_back(1);
 			}
 			break;
 		case 2:
-			if (origin.getYPosition() - 1 >= 0 && this->map[origin.getYPosition()-1][origin.getXPosition()].getType() != RoadType::N) {
+			if (origin.getYPosition() - 1 <= this->height - 1 && origin.getYPosition() - 1 >= 0 && this->map[origin.getYPosition()-1][origin.getXPosition()].getType() != RoadType::N) {
 				potentialNewJunctions.push_back(this->map[origin.getYPosition()-1][origin.getXPosition()]);
 				potentialExits.push_back(2);
 			}
 			break;
 		case 3:
-			if (origin.getYPosition() + 1 >= 0 != this->map[origin.getYPosition()+1][origin.getXPosition()].getType() != RoadType::N) {
+			if (origin.getYPosition() + 1 <= this->height-1 && origin.getYPosition() + 1 >= 0 && this->map[origin.getYPosition()+1][origin.getXPosition()].getType() != RoadType::N) {
 				potentialNewJunctions.push_back(this->map[origin.getYPosition() + 1][origin.getXPosition()]);
 				potentialExits.push_back(3);
 			}
 			break;
+		default:
+			break;
 		}
+		
 	}
 
 	//std::cout << "size = " << potentialNewJunctions.size() << std::endl;
