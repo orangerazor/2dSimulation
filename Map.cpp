@@ -80,8 +80,7 @@ std::pair<std::vector<Junction>, std::vector<int>> Map::pathfinder(std::vector<J
 		return std::make_pair(path, exits);
 	}
 	std::pair<std::vector<Junction>, std::vector<int>> nextMoves = possibleMoves(path[path.size() - 1], entryPoint);
-	for (int i = 0; i < nextMoves.first.size(); i++) {
-		std::cout << nextMoves.first[i].getIdentifier() << std::endl;
+	for (int i = 0; i < nextMoves.first.size(); i++) { 
 		https://coduber.com/how-to-check-if-vector-contains-a-given-element-in-cpp/
 		if (std::find(path.begin(), path.end(), nextMoves.first[i]) == path.end()) {
 			path.push_back(nextMoves.first[i]);

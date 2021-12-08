@@ -168,7 +168,6 @@ int Car::decideDirection(int entryPoint) {
 	}
 	currentJunction = (*junction).getIdentifier();
 	if (this->path.empty()) {
-		std::cout << "here\n";
 		int numTurns = (*junction).getTurnings().size();
 		std::vector<int> possibleTurnings;
 		for (int i = 0; i < numTurns; i++) {
@@ -185,7 +184,6 @@ int Car::decideDirection(int entryPoint) {
 	}
 	else {
 		exitPoint = path[path.size()-1];
-		std::cout << "exit" << exitPoint << std::endl;
 		path.pop_back();
 	}
 	

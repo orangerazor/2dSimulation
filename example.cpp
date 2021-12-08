@@ -393,6 +393,11 @@ void display()
 			cars[i].respawn(cars[i].getJunction(), mapClass.getSpawns()[randomSpawn].second);
 			cars[i].setPath(mapClass.pathfinder({ (*cars[i].getJunction()) }, {}, mapClass.getSpawns()[randomSpawn].second,
 				* mapClass.getMapJunction(exitJunctionIndex.first, exitJunctionIndex.second), mapClass.getSpawns()[randomExit].second).second);
+			std::cout << "spawn = " << spawnJunctionIndex.first << ", " << spawnJunctionIndex.second << std::endl;
+			std::cout << "exit = " << exitJunctionIndex.first << ", " << exitJunctionIndex.second << std::endl;
+			for (int z = 0; z < cars[i].getPath().size(); z++) {
+				std::cout << "z = " << z << ", " << cars[i].getPath()[z] << std::endl;
+			}
 			cars[i].setPreviousJunction("");
 		}
 		
@@ -855,11 +860,11 @@ void init()
 	for (int i = 0; i < cars.size(); i++) {
 		cars[i].Init(shader, red, "textures/car.png");
 	}
-	mapClass.possibleMoves(*mapClass.getMapJunction(1, 5), 2);
-	std::vector<int> path = mapClass.pathfinder({ *mapClass.getMapJunction(1, 5) }, {}, 2, { *mapClass.getMapJunction(3, 5) }, 1).second;
-	for (int i = 0; i < path.size(); i++) {
-		std::cout << "i = " << i << ", " << path[i] << std::endl;
-	} 
+	//mapClass.possibleMoves(*mapClass.getMapJunction(1, 5), 2);
+	//std::vector<int> path = mapClass.pathfinder({ *mapClass.getMapJunction(3, 6) }, {}, 1, { *mapClass.getMapJunction(5, 0) }, 0).second;
+	//for (int i = 0; i < path.size(); i++) {
+	//	std::cout << "i = " << i << ", " << path[i] << std::endl;
+	//} 
 	Junction middle = mapClass.getMiddle();
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
