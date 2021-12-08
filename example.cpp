@@ -385,13 +385,14 @@ void display()
 		}
 	respawn:
 		if (mapClass.getSpawns().size() > 0) {
-			int randomSpawn = rand() % mapClass.getSpawns().size();
-			int randomExit = rand() % mapClass.getSpawns().size();
+			int randomSpawn = rand() % mapClass.getSpawns().size(), randomExit;
+			//https://stackoverflow.com/questions/21813602/three-random-numbers-which-are-not-equal-to-each-other
+			do randomExit = rand() % mapClass.getSpawns().size(); while (randomSpawn == randomExit);
 			std::pair<int, int> spawnJunctionIndex = mapClass.getSpawns()[randomSpawn].first;
 			std::pair<int, int> exitJunctionIndex = mapClass.getSpawns()[randomExit].first;
 			cars[i].setJunction((mapClass.getMapJunction(spawnJunctionIndex.first, spawnJunctionIndex.second)));
 			cars[i].respawn(cars[i].getJunction(), mapClass.getSpawns()[randomSpawn].second);
-			cars[i].setPath(mapClass.pathfinder({ (*cars[i].getJunction()) }, {}, mapClass.getSpawns()[randomSpawn].second,
+			cars[i].setPath(mapClass.pathfinder((*cars[i].getJunction()), mapClass.getSpawns()[randomSpawn].second,
 				* mapClass.getMapJunction(exitJunctionIndex.first, exitJunctionIndex.second), mapClass.getSpawns()[randomExit].second).second);
 			std::cout << "spawn = " << spawnJunctionIndex.first << ", " << spawnJunctionIndex.second << std::endl;
 			std::cout << "exit = " << exitJunctionIndex.first << ", " << exitJunctionIndex.second << std::endl;

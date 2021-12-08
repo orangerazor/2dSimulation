@@ -71,44 +71,74 @@ void Map::initialiseSpawns() {
 	}
 }
 
-std::pair<std::vector<Junction>, std::vector<int>> Map::pathfinder(std::vector<Junction> path, std::vector<int> exits, int entryPoint, Junction goal, int exitPoint) {
+std::pair<std::vector<Junction>, std::vector<int>> Map::pathfinder(Junction start, int entryPoint, Junction goal, int exitPoint) {
 	std::pair<std::vector<Junction>, std::vector<int>> solution;
-	if (path[path.size()-1].getIdentifier() == goal.getIdentifier()) {
+	int bound = this->fValue({ start }, goal);
+	//std::cout << "bound = " << bound << std::endl;
+	while (true)
+	{
+		solution = this->aStar({ start }, {}, entryPoint, goal, exitPoint, bound);
+		
+		if (solution.first.size()!=0) {
+			return solution;
+		}
+		else {
+			bound = *std::min_element(biggerBounds.begin(), biggerBounds.end());
+			biggerBounds = {};
+		}
+	}
+	return solution;
+}
+
+std::pair<std::vector<Junction>, std::vector<int>> Map::aStar(std::vector<Junction> path, std::vector<int> exits, int entryPoint, Junction goal, int exitPoint, int bound)
+{
+	int fValue;
+	std::pair<std::vector<Junction>, std::vector<int>> solution;
+	if (path[path.size() - 1].getIdentifier() == goal.getIdentifier()) {
 		std::cout << "found" << std::endl;
 		exits.push_back(exitPoint);
 		std::reverse(exits.begin(), exits.end());
 		return std::make_pair(path, exits);
 	}
 	std::pair<std::vector<Junction>, std::vector<int>> nextMoves = possibleMoves(path[path.size() - 1], entryPoint);
-	for (int i = 0; i < nextMoves.first.size(); i++) { 
-		https://coduber.com/how-to-check-if-vector-contains-a-given-element-in-cpp/
+	for (int i = 0; i < nextMoves.first.size(); i++) {
+	https://coduber.com/how-to-check-if-vector-contains-a-given-element-in-cpp/
 		if (std::find(path.begin(), path.end(), nextMoves.first[i]) == path.end()) {
 			path.push_back(nextMoves.first[i]);
 			exits.push_back(nextMoves.second[i]);
-			switch (exits[exits.size()-1])
-			{
-			case(0):
-				solution = pathfinder(path, exits, 2, goal, exitPoint);
-				break;
-			case(1):
-				solution = pathfinder(path, exits, 3, goal, exitPoint);
-				break;
-			case(2):
-				solution = pathfinder(path, exits, 0, goal, exitPoint);
-				break;
-			case(3):
-				solution = pathfinder(path, exits, 1, goal, exitPoint);
-				break;
+			fValue = this->fValue(path, goal);
+			if (fValue <= bound) {
+				switch (exits[exits.size() - 1])
+				{
+				case(0):
+					solution = aStar(path, exits, 2, goal, exitPoint, bound);
+					break;
+				case(1):
+					solution = aStar(path, exits, 3, goal, exitPoint, bound);
+					break;
+				case(2):
+					solution = aStar(path, exits, 0, goal, exitPoint, bound);
+					break;
+				case(3):
+					solution = aStar(path, exits, 1, goal, exitPoint, bound);
+					break;
+				}
+				if (!solution.first.empty()) {
+					return solution;
+				}
 			}
-			if (!solution.first.empty()) {
-				return solution;
+			else {
+				biggerBounds.push_back(fValue);
 			}
+			
 
 
 		}
 	}
-	return solution;
+	return std::pair<std::vector<Junction>, std::vector<int>>();
 }
+
+
 
 std::pair<std::vector<Junction>, std::vector<int>> Map::possibleMoves(Junction origin, int entryPoint) {
 	std::vector<Junction> potentialNewJunctions;
@@ -164,4 +194,11 @@ std::pair<std::vector<Junction>, std::vector<int>> Map::possibleMoves(Junction o
 	//}
 	return std::make_pair(potentialNewJunctions, potentialExits);
 
+}
+
+int Map::fValue(std::vector<Junction> path, Junction goal)
+{
+	int h;
+	h = std::abs(path[path.size() - 1].xPosition - goal.xPosition) + std::abs(path[path.size() - 1].yPosition - goal.yPosition);
+	return path.size()-1+h;
 }

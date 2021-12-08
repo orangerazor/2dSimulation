@@ -22,11 +22,15 @@ public:
     Map();
     ~Map();
     void initialiseSpawns();
-    std::pair<std::vector<Junction>, std::vector<int>> pathfinder(std::vector<Junction> path, std::vector<int> exits, int entryPoint, Junction goal, int exitPoint);
+    std::pair<std::vector<Junction>, std::vector<int>> pathfinder(Junction start, int entryPoint, Junction goal, int exitPoint);
+    std::pair<std::vector<Junction>, std::vector<int>> aStar(std::vector<Junction> path, std::vector<int> exits, int entryPoint, Junction goal, int exitPoint, int bound);
     void addJunction(Junction junction, int posX, int posY);
     void removeJunction(int posX, int posY);
     Junction* getMapJunction(int y, int x);
     std::pair<std::vector<Junction>, std::vector<int>> possibleMoves(Junction origin, int entryPoint);
+    int fValue (std::vector<Junction> path, Junction goal);
+    std::vector<int> biggerBounds;
+
 
     inline int getWidth() {
         return this->width;
