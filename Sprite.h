@@ -47,7 +47,7 @@ public:
 	float getHeight();
 	void IncPos(float x, float y);
 	glm::mat4 transform(float speed, int direction);
-	virtual void Render(Shader& shader, glm::mat4& ModelViewMatrix, glm::mat4& ProjectionMatrix, glm::mat4& ModelMatrix);
+	virtual void Render(Shader& shader, glm::mat4& ModelViewMatrix, glm::mat4& ProjectionMatrix, glm::mat4& ModelMatrix, int hour);
 	OBB& GetOBB();
 	OBB& getCollide();
 	OBB& getSpawnOBB();

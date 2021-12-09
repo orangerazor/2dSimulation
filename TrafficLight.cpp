@@ -70,23 +70,23 @@ void TrafficLight::InitLights(Shader& shader, float colour[3], std::string phase
     lightsSprite[3].Init(shader, colour, phaseFour);
 }
 
-void TrafficLight::Render(Shader & shader, glm::mat4 & ModelViewMatrix, glm::mat4 & ProjectionMatrix, glm::mat4& ModelMatrix)
+void TrafficLight::Render(Shader & shader, glm::mat4 & ModelViewMatrix, glm::mat4 & ProjectionMatrix, glm::mat4& ModelMatrix, int hour)
 {
     switch (this->current_phase) {
     case 0:
-        lightsSprite[0].Render(shader, ModelViewMatrix, ProjectionMatrix, ModelMatrix);
+        lightsSprite[0].Render(shader, ModelViewMatrix, ProjectionMatrix, ModelMatrix, hour);
         break;
     case 1:
-        lightsSprite[1].Render(shader, ModelViewMatrix, ProjectionMatrix, ModelMatrix);
+        lightsSprite[1].Render(shader, ModelViewMatrix, ProjectionMatrix, ModelMatrix, hour);
         break;
     case 2:
-        lightsSprite[2].Render(shader, ModelViewMatrix, ProjectionMatrix, ModelMatrix);
+        lightsSprite[2].Render(shader, ModelViewMatrix, ProjectionMatrix, ModelMatrix, hour);
         break;
     case 3:
-        lightsSprite[3].Render(shader, ModelViewMatrix, ProjectionMatrix, ModelMatrix);
+        lightsSprite[3].Render(shader, ModelViewMatrix, ProjectionMatrix, ModelMatrix, hour);
         break;
     default:
-        Sprite::Render(shader, ModelViewMatrix, ProjectionMatrix, ModelMatrix);
+        Sprite::Render(shader, ModelViewMatrix, ProjectionMatrix, ModelMatrix, hour);
         break;
     }
 }

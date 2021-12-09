@@ -37,7 +37,7 @@ int screenWidth = 720, screenHeight = 720;
 
 //booleans to handle when the arrow keys are pressed or released.
 int secondElapsed = 0;
-float secondsToHour = 500.0f;
+float secondsToHour = 1.0f;
 int hourElapsed = 0;
 int hour;
 bool Left = false;
@@ -127,6 +127,44 @@ void display()
 			hour++;
 		}
 		hourElapsed = 0;
+		switch (hour)
+		{
+		case 0:
+		case 1:
+		case 2:
+		case 3:
+		case 4:
+		case 23:
+			glClearColor((0.0f) * 0.25, (153.0f / 256.0f) * 0.25, (68.0f / 256.0f) * 0.25, (0.0f) * 0.25);
+			break;
+		case 5:
+		case 6:
+		case 21:
+		case 22:
+			glClearColor((0.0f) * 0.4, (153.0f / 256.0f) * 0.4, (68.0f / 256.0f) * 0.4, (0.0f) * 0.4);
+			break;
+		case 7:
+		case 8:
+		case 9:
+		case 19:
+		case 20:
+			glClearColor((0.0f) * 0.6, (153.0f / 256.0f) * 0.6, (68.0f / 256.0f) * 0.6, (0.0f) * 0.6);
+			break;
+		case 10:
+		case 11:
+		case 17:
+		case 18:
+			glClearColor((0.0f) * 0.8, (153.0f / 256.0f) * 0.8, (68.0f / 256.0f) * 0.8, (0.0f) * 0.8);
+			break;
+		case 12:
+		case 13:
+		case 14:
+		case 15:
+		case 16:
+		default:
+			glClearColor((0.0f), (153.0f / 256.0f), (68.0f / 256.0f), (0.0f));
+			break;
+		}
 	}
 	switch (hour)
 	{
@@ -232,7 +270,7 @@ void display()
 			junctionRender = glm::translate(junctionRender, glm::vec3((*mapClass.getMapJunction(i, j)).GetXPos(), (*mapClass.getMapJunction(i, j)).GetYPos(), 0));
 			junctionRender = glm::rotate(junctionRender, glm::radians((*mapClass.getMapJunction(i, j)).getOrientation() * 90.0f), glm::vec3(0.0, 0.0, 1.0));
 			ModelViewMatrix = ViewMatrix * junctionRender;
-			(*mapClass.getMapJunction(i, j)).Render(shader, ModelViewMatrix, ProjectionMatrix, junctionRender);
+			(*mapClass.getMapJunction(i, j)).Render(shader, ModelViewMatrix, ProjectionMatrix, junctionRender, hour);
 			if ((*mapClass.getMapJunction(i, j)).getType() != (RoadType::N)) {
 				for (int k = 0; k < 4; k++) {
 					if ((*mapClass.getMapJunction(i, j)).getTurnings()[k]) {
@@ -255,7 +293,7 @@ void display()
 							break;
 						}
 						ModelViewMatrix = ViewMatrix * moveLight;
-						(*mapClass.getMapJunction(i, j)).getTrafficLights()[k].Render(shader, ModelViewMatrix, ProjectionMatrix, moveLight);
+						(*mapClass.getMapJunction(i, j)).getTrafficLights()[k].Render(shader, ModelViewMatrix, ProjectionMatrix, moveLight, hour);
 						
 
 
@@ -307,8 +345,8 @@ void display()
 			std::pair<int, int> exitJunctionIndex = mapClass.getSpawns()[randomExit].first;
 			cars[i].setJunction((mapClass.getMapJunction(spawnJunctionIndex.first, spawnJunctionIndex.second)));
 			cars[i].respawn(cars[i].getJunction(), mapClass.getSpawns()[randomSpawn].second);
-			//cars[i].setPath(mapClass.pathfinder((*cars[i].getJunction()), mapClass.getSpawns()[randomSpawn].second,
-			//	* mapClass.getMapJunction(exitJunctionIndex.first, exitJunctionIndex.second), mapClass.getSpawns()[randomExit].second).second);
+			cars[i].setPath(mapClass.pathfinder((*cars[i].getJunction()), mapClass.getSpawns()[randomSpawn].second,
+				* mapClass.getMapJunction(exitJunctionIndex.first, exitJunctionIndex.second), mapClass.getSpawns()[randomExit].second).second);
 			//std::cout << "spawn = " << spawnJunctionIndex.first << ", " << spawnJunctionIndex.second << std::endl;
 			//std::cout << "exit = " << exitJunctionIndex.first << ", " << exitJunctionIndex.second << std::endl;
 			//for (int z = 0; z < cars[i].getPath().size(); z++) {
@@ -441,7 +479,7 @@ void display()
 		int direction = cars[i].decideDirection(cars[i].getEntryTurning());
 		ModelMatrix = cars[i].rotate(12.0f / fps, direction, cars[i].getEntryTurning(), fps, cars);
 		ModelViewMatrix = ViewMatrix * ModelMatrix;
-		cars[i].Render(shader, ModelViewMatrix, ProjectionMatrix, ModelMatrix);
+		cars[i].Render(shader, ModelViewMatrix, ProjectionMatrix, ModelMatrix, 100);
 		cars[i].setCurrentlyRendered(true);
 	}
 
@@ -601,7 +639,7 @@ void init()
 	float red[3] = { 1,0,0 };
 	FreeImage_Initialise();
 
-	glClearColor(0.0,(153.0f/256.0f),(68.0f/256.0f),0.0);						//sets the clear colour to black
+	glClearColor((0.0f)*0.25,(153.0f/256.0f)*0.25,(68.0f/256.0f) * 0.25,(0.0f)*0.25);						//sets the clear colour to black
 	 
 	//Load the GLSL program 
 	if (!shader.load("Basic", "./glslfiles/basicTexture.vert", "./glslfiles/basicTexture.frag"))
@@ -637,93 +675,93 @@ void init()
 	basicCar.SetHeight(scale);
 	basicCar.Init(shader, red, "textures/car.png");
 
-	mapClass.addJunction(Junction::Junction(&road, &basicTrafficLight), 0, 1);
-	mapClass.getMapJunction(0, 1)->setOrientation(0, &basicTrafficLight);
-	mapClass.getMapJunction(0, 1)->setSpawnable(true, { 2 });
+	//mapClass.addJunction(Junction::Junction(&road, &basicTrafficLight), 0, 1);
+	//mapClass.getMapJunction(0, 1)->setOrientation(0, &basicTrafficLight);
+	//mapClass.getMapJunction(0, 1)->setSpawnable(true, { 2 });
 
-	mapClass.addJunction(Junction::Junction(&road, &basicTrafficLight), 1, 0);
-	mapClass.getMapJunction(1, 0)->setOrientation(1, &basicTrafficLight);
-	mapClass.getMapJunction(1, 0)->setSpawnable(true, { 0 });
-	mapClass.addJunction(Junction::Junction(&xJunction, &basicTrafficLight), 1, 1);
-	mapClass.getMapJunction(1, 1)->setOrientation(2, &basicTrafficLight);
-	mapClass.addJunction(Junction::Junction(&road, &basicTrafficLight), 1, 2);
-	mapClass.getMapJunction(1, 2)->setOrientation(1, &basicTrafficLight);
-	mapClass.getMapJunction(1, 2)->setSpawnable(true, { 1 });
+	//mapClass.addJunction(Junction::Junction(&road, &basicTrafficLight), 1, 0);
+	//mapClass.getMapJunction(1, 0)->setOrientation(1, &basicTrafficLight);
+	//mapClass.getMapJunction(1, 0)->setSpawnable(true, { 0 });
+	//mapClass.addJunction(Junction::Junction(&xJunction, &basicTrafficLight), 1, 1);
+	//mapClass.getMapJunction(1, 1)->setOrientation(2, &basicTrafficLight);
+	//mapClass.addJunction(Junction::Junction(&road, &basicTrafficLight), 1, 2);
+	//mapClass.getMapJunction(1, 2)->setOrientation(1, &basicTrafficLight);
+	//mapClass.getMapJunction(1, 2)->setSpawnable(true, { 1 });
 
-	mapClass.addJunction(Junction::Junction(&road, &basicTrafficLight), 2, 1);
-	mapClass.getMapJunction(2, 1)->setOrientation(0, &basicTrafficLight);
-	mapClass.getMapJunction(2, 1)->setSpawnable(true, { 3 });
+	//mapClass.addJunction(Junction::Junction(&road, &basicTrafficLight), 2, 1);
+	//mapClass.getMapJunction(2, 1)->setOrientation(0, &basicTrafficLight);
+	//mapClass.getMapJunction(2, 1)->setSpawnable(true, { 3 });
 
 
 	//row 1
-	//mapClass.addJunction(Junction::Junction(road), 0, 1);
-	//mapClass.getMapJunction(0, 1)->setSpawnable(true, { 2 });
-	//mapClass.addJunction(Junction::Junction(road), 0, 5);
-	//mapClass.getMapJunction(0, 5)->setSpawnable(true, { 2 });
-	////row 2
-	//mapClass.addJunction(Junction::Junction(&tJunction, &basicTrafficLight), 1, 1);
-	//mapClass.getMapJunction(1, 1)->setOrientation(1, &basicTrafficLight);
-	//mapClass.addJunction(Junction::Junction(road), 1, 2);
-	//mapClass.getMapJunction(1, 2)->setOrientation(1, &basicTrafficLight);
-	//mapClass.addJunction(Junction::Junction(road), 1, 3);
-	//mapClass.getMapJunction(1, 3)->setOrientation(1, &basicTrafficLight);
-	//mapClass.addJunction(Junction::Junction(road), 1, 4);
-	//mapClass.getMapJunction(1, 4)->setOrientation(1, &basicTrafficLight);
-	//mapClass.addJunction(Junction::Junction(&xJunction, &basicTrafficLight), 1, 5);
-	//mapClass.getMapJunction(1, 5)->setOrientation(0, &basicTrafficLight);
-	//mapClass.addJunction(Junction::Junction(road), 1, 6);
-	//mapClass.getMapJunction(1, 6)->setOrientation(1, &basicTrafficLight);
-	//mapClass.getMapJunction(1, 6)->setSpawnable(true, { 1 });
-	////row 3 
-	//mapClass.addJunction(Junction::Junction(&tJunction, &basicTrafficLight), 2, 1);
-	//mapClass.getMapJunction(2, 1)->setOrientation(1, &basicTrafficLight);
-	//mapClass.addJunction(Junction::Junction(&tJunction, &basicTrafficLight), 2, 2);
-	//mapClass.getMapJunction(2, 2)->setOrientation(0, &basicTrafficLight);
-	//mapClass.addJunction(Junction::Junction(road), 2, 3);
-	//mapClass.getMapJunction(2, 3)->setOrientation(1, &basicTrafficLight);
-	//mapClass.addJunction(Junction::Junction(&tJunction, &basicTrafficLight), 2, 4);
-	//mapClass.getMapJunction(2, 4)->setOrientation(0, &basicTrafficLight);
-	//mapClass.addJunction(Junction::Junction(&tJunction, &basicTrafficLight), 2, 5);
-	//mapClass.getMapJunction(2, 5)->setOrientation(3, &basicTrafficLight);
-	////row 4
-	//mapClass.addJunction(Junction::Junction(road), 3, 1);
-	//mapClass.addJunction(Junction::Junction(road), 3, 2);
-	//mapClass.addJunction(Junction::Junction(road), 3, 4);
-	//mapClass.addJunction(Junction::Junction(&tJunction, &basicTrafficLight), 3, 5);
-	//mapClass.getMapJunction(3, 5)->setOrientation(1, &basicTrafficLight);
-	//mapClass.addJunction(Junction::Junction(road), 3, 6);
-	//mapClass.getMapJunction(3, 6)->setOrientation(1, &basicTrafficLight);
-	//mapClass.getMapJunction(3, 6)->setSpawnable(true, { 1 });
-	////row 5
-	//mapClass.addJunction(Junction::Junction(road), 4, 1);
-	//mapClass.addJunction(Junction::Junction(&tJunction, &basicTrafficLight), 4, 2);
-	//mapClass.getMapJunction(4, 2)->setOrientation(1, &basicTrafficLight);
-	//mapClass.addJunction(Junction::Junction(road), 4, 3);
-	//mapClass.getMapJunction(4, 3)->setOrientation(1, &basicTrafficLight);
-	//mapClass.addJunction(Junction::Junction(&tJunction, &basicTrafficLight), 4, 4);
-	//mapClass.getMapJunction(4, 4)->setOrientation(3, &basicTrafficLight);
-	//mapClass.addJunction(Junction::Junction(road), 4, 5);
-	////row 6
-	//mapClass.addJunction(Junction::Junction(road), 5, 0);
-	//mapClass.getMapJunction(5, 0)->setOrientation(1, &basicTrafficLight);
-	//mapClass.getMapJunction(5, 0)->setSpawnable(true, { 0 });
-	//mapClass.addJunction(Junction::Junction(&xJunction, &basicTrafficLight), 5, 1);
-	//mapClass.getMapJunction(5, 1)->setOrientation(0, &basicTrafficLight);
-	//mapClass.addJunction(Junction::Junction(&xJunction, &basicTrafficLight), 5, 2);
-	//mapClass.getMapJunction(5, 2)->setOrientation(0, &basicTrafficLight);
-	//mapClass.addJunction(Junction::Junction(road), 5, 3);
-	//mapClass.getMapJunction(5, 3)->setOrientation(1, &basicTrafficLight);
-	//mapClass.addJunction(Junction::Junction(&tJunction, &basicTrafficLight), 5, 4);
-	//mapClass.getMapJunction(5, 4)->setOrientation(2, &basicTrafficLight);
-	//mapClass.addJunction(Junction::Junction(&tJunction, &basicTrafficLight), 5, 5);
-	//mapClass.getMapJunction(5, 5)->setOrientation(3, &basicTrafficLight);
-	////row 7
-	//mapClass.addJunction(Junction::Junction(road), 6, 1);
-	//mapClass.getMapJunction(6, 1)->setSpawnable(true, { 3 });
-	//mapClass.addJunction(Junction::Junction(road), 6, 2);
-	//mapClass.getMapJunction(6, 2)->setSpawnable(true, { 3 });
-	//mapClass.addJunction(Junction::Junction(road), 6, 5);
-	//mapClass.getMapJunction(6, 5)->setSpawnable(true, { 3 });
+	mapClass.addJunction(Junction::Junction(road), 0, 1);
+	mapClass.getMapJunction(0, 1)->setSpawnable(true, { 2 });
+	mapClass.addJunction(Junction::Junction(road), 0, 5);
+	mapClass.getMapJunction(0, 5)->setSpawnable(true, { 2 });
+	//row 2
+	mapClass.addJunction(Junction::Junction(&tJunction, &basicTrafficLight), 1, 1);
+	mapClass.getMapJunction(1, 1)->setOrientation(1, &basicTrafficLight);
+	mapClass.addJunction(Junction::Junction(road), 1, 2);
+	mapClass.getMapJunction(1, 2)->setOrientation(1, &basicTrafficLight);
+	mapClass.addJunction(Junction::Junction(road), 1, 3);
+	mapClass.getMapJunction(1, 3)->setOrientation(1, &basicTrafficLight);
+	mapClass.addJunction(Junction::Junction(road), 1, 4);
+	mapClass.getMapJunction(1, 4)->setOrientation(1, &basicTrafficLight);
+	mapClass.addJunction(Junction::Junction(&xJunction, &basicTrafficLight), 1, 5);
+	mapClass.getMapJunction(1, 5)->setOrientation(0, &basicTrafficLight);
+	mapClass.addJunction(Junction::Junction(road), 1, 6);
+	mapClass.getMapJunction(1, 6)->setOrientation(1, &basicTrafficLight);
+	mapClass.getMapJunction(1, 6)->setSpawnable(true, { 1 });
+	//row 3 
+	mapClass.addJunction(Junction::Junction(&tJunction, &basicTrafficLight), 2, 1);
+	mapClass.getMapJunction(2, 1)->setOrientation(1, &basicTrafficLight);
+	mapClass.addJunction(Junction::Junction(&tJunction, &basicTrafficLight), 2, 2);
+	mapClass.getMapJunction(2, 2)->setOrientation(0, &basicTrafficLight);
+	mapClass.addJunction(Junction::Junction(road), 2, 3);
+	mapClass.getMapJunction(2, 3)->setOrientation(1, &basicTrafficLight);
+	mapClass.addJunction(Junction::Junction(&tJunction, &basicTrafficLight), 2, 4);
+	mapClass.getMapJunction(2, 4)->setOrientation(0, &basicTrafficLight);
+	mapClass.addJunction(Junction::Junction(&tJunction, &basicTrafficLight), 2, 5);
+	mapClass.getMapJunction(2, 5)->setOrientation(3, &basicTrafficLight);
+	//row 4
+	mapClass.addJunction(Junction::Junction(road), 3, 1);
+	mapClass.addJunction(Junction::Junction(road), 3, 2);
+	mapClass.addJunction(Junction::Junction(road), 3, 4);
+	mapClass.addJunction(Junction::Junction(&tJunction, &basicTrafficLight), 3, 5);
+	mapClass.getMapJunction(3, 5)->setOrientation(1, &basicTrafficLight);
+	mapClass.addJunction(Junction::Junction(road), 3, 6);
+	mapClass.getMapJunction(3, 6)->setOrientation(1, &basicTrafficLight);
+	mapClass.getMapJunction(3, 6)->setSpawnable(true, { 1 });
+	//row 5
+	mapClass.addJunction(Junction::Junction(road), 4, 1);
+	mapClass.addJunction(Junction::Junction(&tJunction, &basicTrafficLight), 4, 2);
+	mapClass.getMapJunction(4, 2)->setOrientation(1, &basicTrafficLight);
+	mapClass.addJunction(Junction::Junction(road), 4, 3);
+	mapClass.getMapJunction(4, 3)->setOrientation(1, &basicTrafficLight);
+	mapClass.addJunction(Junction::Junction(&tJunction, &basicTrafficLight), 4, 4);
+	mapClass.getMapJunction(4, 4)->setOrientation(3, &basicTrafficLight);
+	mapClass.addJunction(Junction::Junction(road), 4, 5);
+	//row 6
+	mapClass.addJunction(Junction::Junction(road), 5, 0);
+	mapClass.getMapJunction(5, 0)->setOrientation(1, &basicTrafficLight);
+	mapClass.getMapJunction(5, 0)->setSpawnable(true, { 0 });
+	mapClass.addJunction(Junction::Junction(&xJunction, &basicTrafficLight), 5, 1);
+	mapClass.getMapJunction(5, 1)->setOrientation(0, &basicTrafficLight);
+	mapClass.addJunction(Junction::Junction(&xJunction, &basicTrafficLight), 5, 2);
+	mapClass.getMapJunction(5, 2)->setOrientation(0, &basicTrafficLight);
+	mapClass.addJunction(Junction::Junction(road), 5, 3);
+	mapClass.getMapJunction(5, 3)->setOrientation(1, &basicTrafficLight);
+	mapClass.addJunction(Junction::Junction(&tJunction, &basicTrafficLight), 5, 4);
+	mapClass.getMapJunction(5, 4)->setOrientation(2, &basicTrafficLight);
+	mapClass.addJunction(Junction::Junction(&tJunction, &basicTrafficLight), 5, 5);
+	mapClass.getMapJunction(5, 5)->setOrientation(3, &basicTrafficLight);
+	//row 7
+	mapClass.addJunction(Junction::Junction(road), 6, 1);
+	mapClass.getMapJunction(6, 1)->setSpawnable(true, { 3 });
+	mapClass.addJunction(Junction::Junction(road), 6, 2);
+	mapClass.getMapJunction(6, 2)->setSpawnable(true, { 3 });
+	mapClass.addJunction(Junction::Junction(road), 6, 5);
+	mapClass.getMapJunction(6, 5)->setSpawnable(true, { 3 });
 
 	//mapClass.addJunction(road, 0, 1);
 	//(*mapClass.getMapJunction(0, 1)).setOrientation(1);
@@ -784,7 +822,7 @@ void init()
 		cars[i].Init(shader, red, "textures/car.png");
 	}
 	//mapClass.aStar({ *mapClass.getMapJunction(1, 6) }, {}, 1, { *mapClass.getMapJunction(0, 5) }, 3, 7);
-	//std::vector<int> path = mapClass.pathfinder({ *mapClass.getMapJunction(1, 6) }, 1, { *mapClass.getMapJunction(0, 5) }, 3).second;
+	//std::vector<int> path = mapClass.pathfinder({ *mapClass.getMapJunction(1, 6) }, 1, { *mapClass.getMapJunction(0, 5) }, 2).second;
 	//for (int i = 0; i < path.size(); i++) {
 	//	std::cout << "i = " << i << ", " << path[i] << std::endl;
 	//} 

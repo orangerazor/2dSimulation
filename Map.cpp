@@ -85,7 +85,7 @@ std::pair<std::vector<Junction>, std::vector<int>> Map::pathfinder(Junction star
 			return solution;
 		}
 		else {
-			std::cout << "bound = " << bound << std::endl;
+			//std::cout << "bound = " << bound << std::endl;
 			bound = *std::min_element(biggerBounds.begin(), biggerBounds.end());
 			biggerBounds = {};
 		}
@@ -107,26 +107,27 @@ std::pair<std::vector<Junction>, std::vector<int>> Map::aStar(std::vector<Juncti
 	for (int i = 0; i < nextMoves.first.size(); i++) {
 	https://coduber.com/how-to-check-if-vector-contains-a-given-element-in-cpp/
 		if (std::find(path.begin(), path.end(), nextMoves.first[i]) == path.end()) {
-			path.push_back(nextMoves.first[i]);
-			exits.push_back(nextMoves.second[i]);
+			std::vector<int> newExits = exits;
+			std::vector<Junction> newPath = path;
+			newExits.push_back(nextMoves.second[i]);
+			newPath.push_back(nextMoves.first[i]);
 			fValue = this->fValue(path, goal);
-			std::cout << "path-1 = " << path[path.size() - 1].getIdentifier() << std::endl;
+			//std::cout << "path-1 = " << path[path.size() - 1].getIdentifier() << std::endl;
 			
 			if (fValue <= bound) {
-				std::cout << "fvalue = " << fValue << std::endl;
-				switch (exits[exits.size() - 1])
+				switch (newExits[newExits.size() - 1])
 				{
 				case(0):
-					solution = aStar(path, exits, 1, goal, exitPoint, bound);
+					solution = aStar(newPath, newExits, 1, goal, exitPoint, bound);
 					break;
 				case(1):
-					solution = aStar(path, exits, 0, goal, exitPoint, bound);
+					solution = aStar(newPath, newExits, 0, goal, exitPoint, bound);
 					break;
 				case(2):
-					solution = aStar(path, exits, 3, goal, exitPoint, bound);
+					solution = aStar(newPath, newExits, 3, goal, exitPoint, bound);
 					break;
 				case(3):
-					solution = aStar(path, exits, 2, goal, exitPoint, bound);
+					solution = aStar(newPath, newExits, 2, goal, exitPoint, bound);
 					break;
 				}
 				if (!solution.first.empty()) {
@@ -134,6 +135,8 @@ std::pair<std::vector<Junction>, std::vector<int>> Map::aStar(std::vector<Juncti
 				}
 			}
 			else {
+				//std::cout << "fvalue = " << fValue << std::endl;
+
 				biggerBounds.push_back(fValue);
 			}
 			
