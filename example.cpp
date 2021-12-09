@@ -37,7 +37,7 @@ int screenWidth = 720, screenHeight = 720;
 
 //booleans to handle when the arrow keys are pressed or released.
 int secondElapsed = 0;
-float secondsToHour = 1.0f;
+float secondsToHour = 1555.0f;
 int hourElapsed = 0;
 int hour;
 bool Left = false;
@@ -705,14 +705,14 @@ void init()
 	//mapClass.getMapJunction(0, 1)->setOrientation(0, &basicTrafficLight);
 	//mapClass.getMapJunction(0, 1)->setSpawnable(true, { 2 });
 
-	//mapClass.addJunction(Junction::Junction(&road, &basicTrafficLight), 1, 0);
-	//mapClass.getMapJunction(1, 0)->setOrientation(1, &basicTrafficLight);
-	//mapClass.getMapJunction(1, 0)->setSpawnable(true, { 0 });
-	//mapClass.addJunction(Junction::Junction(&xJunction, &basicTrafficLight), 1, 1);
-	//mapClass.getMapJunction(1, 1)->setOrientation(2, &basicTrafficLight);
-	//mapClass.addJunction(Junction::Junction(&road, &basicTrafficLight), 1, 2);
-	//mapClass.getMapJunction(1, 2)->setOrientation(1, &basicTrafficLight);
-	//mapClass.getMapJunction(1, 2)->setSpawnable(true, { 1 });
+	mapClass.addJunction(Junction::Junction(&road, &basicTrafficLight), 1, 0);
+	mapClass.getMapJunction(1, 0)->setOrientation(1, &basicTrafficLight);
+	mapClass.getMapJunction(1, 0)->setSpawnable(true, { 0 });
+	mapClass.addJunction(Junction::Junction(&xJunction, &basicTrafficLight), 1, 1);
+	mapClass.getMapJunction(1, 1)->setOrientation(2, &basicTrafficLight);
+	mapClass.addJunction(Junction::Junction(&road, &basicTrafficLight), 1, 2);
+	mapClass.getMapJunction(1, 2)->setOrientation(1, &basicTrafficLight);
+	mapClass.getMapJunction(1, 2)->setSpawnable(true, { 1 });
 
 	//mapClass.addJunction(Junction::Junction(&road, &basicTrafficLight), 2, 1);
 	//mapClass.getMapJunction(2, 1)->setOrientation(0, &basicTrafficLight);

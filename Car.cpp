@@ -477,7 +477,7 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 		if (collideCheck[i].IsInCollision(collide)) {
 			speed = 0;
 		}
-		//Check to see if car infront is turning right and if so give it space to turn before moving this car
+		//Check to see if car infront is turning right and if so give it space to turn before moving this car and check other lane for right turners and give way to them
 		float otherCarX = collideCheck[i].GetXPos();
 		float otherCarY = collideCheck[i].GetYPos();
 		float inFrontOrBehindX = otherCarX - m_xpos;
@@ -488,10 +488,17 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 			if (inFrontOrBehindX > 0) {
 				if (collideCheck[i].getDirection() == 1) {
 					// Car in box
-					if (otherCarX <= junction->getXRightSquare() && otherCarX >= junction->getXLeftSquare() && otherCarY <= junction->getYTopSquare() && otherCarY >= junction->getYBotSquare()) {
+					if (otherCarX <= junction->getXRightSquare() && otherCarX >= junction->getXLeftSquare() && otherCarY <= junction->getYTopSquare() && otherCarY >= junction->GetYPos()) {
 						//Check distance
-						if (inFrontOrBehindX < m_Width * 2) {
+						if (inFrontOrBehindX < m_Width * 3) {
 							//std::cout << "Caught the bugger" << std::endl;
+							speed = 0;
+						}
+					}
+					//Car is coming other way but turning right so give way to it
+					if (otherCarX <= junction->getXRightSquare() && otherCarX >= junction->getXLeftSquare() && otherCarY <= junction->GetYPos() && otherCarY >= junction->getYBotSquare()) {
+						//Don't go past the line
+						if ((junction->getXLeftSquare() - m_xpos) < (m_Width * 4/3)) {
 							speed = 0;
 						}
 					}
@@ -503,10 +510,17 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 			if (inFrontOrBehindX < 0) {
 				if (collideCheck[i].getDirection() == 1) {
 					// Car in box
-					if (otherCarX <= junction->getXRightSquare() && otherCarX >= junction->getXLeftSquare() && otherCarY <= junction->getYTopSquare() && otherCarY >= junction->getYBotSquare()) {
+					if (otherCarX <= junction->getXRightSquare() && otherCarX >= junction->getXLeftSquare() && otherCarY <= junction->GetYPos() && otherCarY >= junction->getYBotSquare()) {
 						//Check distance
-						if (inFrontOrBehindX > -m_Width * 2) {
+						if (inFrontOrBehindX > -m_Width * 3) {
 							//std::cout << "Caught the bugger" << std::endl;
+							speed = 0;
+						}
+					}
+					//Car is coming other way but turning right so give way to it
+					if (otherCarX <= junction->getXRightSquare() && otherCarX >= junction->getXLeftSquare() && otherCarY <= junction->getYTopSquare() && otherCarY >= junction->GetYPos()) {
+						//Don't go past the line
+						if ((junction->getXRightSquare() - m_xpos) < (m_Width * 4 / 3)) {
 							speed = 0;
 						}
 					}
@@ -518,10 +532,17 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 			if (inFrontOrBehindY < 0) {
 				if (collideCheck[i].getDirection() == 1) {
 					// Car in box
-					if (otherCarX <= junction->getXRightSquare() && otherCarX >= junction->getXLeftSquare() && otherCarY <= junction->getYTopSquare() && otherCarY >= junction->getYBotSquare()) {
+					if (otherCarX <= junction->getXRightSquare() && otherCarX >= junction->GetXPos() && otherCarY <= junction->getYTopSquare() && otherCarY >= junction->getYBotSquare()) {
 						//Check distance
-						if (inFrontOrBehindY > -m_Width * 2) {
+						if (inFrontOrBehindY > -m_Width * 3) {
 							//std::cout << "Caught the bugger" << std::endl;
+							speed = 0;
+						}
+					}
+					//Car is coming other way but turning right so give way to it
+					if (otherCarX <= junction->GetXPos() && otherCarX >= junction->getXLeftSquare() && otherCarY <= junction->getYTopSquare() && otherCarY >= junction->getYBotSquare()) {
+						//Don't go past the line
+						if ((junction->getYTopSquare() - m_ypos) < (-m_Width * 4 / 3)) {
 							speed = 0;
 						}
 					}
@@ -533,10 +554,17 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 			if (inFrontOrBehindY > 0) {
 				if (collideCheck[i].getDirection() == 1) {
 					// Car in box
-					if (otherCarX <= junction->getXRightSquare() && otherCarX >= junction->getXLeftSquare() && otherCarY <= junction->getYTopSquare() && otherCarY >= junction->getYBotSquare()) {
+					if (otherCarX <= junction->GetXPos() && otherCarX >= junction->getXLeftSquare() && otherCarY <= junction->getYTopSquare() && otherCarY >= junction->getYBotSquare()) {
 						//Check distance
-						if (inFrontOrBehindY < m_Width * 2) {
+						if (inFrontOrBehindY < m_Width * 3) {
 							//std::cout << "Caught the bugger" << std::endl;
+							speed = 0;
+						}
+					}
+					//Car is coming other way but turning right so give way to it
+					if (otherCarX <= junction->getXRightSquare() && otherCarX >= junction->GetXPos() && otherCarY <= junction->getYTopSquare() && otherCarY >= junction->getYBotSquare()) {
+						//Don't go past the line
+						if ((junction->getYTopSquare() - m_ypos) < (m_Width * 4 / 3)) {
 							speed = 0;
 						}
 					}
@@ -545,7 +573,7 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 			break;
 		}
 	}
-
+	
 	glm::vec3 forVec2 = forVec;
 	glm::mat4 matrix = glm::rotate(glm::mat4(1.0f), angle, glm::vec3(0.0f, 0.0f, 1.0f));
 	forVec2 = matrix * glm::vec4(forVec, 1.0f);
