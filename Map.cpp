@@ -75,14 +75,17 @@ std::pair<std::vector<Junction>, std::vector<int>> Map::pathfinder(Junction star
 	std::pair<std::vector<Junction>, std::vector<int>> solution;
 	int bound = this->fValue({ start }, goal);
 	//std::cout << "bound = " << bound << std::endl;
+	std::cout << "start = " << start.getIdentifier() << std::endl;
+	std::cout << "goal = " << goal.getIdentifier() << std::endl;
 	while (true)
 	{
-		solution = this->aStar({ start }, {}, entryPoint, goal, exitPoint, bound);
 		
+		solution = this->aStar({ start }, {}, entryPoint, goal, exitPoint, bound);
 		if (solution.first.size()!=0) {
 			return solution;
 		}
 		else {
+			std::cout << "bound = " << bound << std::endl;
 			bound = *std::min_element(biggerBounds.begin(), biggerBounds.end());
 			biggerBounds = {};
 		}
@@ -107,20 +110,23 @@ std::pair<std::vector<Junction>, std::vector<int>> Map::aStar(std::vector<Juncti
 			path.push_back(nextMoves.first[i]);
 			exits.push_back(nextMoves.second[i]);
 			fValue = this->fValue(path, goal);
+			std::cout << "path-1 = " << path[path.size() - 1].getIdentifier() << std::endl;
+			
 			if (fValue <= bound) {
+				std::cout << "fvalue = " << fValue << std::endl;
 				switch (exits[exits.size() - 1])
 				{
 				case(0):
-					solution = aStar(path, exits, 2, goal, exitPoint, bound);
+					solution = aStar(path, exits, 1, goal, exitPoint, bound);
 					break;
 				case(1):
-					solution = aStar(path, exits, 3, goal, exitPoint, bound);
-					break;
-				case(2):
 					solution = aStar(path, exits, 0, goal, exitPoint, bound);
 					break;
+				case(2):
+					solution = aStar(path, exits, 3, goal, exitPoint, bound);
+					break;
 				case(3):
-					solution = aStar(path, exits, 1, goal, exitPoint, bound);
+					solution = aStar(path, exits, 2, goal, exitPoint, bound);
 					break;
 				}
 				if (!solution.first.empty()) {
