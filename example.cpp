@@ -33,7 +33,7 @@ glm::mat4 ViewMatrix;  // matrix for the modelling and viewing
 glm::mat4 ProjectionMatrix; // matrix for the orthographic projection
 glm::mat4 ModelMatrix;
 glm::mat4 ModelViewMatrix;
-int screenWidth = 480, screenHeight = 480;
+int screenWidth = 720, screenHeight = 720;
 
 //booleans to handle when the arrow keys are pressed or released.
 int secondElapsed = 0;
@@ -143,7 +143,6 @@ void display()
 				Car toSpawn = Car(basicCar);
 				toSpawn.setIdentifier(cars.size());
 				toSpawn.setJunction(&emptyJunction);
-				toSpawn.setPath({ 3,1 });
 				cars.push_back(toSpawn);
 			}
 		}
@@ -328,7 +327,7 @@ void display()
 	filledSpawns.resize(numSpawns);
 	//vector<int> alreadyChecked;
 	//alreadyChecked.resize(cars.size());
-	cout << "Num spawns = " << numSpawns << endl;
+	//cout << "Num spawns = " << numSpawns << endl;
 	for (int k = 0; k < numSpawns; k++) {
 		OBB boxCheck;
 		for (int i = 0; i < cars.size(); i++) {
@@ -363,9 +362,9 @@ void display()
 					break;
 				case 2:
 					boxCheck.vert[0].x = current->getXLeftSquare();
-					boxCheck.vert[0].y = current->getTopInner();
+					boxCheck.vert[0].y = current->getBotInner();
 					boxCheck.vert[1].x = current->getXRightSquare();
-					boxCheck.vert[1].y = current->getTopInner();
+					boxCheck.vert[1].y = current->getBotInner();
 					boxCheck.vert[2].x = current->getXRightSquare();
 					boxCheck.vert[2].y = current->GetYPos() + (current->getHeight() / 2);
 					boxCheck.vert[3].x = current->getXLeftSquare();
@@ -377,9 +376,9 @@ void display()
 					boxCheck.vert[1].x = current->getXRightSquare();
 					boxCheck.vert[1].y = current->GetYPos() - (current->getHeight() / 2);
 					boxCheck.vert[2].x = current->getXRightSquare();
-					boxCheck.vert[2].y = current->getBotInner();
+					boxCheck.vert[2].y = current->getTopInner();
 					boxCheck.vert[3].x = current->getXLeftSquare();
-					boxCheck.vert[3].y = current->getBotInner();
+					boxCheck.vert[3].y = current->getTopInner();
 					break;
 				}
 				//cout << "Vert 0 x = " << cars[i].getSpawnOBB().vert[0].x << ", Y = " << cars[i].getSpawnOBB().vert[0].y << endl;
@@ -391,6 +390,7 @@ void display()
 				//cout << "Vert 1 x = " << boxCheck.vert[1].x << ", Y = " << boxCheck.vert[1].y << endl;
 				//cout << "Vert 2 x = " << boxCheck.vert[2].x << ", Y = " << boxCheck.vert[2].y << endl;
 				//cout << "Vert 3 x = " << boxCheck.vert[3].x << ", Y = " << boxCheck.vert[3].y << endl;
+				
 
 				//if (i == 2) {
 					//cout << "Vert 0 x = " << cars[i].GetOBB().vert[0].x << ", Y = " << cars[i].GetOBB().vert[0].y << endl;
@@ -431,7 +431,6 @@ void display()
 				int index = filledSpawns.at(k).at(i).second;
 				if (index != indexOfBestCar) {
 					buffer.at(k).push_back(next);
-					cout << "Possible delete here?" << endl;
 					cars.erase(cars.begin() + index);
 				}
 			}
@@ -602,7 +601,7 @@ void init()
 	float red[3] = { 1,0,0 };
 	FreeImage_Initialise();
 
-	glClearColor(0.0,153.0f/256.0f,68.0f/256.0f,0.0);						//sets the clear colour to black
+	glClearColor(0.0,(153.0f/256.0f),(68.0f/256.0f),0.0);						//sets the clear colour to black
 	 
 	//Load the GLSL program 
 	if (!shader.load("Basic", "./glslfiles/basicTexture.vert", "./glslfiles/basicTexture.frag"))
@@ -785,10 +784,10 @@ void init()
 		cars[i].Init(shader, red, "textures/car.png");
 	}
 	//mapClass.aStar({ *mapClass.getMapJunction(1, 6) }, {}, 1, { *mapClass.getMapJunction(0, 5) }, 3, 7);
-	std::vector<int> path = mapClass.pathfinder({ *mapClass.getMapJunction(1, 6) }, 1, { *mapClass.getMapJunction(0, 5) }, 3).second;
-	for (int i = 0; i < path.size(); i++) {
-		std::cout << "i = " << i << ", " << path[i] << std::endl;
-	} 
+	//std::vector<int> path = mapClass.pathfinder({ *mapClass.getMapJunction(1, 6) }, 1, { *mapClass.getMapJunction(0, 5) }, 3).second;
+	//for (int i = 0; i < path.size(); i++) {
+	//	std::cout << "i = " << i << ", " << path[i] << std::endl;
+	//} 
 	Junction middle = mapClass.getMiddle();
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }

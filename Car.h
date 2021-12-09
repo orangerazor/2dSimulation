@@ -14,6 +14,7 @@ private:
 	int identifier;
 	int entryTurning;
 	int exitTurning = -1;
+	int direction;
 	int exit;
 	float angle;
 	Junction* junction;
@@ -65,6 +66,9 @@ public:
 	}
 	inline int getEntryTurning() {
 		return entryTurning;
+	}
+	inline int getDirection() {
+		return direction;
 	}
 	inline float getAngle() {
 		return angle;
