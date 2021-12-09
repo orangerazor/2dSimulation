@@ -475,6 +475,8 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 			continue;
 		}
 		if (collideCheck[i].IsInCollision(collide)) {
+			//std::cout << "index of collision = " << m_xpos << ", " << m_ypos << std::endl;
+			//std::cout << "Index of other car = " << collideCheck[i].GetXPos() << ", " << collideCheck[i].GetYPos() << std::endl;
 			speed = 0;
 		}
 		//Check to see if car infront is turning right and if so give it space to turn before moving this car and check other lane for right turners and give way to them
@@ -491,7 +493,7 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 					if (otherCarX <= junction->getXRightSquare() && otherCarX >= junction->getXLeftSquare() && otherCarY <= junction->getYTopSquare() && otherCarY >= junction->GetYPos()) {
 						//Check distance
 						if (inFrontOrBehindX < m_Width * 3) {
-							//std::cout << "Caught the bugger" << std::endl;
+							std::cout << "Avoiding right turn in front" << std::endl;
 							speed = 0;
 						}
 					}
@@ -499,6 +501,7 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 					if (otherCarX <= junction->getXRightSquare() && otherCarX >= junction->getXLeftSquare() && otherCarY <= junction->GetYPos() && otherCarY >= junction->getYBotSquare()) {
 						//Don't go past the line
 						if ((junction->getXLeftSquare() - m_xpos) < (m_Width * 4/3)) {
+							std::cout << "Avoiding right turn other side of road" << std::endl;
 							speed = 0;
 						}
 					}
@@ -513,7 +516,7 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 					if (otherCarX <= junction->getXRightSquare() && otherCarX >= junction->getXLeftSquare() && otherCarY <= junction->GetYPos() && otherCarY >= junction->getYBotSquare()) {
 						//Check distance
 						if (inFrontOrBehindX > -m_Width * 3) {
-							//std::cout << "Caught the bugger" << std::endl;
+							std::cout << "Avoiding right turn in front" << std::endl;
 							speed = 0;
 						}
 					}
@@ -521,6 +524,7 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 					if (otherCarX <= junction->getXRightSquare() && otherCarX >= junction->getXLeftSquare() && otherCarY <= junction->getYTopSquare() && otherCarY >= junction->GetYPos()) {
 						//Don't go past the line
 						if ((junction->getXRightSquare() - m_xpos) < (m_Width * 4 / 3)) {
+							std::cout << "Avoiding right turn other side of road" << std::endl;
 							speed = 0;
 						}
 					}
@@ -535,7 +539,7 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 					if (otherCarX <= junction->getXRightSquare() && otherCarX >= junction->GetXPos() && otherCarY <= junction->getYTopSquare() && otherCarY >= junction->getYBotSquare()) {
 						//Check distance
 						if (inFrontOrBehindY > -m_Width * 3) {
-							//std::cout << "Caught the bugger" << std::endl;
+							std::cout << "Avoiding right turn in front" << std::endl;
 							speed = 0;
 						}
 					}
@@ -543,6 +547,7 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 					if (otherCarX <= junction->GetXPos() && otherCarX >= junction->getXLeftSquare() && otherCarY <= junction->getYTopSquare() && otherCarY >= junction->getYBotSquare()) {
 						//Don't go past the line
 						if ((junction->getYTopSquare() - m_ypos) < (-m_Width * 4 / 3)) {
+							std::cout << "Avoiding right turn other side of road" << std::endl;
 							speed = 0;
 						}
 					}
@@ -557,7 +562,7 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 					if (otherCarX <= junction->GetXPos() && otherCarX >= junction->getXLeftSquare() && otherCarY <= junction->getYTopSquare() && otherCarY >= junction->getYBotSquare()) {
 						//Check distance
 						if (inFrontOrBehindY < m_Width * 3) {
-							//std::cout << "Caught the bugger" << std::endl;
+							std::cout << "Avoiding right turn in front" << std::endl;
 							speed = 0;
 						}
 					}
@@ -565,6 +570,7 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 					if (otherCarX <= junction->getXRightSquare() && otherCarX >= junction->GetXPos() && otherCarY <= junction->getYTopSquare() && otherCarY >= junction->getYBotSquare()) {
 						//Don't go past the line
 						if ((junction->getYTopSquare() - m_ypos) < (m_Width * 4 / 3)) {
+							std::cout << "Avoiding right turn other side of road" << std::endl;
 							speed = 0;
 						}
 					}
