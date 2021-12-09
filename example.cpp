@@ -229,6 +229,15 @@ void display()
 			}
 		}
 		break;
+	case 100:
+
+		if (cars.size() < 1) {
+			Car toSpawn = Car(basicCar);
+			toSpawn.setIdentifier(cars.size());
+			toSpawn.setJunction(&emptyJunction);
+			cars.push_back(toSpawn);
+		}
+		break;
 	default:
 		if (secondElapsed >= 1000000) {
 			if (cars.size() < 75) {
@@ -954,8 +963,13 @@ void keyboard_down(unsigned char key, int x, int y) {
 		mapSelect = 3;
 		init();
 		break;
-	
+	case('4'):
+		glClearColor((0.0f), (153.0f / 256.0f), (68.0f / 256.0f), (0.0f));
+		cars = {};
+		hour = 100;
+		secondsToHour = 10000000000;
 	}
+	
 
 
 }
