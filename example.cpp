@@ -33,7 +33,7 @@ glm::mat4 ViewMatrix;  // matrix for the modelling and viewing
 glm::mat4 ProjectionMatrix; // matrix for the orthographic projection
 glm::mat4 ModelMatrix;
 glm::mat4 ModelViewMatrix;
-int screenWidth = 480, screenHeight = 480;
+int screenWidth = 720, screenHeight = 720;
 
 //booleans to handle when the arrow keys are pressed or released.
 int secondElapsed = 0;
@@ -181,7 +181,6 @@ void display()
 				Car toSpawn = Car(basicCar);
 				toSpawn.setIdentifier(cars.size());
 				toSpawn.setJunction(&emptyJunction);
-				toSpawn.setPath({ 3,1 });
 				cars.push_back(toSpawn);
 			}
 		}
@@ -401,9 +400,9 @@ void display()
 					break;
 				case 2:
 					boxCheck.vert[0].x = current->getXLeftSquare();
-					boxCheck.vert[0].y = current->getTopInner();
+					boxCheck.vert[0].y = current->getBotInner();
 					boxCheck.vert[1].x = current->getXRightSquare();
-					boxCheck.vert[1].y = current->getTopInner();
+					boxCheck.vert[1].y = current->getBotInner();
 					boxCheck.vert[2].x = current->getXRightSquare();
 					boxCheck.vert[2].y = current->GetYPos() + (current->getHeight() / 2);
 					boxCheck.vert[3].x = current->getXLeftSquare();
@@ -415,9 +414,9 @@ void display()
 					boxCheck.vert[1].x = current->getXRightSquare();
 					boxCheck.vert[1].y = current->GetYPos() - (current->getHeight() / 2);
 					boxCheck.vert[2].x = current->getXRightSquare();
-					boxCheck.vert[2].y = current->getBotInner();
+					boxCheck.vert[2].y = current->getTopInner();
 					boxCheck.vert[3].x = current->getXLeftSquare();
-					boxCheck.vert[3].y = current->getBotInner();
+					boxCheck.vert[3].y = current->getTopInner();
 					break;
 				}
 				//cout << "Vert 0 x = " << cars[i].getSpawnOBB().vert[0].x << ", Y = " << cars[i].getSpawnOBB().vert[0].y << endl;
@@ -429,6 +428,7 @@ void display()
 				//cout << "Vert 1 x = " << boxCheck.vert[1].x << ", Y = " << boxCheck.vert[1].y << endl;
 				//cout << "Vert 2 x = " << boxCheck.vert[2].x << ", Y = " << boxCheck.vert[2].y << endl;
 				//cout << "Vert 3 x = " << boxCheck.vert[3].x << ", Y = " << boxCheck.vert[3].y << endl;
+				
 
 				//if (i == 2) {
 					//cout << "Vert 0 x = " << cars[i].GetOBB().vert[0].x << ", Y = " << cars[i].GetOBB().vert[0].y << endl;
@@ -469,7 +469,6 @@ void display()
 				int index = filledSpawns.at(k).at(i).second;
 				if (index != indexOfBestCar) {
 					buffer.at(k).push_back(next);
-					cout << "Possible delete here?" << endl;
 					cars.erase(cars.begin() + index);
 				}
 			}

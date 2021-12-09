@@ -244,6 +244,7 @@ int Car::decideDirection(int entryPoint) {
 	//std::cout << exitPoint << std::endl;
 	exit = exitPoint;
 	std::cout << "direction = " << exit << std::endl;
+	direction = exitPoint;
 	return exitPoint;
 }
 
@@ -476,6 +477,73 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 		if (collideCheck[i].IsInCollision(collide)) {
 			speed = 0;
 		}
+		//Check to see if car infront is turning right and if so give it space to turn before moving this car
+		float otherCarX = collideCheck[i].GetXPos();
+		float otherCarY = collideCheck[i].GetYPos();
+		float inFrontOrBehindX = otherCarX - m_xpos;
+		float inFrontOrBehindY = otherCarY - m_ypos;
+		switch (entryPoint) {
+		case 0:
+			// Car is in front
+			if (inFrontOrBehindX > 0) {
+				if (collideCheck[i].getDirection() == 1) {
+					// Car in box
+					if (otherCarX <= junction->getXRightSquare() && otherCarX >= junction->getXLeftSquare() && otherCarY <= junction->getYTopSquare() && otherCarY >= junction->getYBotSquare()) {
+						//Check distance
+						if (inFrontOrBehindX < m_Width * 2) {
+							//std::cout << "Caught the bugger" << std::endl;
+							speed = 0;
+						}
+					}
+				}
+			}
+			break;
+		case 1:
+			// Car is in front
+			if (inFrontOrBehindX < 0) {
+				if (collideCheck[i].getDirection() == 1) {
+					// Car in box
+					if (otherCarX <= junction->getXRightSquare() && otherCarX >= junction->getXLeftSquare() && otherCarY <= junction->getYTopSquare() && otherCarY >= junction->getYBotSquare()) {
+						//Check distance
+						if (inFrontOrBehindX > -m_Width * 2) {
+							//std::cout << "Caught the bugger" << std::endl;
+							speed = 0;
+						}
+					}
+				}
+			}
+			break;
+		case 2:
+			// Car is in front
+			if (inFrontOrBehindY < 0) {
+				if (collideCheck[i].getDirection() == 1) {
+					// Car in box
+					if (otherCarX <= junction->getXRightSquare() && otherCarX >= junction->getXLeftSquare() && otherCarY <= junction->getYTopSquare() && otherCarY >= junction->getYBotSquare()) {
+						//Check distance
+						if (inFrontOrBehindY > -m_Width * 2) {
+							//std::cout << "Caught the bugger" << std::endl;
+							speed = 0;
+						}
+					}
+				}
+			}
+			break;
+		case 3:
+			// Car is in front
+			if (inFrontOrBehindY > 0) {
+				if (collideCheck[i].getDirection() == 1) {
+					// Car in box
+					if (otherCarX <= junction->getXRightSquare() && otherCarX >= junction->getXLeftSquare() && otherCarY <= junction->getYTopSquare() && otherCarY >= junction->getYBotSquare()) {
+						//Check distance
+						if (inFrontOrBehindY < m_Width * 2) {
+							//std::cout << "Caught the bugger" << std::endl;
+							speed = 0;
+						}
+					}
+				}
+			}
+			break;
+		}
 	}
 
 	glm::vec3 forVec2 = forVec;
@@ -514,7 +582,7 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 				speed = speed;
 			}
 			//In the box and need to turn correctly
-			if (intersectDistLeft <= 0) {
+			if (intersectDistLeft <= 0 && speed > 0.01) {
 				switch (direction) {
 				case -1:
 					angle += 2.4 / fps;
@@ -537,7 +605,7 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 				speed = speed;
 			}
 			//In box so turn
-			if (intersectDistRight <= 0) {
+			if (intersectDistRight <= 0 && speed > 0.01) {
 				switch (direction) {
 				case -1:
 					angle += 2.4 / fps;
@@ -560,7 +628,7 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 				speed = speed;
 			}
 			//In box so turn
-			if (intersectDistTop <= 0) {
+			if (intersectDistTop <= 0 && speed > 0.01) {
 				switch (direction) {
 				case -1:
 					angle += 2.4 / fps;
@@ -582,7 +650,7 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 			else {
 				speed = speed;
 			}
-			if (intersectDistBot <= 0) {
+			if (intersectDistBot <= 0 && speed > 0.01) {
 				switch (direction) {
 				case -1:
 					angle += 2.4 / fps;
@@ -610,7 +678,7 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 				speed = speed;
 			}
 			//In the box and need to turn correctly
-			if (intersectDistLeft <= 0) {
+			if (intersectDistLeft <= 0 && speed > 0.01) {
 				switch (direction) {
 				case -1:
 					angle += 2.4 / fps;
@@ -633,7 +701,7 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 				speed = speed;
 			}
 			//In box so turn
-			if (intersectDistRight <= 0) {
+			if (intersectDistRight <= 0 && speed > 0.01) {
 				switch (direction) {
 				case -1:
 					angle += 2.4 / fps;
@@ -656,7 +724,7 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 				speed = speed;
 			}
 			//In box so turn
-			if (intersectDistTop <= 0) {
+			if (intersectDistTop <= 0 && speed > 0.01) {
 				switch (direction) {
 				case -1:
 					angle += 2.4 / fps;
@@ -678,7 +746,7 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 			else {
 				speed = speed;
 			}
-			if (intersectDistBot <= 0) {
+			if (intersectDistBot <= 0 && speed > 0.01) {
 				switch (direction) {
 				case -1:
 					angle += 2.4 / fps;
