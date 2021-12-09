@@ -46,9 +46,9 @@ Junction Map::getMiddle() {
 	if (middle == 0) {
 		return this->map[0][0];
 	}
-	std::cout << "middle=" << middle << std::endl;
-	std::cout <<"y="<< middle / this->height << std::endl;
-	std::cout <<"x="<< middle % this->height << std::endl;
+	//std::cout << "middle=" << middle << std::endl;
+	//std::cout <<"y="<< middle / this->height << std::endl;
+	//std::cout <<"x="<< middle % this->height << std::endl;
 
 	return this->map[middle / this->height][middle % this->height];
 }
@@ -75,8 +75,8 @@ std::pair<std::vector<Junction>, std::vector<int>> Map::pathfinder(Junction star
 	std::pair<std::vector<Junction>, std::vector<int>> solution;
 	int bound = this->fValue({ start }, goal);
 	//std::cout << "bound = " << bound << std::endl;
-	std::cout << "start = " << start.getIdentifier() << std::endl;
-	std::cout << "goal = " << goal.getIdentifier() << std::endl;
+	//std::cout << "start = " << start.getIdentifier() << std::endl;
+	//std::cout << "goal = " << goal.getIdentifier() << std::endl;
 	while (true)
 	{
 		
@@ -98,7 +98,7 @@ std::pair<std::vector<Junction>, std::vector<int>> Map::aStar(std::vector<Juncti
 	int fValue;
 	std::pair<std::vector<Junction>, std::vector<int>> solution;
 	if (path[path.size() - 1].getIdentifier() == goal.getIdentifier()) {
-		std::cout << "found" << std::endl;
+		//std::cout << "found" << std::endl;
 		exits.push_back(exitPoint);
 		std::reverse(exits.begin(), exits.end());
 		return std::make_pair(path, exits);
