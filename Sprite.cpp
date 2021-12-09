@@ -233,7 +233,7 @@ void Sprite::Init(Shader& shader, float colour[3], std::string filename)
 	glBindVertexArray(0);
 }
 
-void Sprite::Render(Shader& shader, glm::mat4& ModelViewMatrix, glm::mat4& ProjectionMatrix, glm::mat4& ModelMatrix)
+void Sprite::Render(Shader& shader, glm::mat4& ModelViewMatrix, glm::mat4& ProjectionMatrix, glm::mat4& ModelMatrix, int hour)
 {
 	//std::cout << this->getHeight() << std::endl;
 	/****UPDATE THE CORNER VALUES BASED ON TRANSFORMATION***/
@@ -269,7 +269,52 @@ void Sprite::Render(Shader& shader, glm::mat4& ModelViewMatrix, glm::mat4& Proje
 	//pass the uniform for the ModelView matrix to the shader
 	glUniformMatrix4fv(glGetUniformLocation(shader.handle(), "ModelViewMatrix"), 1, GL_FALSE, &ModelViewMatrix[0][0]);
 
-	glUniform1f(glGetUniformLocation(shader.handle(), "dayVal"), 0.0);
+	if (hour == 0) {
+		glUniform1f(glGetUniformLocation(shader.handle(), "dayVal"), 0.0);
+
+	}
+	else {
+		glUniform1f(glGetUniformLocation(shader.handle(), "dayVal"), hour/23.0f * 0.75f);
+	}
+	switch (hour)
+	{
+	case 0:
+	case 1:
+	case 2:
+	case 3:
+	case 4:
+	case 23:
+		glUniform1f(glGetUniformLocation(shader.handle(), "dayVal"), 0.75f);
+		break;
+	case 5:
+	case 6:
+	case 21:
+	case 22:
+		glUniform1f(glGetUniformLocation(shader.handle(), "dayVal"), 0.6f);
+		break;
+	case 7:
+	case 8:
+	case 9:
+	case 19:
+	case 20:
+		glUniform1f(glGetUniformLocation(shader.handle(), "dayVal"), 0.4f);
+		break;
+	case 10:
+	case 11:
+	case 17:
+	case 18:
+		glUniform1f(glGetUniformLocation(shader.handle(), "dayVal"), 0.2f);
+		break;
+	case 12:
+	case 13:
+	case 14:
+	case 15:
+	case 16:
+	default:
+		glUniform1f(glGetUniformLocation(shader.handle(), "dayVal"), 0.0f);
+		break;
+	}
+	
 
 	//Draw the object
 	glBindVertexArray(m_vaoID);		// select first VAO
