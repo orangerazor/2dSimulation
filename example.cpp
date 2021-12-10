@@ -466,11 +466,12 @@ void display()
 					carInBox.first = cars[i];
 					carInBox.second = i;
 					filledSpawns.at(k).push_back(carInBox);
-					//cout << "Inside the box is " << i << endl;
+					cout << "Inside the box is " << i << endl;
 				}
 			}
 			int indexOfBestCar = 0;
 			float bestDist = INT_MAX;
+			//cout << "Number of cars in spawn " << k << " = " << filledSpawns.at(k).size() << endl;
 			for (int i = 0; i < filledSpawns.at(k).size(); i++) {
 				// Check which car is closer to the centre of the junction and keep that car
 				Car next = filledSpawns.at(k).at(i).first;
@@ -483,14 +484,18 @@ void display()
 				}
 			}
 			for (int i = 0; i < filledSpawns.at(k).size(); i++) {
+				//cout << filledSpawns.at(k).size() << endl;
 				Car next = filledSpawns.at(k).at(i).first;
 				int index = filledSpawns.at(k).at(i).second;
 				if (index != indexOfBestCar) {
+					cout << "nextCar position = " << next.GetXPos() << ", " << next.GetYPos() << endl;
 					buffer.at(k).push_back(next);
+					cout << "DELETE" << endl;
 					cars.erase(cars.begin() + index);
 				}
 			}
 		}
+		//cout << "\n";
 	}
 
 	for (int i = 0; i < cars.size(); i++) {
