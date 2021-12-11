@@ -524,7 +524,7 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 					//Car is coming other way but turning right so give way to it
 					if (otherCarX <= junction->getXRightSquare() && otherCarX >= junction->getXLeftSquare() && otherCarY <= junction->getYTopSquare() && otherCarY >= junction->GetYPos()) {
 						//Don't go past the line
-						if ((junction->getXRightSquare() - m_xpos) < (m_Width * 4 / 3)) {
+						if ((junction->getXRightSquare() - m_xpos) < (-m_Width * 4 / 3)) {
 							//std::cout << "Avoiding right turn other side of road" << std::endl;
 							speed = 0;
 						}
