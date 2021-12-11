@@ -1040,12 +1040,12 @@ void processKeys()
 		ypos -= 1000 / fps;
 	}
 	if (zoomIn) {
-		zoom += 0.01;
+		zoom += 0.001;
 		reshape(screenWidth, screenHeight);
 	}
 	if (zoomOut) {
 		if (zoom > 0) {
-			zoom -= 0.01;
+			zoom -= 0.001;
 			reshape(screenWidth, screenHeight);
 		}
 	}
