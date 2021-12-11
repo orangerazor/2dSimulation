@@ -494,7 +494,7 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 					// Car in box
 					if (otherCarX <= junction->getXRightSquare() && otherCarX >= junction->getXLeftSquare() && otherCarY <= junction->getYTopSquare() && otherCarY >= junction->GetYPos()) {
 						//Check distance
-						if (inFrontOrBehindX < m_Width * 3) {
+						if (inFrontOrBehindX < m_Width * 3 && m_ypos > junction->getYTopSquare()) {
 							//std::cout << "Avoiding right turn in front" << std::endl;
 							speed = 0;
 						}
@@ -517,7 +517,7 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 					// Car in box
 					if (otherCarX <= junction->getXRightSquare() && otherCarX >= junction->getXLeftSquare() && otherCarY <= junction->GetYPos() && otherCarY >= junction->getYBotSquare()) {
 						//Check distance
-						if (inFrontOrBehindX > -m_Width * 3) {
+						if (inFrontOrBehindX > -m_Width * 3 && m_ypos > junction->getYBotSquare()) {
 							//std::cout << "Avoiding right turn in front" << std::endl;
 							speed = 0;
 						}
@@ -540,7 +540,7 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 					// Car in box
 					if (otherCarX <= junction->getXRightSquare() && otherCarX >= junction->GetXPos() && otherCarY <= junction->getYTopSquare() && otherCarY >= junction->getYBotSquare()) {
 						//Check distance
-						if (inFrontOrBehindY > -m_Width * 3) {
+						if (inFrontOrBehindY > -m_Width * 3 && m_xpos < junction->getXLeftSquare()) {
 							//std::cout << "Avoiding right turn in front" << std::endl;
 							speed = 0;
 						}
@@ -563,7 +563,7 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 					// Car in box
 					if (otherCarX <= junction->GetXPos() && otherCarX >= junction->getXLeftSquare() && otherCarY <= junction->getYTopSquare() && otherCarY >= junction->getYBotSquare()) {
 						//Check distance
-						if (inFrontOrBehindY < m_Width * 3) {
+						if (inFrontOrBehindY < m_Width * 3 && m_xpos > junction->getXRightSquare()) {
 							//std::cout << "Avoiding right turn in front" << std::endl;
 							speed = 0;
 						}
@@ -571,7 +571,7 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 					//Car is coming other way but turning right so give way to it
 					if (otherCarX <= junction->getXRightSquare() && otherCarX >= junction->GetXPos() && otherCarY <= junction->getYTopSquare() && otherCarY >= junction->getYBotSquare()) {
 						//Don't go past the line
-						if ((junction->getYTopSquare() - m_ypos) < (m_Width * 4 / 3) && m_ypos + (m_Width / 2) < junction->getYBotSquare()) {
+						if ((junction->getYBotSquare() - m_ypos) < (m_Width * 4 / 3) && m_ypos + (m_Width / 2) < junction->getYBotSquare()) {
 							//std::cout << "Avoiding right turn other side of road" << std::endl;
 							speed = 0;
 						}
@@ -1266,11 +1266,11 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 			glm::vec3 target = glm::vec3(-1.0, 0.0, 0.0);
 			float area = (forVec2.x * target.y) - (target.x * forVec2.y);
 			if (area < -0){// && abs(m_ypos - junction->getYBotSquare()) > 4) {
-				std::cout << "Correction" << std::endl;
+				//std::cout << "Correction" << std::endl;
 				angle -= 0.6/fps;
 			}
 			if (area > 0) {// && abs(m_ypos - junction->GetYPos()) > 4) {
-				std::cout << "Correction" << std::endl;
+				//std::cout << "Correction" << std::endl;
 				angle += 0.6 / fps;
 			}
 		}
@@ -1280,11 +1280,11 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 			glm::vec3 target = glm::vec3(1.0, 0.0, 0.0);
 			float area = (forVec2.x * target.y) - (target.x * forVec2.y);
 			if (area < -0) {// && abs(m_ypos - junction->getYTopSquare()) > 4) {
-				std::cout << "Correction" << std::endl;
+				//std::cout << "Correction" << std::endl;
 				angle -= 0.6 / fps;
 			}
 			if (area > 0) {// && abs(m_ypos - junction->GetYPos()) > 4) {
-				std::cout << "Correction" << std::endl;
+				//std::cout << "Correction" << std::endl;
 				angle += 0.6 / fps;
 			}
 		}
@@ -1294,11 +1294,11 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 			glm::vec3 target = glm::vec3(0.0, 1.0, 0.0);
 			float area = (forVec2.x * target.y) - (target.x * forVec2.y);
 			if (area < -0) {// && abs(m_xpos - junction->getXLeftSquare()) > 4) {
-				std::cout << "Correction" << std::endl;
+				//std::cout << "Correction" << std::endl;
 				angle -= 0.6 / fps;
 			}
 			if (area > 0) {// && abs(m_xpos - junction->GetXPos()) > 4) {
-				std::cout << "Correction" << std::endl;
+				//std::cout << "Correction" << std::endl;
 				angle += 0.6 / fps;
 			}
 		}
@@ -1308,11 +1308,11 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 			glm::vec3 target = glm::vec3(0.0, -1.0, 0.0);
 			float area = (forVec2.x * target.y) - (target.x * forVec2.y);
 			if (area < -0) {// && abs(m_xpos - junction->getXRightSquare()) > 4) {
-				std::cout << "Correction" << std::endl;
+				//std::cout << "Correction" << std::endl;
 				angle -= 0.6 / fps;
 			}
 			if (area > 0) {// && abs(m_xpos - junction->GetXPos()) > 4) {
-				std::cout << "Correction" << std::endl;
+				//std::cout << "Correction" << std::endl;
 				angle += 0.6 / fps;
 			}
 		}
