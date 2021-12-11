@@ -480,7 +480,7 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 		if (collideCheck[i].IsInCollision(collide)) {
 			//std::cout << "index of collision = " << m_xpos << ", " << m_ypos << std::endl;
 			//std::cout << "Index of other car = " << collideCheck[i].GetXPos() << ", " << collideCheck[i].GetYPos() << std::endl;
-			if (m_xpos < junction->getXRightSquare() && m_xpos > junction->getXLeftSquare() && m_ypos < junction->getYTopSquare() && m_ypos > junction->getYBotSquare()) {
+			if (m_xpos < junction->getXRightSquare() && m_xpos > junction->getXLeftSquare() && m_ypos < junction->getYTopSquare() && m_ypos > junction->getYBotSquare() && junction->getType() == RoadType::X) {
 				std::cout << "Obb = (" << collideCheck[i].obb.vert[0].x << ", " << collideCheck[i].obb.vert[0].y << ") (" << collideCheck[i].obb.vert[1].x << ", " << collideCheck[i].obb.vert[1].y << ") (" << collideCheck[i].obb.vert[2].x << ", "
 					<< collideCheck[i].obb.vert[2].y << ") (" << collideCheck[i].obb.vert[3].x << ", " << collideCheck[i].obb.vert[3].y << ")" << std::endl;
 
