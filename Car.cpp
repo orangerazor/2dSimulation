@@ -184,6 +184,7 @@ int Car::decideDirection(int entryPoint) {
 	}
 	else {
 		exitPoint = path[path.size()-1];
+		exitTurning = exitPoint;
 		path.pop_back();
 	}
 	
