@@ -20,6 +20,7 @@ private:
 	Junction* junction;
 	std::string previousJunction;
 	std::vector<int> path;
+	int uniqueIdentifier;
 
 	bool currentlyRendered = false;
 
@@ -105,4 +106,14 @@ public:
 	inline std::vector<int> getPath() {
 		return this->path;
 	}
+
+	inline int getUniqueIdentifier() {
+		return this->uniqueIdentifier;
+	}
+
+	inline void setUniqueIdentifier(int uniqueIdentifier) {
+		this->uniqueIdentifier = uniqueIdentifier;
+	}
+
+
 };
