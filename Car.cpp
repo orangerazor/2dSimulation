@@ -184,6 +184,7 @@ int Car::decideDirection(int entryPoint) {
 	}
 	else {
 		exitPoint = path[path.size()-1];
+		exitTurning = exitPoint;
 		path.pop_back();
 	}
 	
@@ -1108,155 +1109,155 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 	//float perpDistHorizontal = (junction->GetYPos() - m_ypos) / perp.y;
 	//float perpDistVertical = (junction->GetXPos() - m_xpos) / perp.x;
 
-	if (m_xpos <= junction->getXRightSquare() && m_xpos >= junction->getXLeftSquare() &&
-		m_ypos <= junction->getYTopSquare() && m_ypos >= junction->getYBotSquare()
-		) {
+	//if (m_xpos <= junction->getXRightSquare() && m_xpos >= junction->getXLeftSquare() &&
+	//	m_ypos <= junction->getYTopSquare() && m_ypos >= junction->getYBotSquare()
+	//	) {
 
-	}
-	else {
-		//Left
-		if (m_xpos < junction->getXLeftSquare()) {
-			float tValCentre = (junction->GetXPos() - m_xpos) / forVec2.x;
-			//Facing centre
-			if (tValCentre > 0) {
-				if (abs(m_ypos - junction->getYTopSquare()) < 4 && speed > 0.01) {
-					angle -= 0.2 / fps;
-				}
-				if (abs(m_ypos - junction->GetYPos()) < 4 && speed > 0.01) {
-					angle += 0.2 / fps;
-				}
-				//if (abs(perpDistTop) < 4) {
-				//	//std::cout << "Moving to avoid top line to side" << std::endl;
-				//	angle -= 2.4 / fps;
-				//}
-				//if (abs(perpDistHorizontal) < 4) {
-				//	//std::cout << "Moving to avoid middle horizontal line to side" << std::endl;
-				//	angle += 2.4 / fps;
-				//}
-			}
-			else {
-				if (abs(m_ypos - junction->getYBotSquare()) < 4 && speed > 0.01) {
-					angle -= 0.2 / fps;
-				}
-				if (abs(m_ypos - junction->GetYPos()) < 4 && speed > 0.01) {
-					angle += 0.2 / fps;
-				}
-				//if (abs(perpDistBot) < 4) {
-				//	//std::cout << "Moving to avoid bot line to side" << std::endl;
-				//	angle -= 2.4 / fps;
-				//}
-				//if (abs(perpDistHorizontal) < 4) {
-				//	//std::cout << "Moving to avoid middle horizontal line to side" << std::endl;
-				//	angle += 2.4 / fps;
-				//}
-			}
-		}
-		//Right
-		if (m_xpos > junction->getXRightSquare()) {
-			float tValCentre = (junction->GetXPos() - m_xpos) / forVec2.x;
-			if (tValCentre > 0) {
-				if (abs(m_ypos - junction->GetYPos()) < 4 && speed > 0.01) {
-					angle += 0.2 / fps;
-				}
-				if (abs(m_ypos - junction->getYBotSquare()) < 4 && speed > 0.01) {
-					angle -= 0.2 / fps;
-				}
-				//if (abs(perpDistBot) < 4) {
-				//	//std::cout << "Moving to avoid bot line to side" << std::endl;
-				//	angle += 2.4 / fps;
-				//}
-				//if (abs(perpDistHorizontal) < 4) {
-				//	//std::cout << "Moving to avoid middle horizontal line to side" << std::endl;
-				//	angle -= 2.4 / fps;
-				//}
-			}
-			else {
-				if (abs(m_ypos - junction->GetYPos()) < 4 && speed > 0.01) {
-					angle += 0.2 / fps;
-				}
-				if (abs(m_ypos - junction->getYTopSquare()) < 4 && speed > 0.01) {
-					angle -= 0.2 / fps;
-				}
-				//if (abs(perpDistTop) < 4) {
-				//	angle += 2.4 / fps;
-				//}
-				//if (abs(perpDistHorizontal) < 4) {
-				//	angle -= 2.4 / fps;
-				//}
-			}
-		}
-		//Top
-		if (m_ypos > junction->getYTopSquare()) {
-			float tValCentre = (junction->GetYPos() - m_ypos) / forVec2.y;
-			if (tValCentre > 0) {
-				if (abs(m_xpos - junction->getXRightSquare()) < 4 && speed > 0.01) {
-					angle -= 0.2 / fps;
-				}
-				if (abs(m_xpos - junction->GetXPos()) < 4 && speed > 0.01) {
-					angle += 0.2 / fps;
-				}
-				//if (abs(perpDistRight) < 4) {
-				//	//std::cout << "Moving to avoid right line to side" << std::endl;
-				//	angle += 2.4 / fps;
-				//}
-				//if (abs(perpDistVertical) < 4) {
-				//	//std::cout << "Moving to avoid middle vertical line to side" << std::endl;
-				//	angle -= 2.4 / fps;
-				//}
-			}
-			else {
-				if (abs(m_xpos - junction->GetXPos()) < 4 && speed > 0.01) {
-					angle += 0.2 / fps;
-				}
-				if (abs(m_xpos - junction->getXLeftSquare()) < 4 && speed > 0.01) {
-					angle -= 0.2 / fps;
-				}
-				//if (abs(perpDistLeft) < 4) {
-				//	angle += 2.4 / fps;
-				//}
-				//if (abs(perpDistVertical) < 4) {
-				//	angle -= 2.4 / fps;
-				//}
-			}
-		}
-		//Bottom
-		if (m_ypos < junction->getYBotSquare()) {
-			float tValCentre = (junction->GetYPos() - m_ypos) / forVec2.y;
-			//std::cout << "Perp dist Right = " << abs(perpDistRight) << " Perp dist vertical = " << abs(perpDistVertical) << std::endl;
-			if (tValCentre > 0) {
-				if (abs(m_xpos - junction->getXLeftSquare()) < 4 && speed > 0.01) {
-					angle -= 0.2 / fps;
-				}
-				if (abs(m_xpos - junction->GetXPos()) < 4 && speed > 0.01) {
-					angle += 0.2 / fps;
-				}
-				//if (abs(perpDistLeft) < 4) {
-				//	//std::cout << "Moving to avoid left line to side" << std::endl;
-				//	angle += 2.4 / fps;
-				//}
-				//if (abs(perpDistVertical) < 4) {
-				//	//std::cout << "Moving to avoid middle vertical line to side" << std::endl;
-				//	angle -= 2.4 / fps;
-				//}
-			}
-			else {
-				if (abs(m_xpos - junction->getXRightSquare()) < 4 && speed > 0.01) {
-					angle -= 0.2 / fps;
-				}
-				if (abs(m_xpos - junction->GetXPos()) < 4 && speed > 0.01) {
-					angle += 0.2 / fps;
-				}
-				//if (abs(perpDistRight) < 4) {
-				//	std::cout << "Moving to avoid right line to side" << std::endl;
-				//	angle -= 2.4 / fps;
-				//}
-				//if (abs(perpDistVertical) < 4) {
-				//	std::cout << "Moving to avoid middle vertical line to side" << std::endl;
-				//	angle += 2.4 / fps;
-				//}
-			}
-		}
-	}
+	//}
+	//else {
+	//	//Left
+	//	if (m_xpos < junction->getXLeftSquare()) {
+	//		float tValCentre = (junction->GetXPos() - m_xpos) / forVec2.x;
+	//		//Facing centre
+	//		if (tValCentre > 0) {
+	//			if (abs(m_ypos - junction->getYTopSquare()) < 4 && speed > 0.01) {
+	//				angle -= 0.2 / fps;
+	//			}
+	//			if (abs(m_ypos - junction->GetYPos()) < 4 && speed > 0.01) {
+	//				angle += 0.2 / fps;
+	//			}
+	//			//if (abs(perpDistTop) < 4) {
+	//			//	//std::cout << "Moving to avoid top line to side" << std::endl;
+	//			//	angle -= 2.4 / fps;
+	//			//}
+	//			//if (abs(perpDistHorizontal) < 4) {
+	//			//	//std::cout << "Moving to avoid middle horizontal line to side" << std::endl;
+	//			//	angle += 2.4 / fps;
+	//			//}
+	//		}
+	//		else {
+	//			if (abs(m_ypos - junction->getYBotSquare()) < 4 && speed > 0.01) {
+	//				angle -= 0.2 / fps;
+	//			}
+	//			if (abs(m_ypos - junction->GetYPos()) < 4 && speed > 0.01) {
+	//				angle += 0.2 / fps;
+	//			}
+	//			//if (abs(perpDistBot) < 4) {
+	//			//	//std::cout << "Moving to avoid bot line to side" << std::endl;
+	//			//	angle -= 2.4 / fps;
+	//			//}
+	//			//if (abs(perpDistHorizontal) < 4) {
+	//			//	//std::cout << "Moving to avoid middle horizontal line to side" << std::endl;
+	//			//	angle += 2.4 / fps;
+	//			//}
+	//		}
+	//	}
+	//	//Right
+	//	if (m_xpos > junction->getXRightSquare()) {
+	//		float tValCentre = (junction->GetXPos() - m_xpos) / forVec2.x;
+	//		if (tValCentre > 0) {
+	//			if (abs(m_ypos - junction->GetYPos()) < 4 && speed > 0.01) {
+	//				angle += 0.2 / fps;
+	//			}
+	//			if (abs(m_ypos - junction->getYBotSquare()) < 4 && speed > 0.01) {
+	//				angle -= 0.2 / fps;
+	//			}
+	//			//if (abs(perpDistBot) < 4) {
+	//			//	//std::cout << "Moving to avoid bot line to side" << std::endl;
+	//			//	angle += 2.4 / fps;
+	//			//}
+	//			//if (abs(perpDistHorizontal) < 4) {
+	//			//	//std::cout << "Moving to avoid middle horizontal line to side" << std::endl;
+	//			//	angle -= 2.4 / fps;
+	//			//}
+	//		}
+	//		else {
+	//			if (abs(m_ypos - junction->GetYPos()) < 4 && speed > 0.01) {
+	//				angle += 0.2 / fps;
+	//			}
+	//			if (abs(m_ypos - junction->getYTopSquare()) < 4 && speed > 0.01) {
+	//				angle -= 0.2 / fps;
+	//			}
+	//			//if (abs(perpDistTop) < 4) {
+	//			//	angle += 2.4 / fps;
+	//			//}
+	//			//if (abs(perpDistHorizontal) < 4) {
+	//			//	angle -= 2.4 / fps;
+	//			//}
+	//		}
+	//	}
+	//	//Top
+	//	if (m_ypos > junction->getYTopSquare()) {
+	//		float tValCentre = (junction->GetYPos() - m_ypos) / forVec2.y;
+	//		if (tValCentre > 0) {
+	//			if (abs(m_xpos - junction->getXRightSquare()) < 4 && speed > 0.01) {
+	//				angle -= 0.2 / fps;
+	//			}
+	//			if (abs(m_xpos - junction->GetXPos()) < 4 && speed > 0.01) {
+	//				angle += 0.2 / fps;
+	//			}
+	//			//if (abs(perpDistRight) < 4) {
+	//			//	//std::cout << "Moving to avoid right line to side" << std::endl;
+	//			//	angle += 2.4 / fps;
+	//			//}
+	//			//if (abs(perpDistVertical) < 4) {
+	//			//	//std::cout << "Moving to avoid middle vertical line to side" << std::endl;
+	//			//	angle -= 2.4 / fps;
+	//			//}
+	//		}
+	//		else {
+	//			if (abs(m_xpos - junction->GetXPos()) < 4 && speed > 0.01) {
+	//				angle += 0.2 / fps;
+	//			}
+	//			if (abs(m_xpos - junction->getXLeftSquare()) < 4 && speed > 0.01) {
+	//				angle -= 0.2 / fps;
+	//			}
+	//			//if (abs(perpDistLeft) < 4) {
+	//			//	angle += 2.4 / fps;
+	//			//}
+	//			//if (abs(perpDistVertical) < 4) {
+	//			//	angle -= 2.4 / fps;
+	//			//}
+	//		}
+	//	}
+	//	//Bottom
+	//	if (m_ypos < junction->getYBotSquare()) {
+	//		float tValCentre = (junction->GetYPos() - m_ypos) / forVec2.y;
+	//		//std::cout << "Perp dist Right = " << abs(perpDistRight) << " Perp dist vertical = " << abs(perpDistVertical) << std::endl;
+	//		if (tValCentre > 0) {
+	//			if (abs(m_xpos - junction->getXLeftSquare()) < 4 && speed > 0.01) {
+	//				angle -= 0.2 / fps;
+	//			}
+	//			if (abs(m_xpos - junction->GetXPos()) < 4 && speed > 0.01) {
+	//				angle += 0.2 / fps;
+	//			}
+	//			//if (abs(perpDistLeft) < 4) {
+	//			//	//std::cout << "Moving to avoid left line to side" << std::endl;
+	//			//	angle += 2.4 / fps;
+	//			//}
+	//			//if (abs(perpDistVertical) < 4) {
+	//			//	//std::cout << "Moving to avoid middle vertical line to side" << std::endl;
+	//			//	angle -= 2.4 / fps;
+	//			//}
+	//		}
+	//		else {
+	//			if (abs(m_xpos - junction->getXRightSquare()) < 4 && speed > 0.01) {
+	//				angle -= 0.2 / fps;
+	//			}
+	//			if (abs(m_xpos - junction->GetXPos()) < 4 && speed > 0.01) {
+	//				angle += 0.2 / fps;
+	//			}
+	//			//if (abs(perpDistRight) < 4) {
+	//			//	std::cout << "Moving to avoid right line to side" << std::endl;
+	//			//	angle -= 2.4 / fps;
+	//			//}
+	//			//if (abs(perpDistVertical) < 4) {
+	//			//	std::cout << "Moving to avoid middle vertical line to side" << std::endl;
+	//			//	angle += 2.4 / fps;
+	//			//}
+	//		}
+	//	}
+	//}
 
 	// Use on left test to determine if the car has turned correctly and correct angle
 	switch (exitTurning) {
@@ -1264,10 +1265,12 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 		if (m_xpos <= (*junction).getXLeftSquare() && speed != 0.0) {
 			glm::vec3 target = glm::vec3(-1.0, 0.0, 0.0);
 			float area = (forVec2.x * target.y) - (target.x * forVec2.y);
-			if (area < -0.2 && abs(m_ypos - junction->getYBotSquare()) > 4) {
+			if (area < -0){// && abs(m_ypos - junction->getYBotSquare()) > 4) {
+				std::cout << "Correction" << std::endl;
 				angle -= 0.6/fps;
 			}
-			if (area > 0.2 && abs(m_ypos - junction->GetYPos()) > 4) {
+			if (area > 0) {// && abs(m_ypos - junction->GetYPos()) > 4) {
+				std::cout << "Correction" << std::endl;
 				angle += 0.6 / fps;
 			}
 		}
@@ -1276,10 +1279,12 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 		if (m_xpos >= (*junction).getXRightSquare() && speed != 0) {
 			glm::vec3 target = glm::vec3(1.0, 0.0, 0.0);
 			float area = (forVec2.x * target.y) - (target.x * forVec2.y);
-			if (area < -0.2 && abs(m_ypos - junction->getYTopSquare()) > 4) {
+			if (area < -0) {// && abs(m_ypos - junction->getYTopSquare()) > 4) {
+				std::cout << "Correction" << std::endl;
 				angle -= 0.6 / fps;
 			}
-			if (area > 0.2 && abs(m_ypos - junction->GetYPos()) > 4) {
+			if (area > 0) {// && abs(m_ypos - junction->GetYPos()) > 4) {
+				std::cout << "Correction" << std::endl;
 				angle += 0.6 / fps;
 			}
 		}
@@ -1288,10 +1293,12 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 		if (m_ypos >= (*junction).getYTopSquare() && speed != 0.0) {
 			glm::vec3 target = glm::vec3(0.0, 1.0, 0.0);
 			float area = (forVec2.x * target.y) - (target.x * forVec2.y);
-			if (area < -0.2 && abs(m_xpos - junction->getXLeftSquare()) > 4) {
+			if (area < -0) {// && abs(m_xpos - junction->getXLeftSquare()) > 4) {
+				std::cout << "Correction" << std::endl;
 				angle -= 0.6 / fps;
 			}
-			if (area > 0.2 && abs(m_xpos - junction->GetXPos()) > 4) {
+			if (area > 0) {// && abs(m_xpos - junction->GetXPos()) > 4) {
+				std::cout << "Correction" << std::endl;
 				angle += 0.6 / fps;
 			}
 		}
@@ -1300,10 +1307,12 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 		if (m_ypos <= (*junction).getYBotSquare() && speed != 0.0) {
 			glm::vec3 target = glm::vec3(0.0, -1.0, 0.0);
 			float area = (forVec2.x * target.y) - (target.x * forVec2.y);
-			if (area < -0.2 && abs(m_xpos - junction->getXRightSquare()) > 4) {
+			if (area < -0) {// && abs(m_xpos - junction->getXRightSquare()) > 4) {
+				std::cout << "Correction" << std::endl;
 				angle -= 0.6 / fps;
 			}
-			if (area > 0.2 && abs(m_xpos - junction->GetXPos()) > 4) {
+			if (area > 0) {// && abs(m_xpos - junction->GetXPos()) > 4) {
+				std::cout << "Correction" << std::endl;
 				angle += 0.6 / fps;
 			}
 		}
