@@ -111,6 +111,7 @@ void readjustScreen(int x, int y, int width, int height) {
 void display()
 
 {
+
 	ModelViewMatrix = glm::mat4(1.0f);
 	ModelMatrix = glm::mat4(1.0f);
 
@@ -398,9 +399,9 @@ void display()
 				switch (entryPointBox) {
 				case 0:
 					boxCheck.vert[0].x = current->GetXPos() - (current->getWidth() / 2);
-					boxCheck.vert[0].y = current->getYBotSquare();
+					boxCheck.vert[0].y = current->GetYPos();
 					boxCheck.vert[1].x = current->getRightInner();
-					boxCheck.vert[1].y = current->getYBotSquare();
+					boxCheck.vert[1].y = current->GetYPos();
 					boxCheck.vert[2].x = current->getRightInner();
 					boxCheck.vert[2].y = current->getYTopSquare();
 					boxCheck.vert[3].x = current->GetXPos() - (current->getWidth() / 2);
@@ -412,26 +413,26 @@ void display()
 					boxCheck.vert[1].x = current->getLeftInner();
 					boxCheck.vert[1].y = current->getYBotSquare();
 					boxCheck.vert[2].x = current->getLeftInner();
-					boxCheck.vert[2].y = current->getYTopSquare();
+					boxCheck.vert[2].y = current->GetYPos();
 					boxCheck.vert[3].x = current->GetXPos() + (current->getWidth() / 2);
-					boxCheck.vert[3].y = current->getYTopSquare();
+					boxCheck.vert[3].y = current->GetYPos();
 					break;
 				case 2:
-					boxCheck.vert[0].x = current->getXLeftSquare();
+					boxCheck.vert[0].x = current->GetXPos();
 					boxCheck.vert[0].y = current->getBotInner();
 					boxCheck.vert[1].x = current->getXRightSquare();
 					boxCheck.vert[1].y = current->getBotInner();
 					boxCheck.vert[2].x = current->getXRightSquare();
 					boxCheck.vert[2].y = current->GetYPos() + (current->getHeight() / 2);
-					boxCheck.vert[3].x = current->getXLeftSquare();
+					boxCheck.vert[3].x = current->GetXPos();
 					boxCheck.vert[3].y = current->GetYPos() + (current->getHeight() / 2);
 					break;
 				case 3:
 					boxCheck.vert[0].x = current->getXLeftSquare();
 					boxCheck.vert[0].y = current->GetYPos() - (current->getHeight() / 2);
-					boxCheck.vert[1].x = current->getXRightSquare();
+					boxCheck.vert[1].x = current->GetXPos();
 					boxCheck.vert[1].y = current->GetYPos() - (current->getHeight() / 2);
-					boxCheck.vert[2].x = current->getXRightSquare();
+					boxCheck.vert[2].x = current->GetXPos();
 					boxCheck.vert[2].y = current->getTopInner();
 					boxCheck.vert[3].x = current->getXLeftSquare();
 					boxCheck.vert[3].y = current->getTopInner();
