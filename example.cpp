@@ -55,6 +55,7 @@ float zoom = 0.25;
 float xpos = 0;
 float ypos = 0;
 int mapSelect = 1;
+int carUniqueIdentifier = 0;
 
 
 Shader shader;
@@ -190,8 +191,16 @@ void display()
 				}
 				
 				toSpawn.setIdentifier(cars.size());
+				toSpawn.setUniqueIdentifier(carUniqueIdentifier);
+				carUniqueIdentifier++;
 				toSpawn.setJunction(&emptyJunction);
 				cars.push_back(toSpawn);
+				/*std::cout << "car size = " << cars.size() << std::endl;
+				for (int i = 0; i < cars.size(); i++) {
+					std::cout << "I = " << i << std::endl;
+					std::cout << "x = " << cars[i].GetXPos() << ", y = " << cars[i].GetYPos() << std::endl;
+				}
+				std::cout << "\n\n";*/
 			}
 		}
 		break;
@@ -208,6 +217,8 @@ void display()
 			if (cars.size() < 200) {
 				Car toSpawn = Car(basicCar);
 				toSpawn.setIdentifier(cars.size());
+				toSpawn.setUniqueIdentifier(carUniqueIdentifier);
+				carUniqueIdentifier++;
 				toSpawn.setJunction(&emptyJunction);
 				cars.push_back(toSpawn);
 			}
@@ -225,16 +236,19 @@ void display()
 			if (cars.size() < 75) {
 				Car toSpawn = Car(basicCar);
 				toSpawn.setIdentifier(cars.size());
+				toSpawn.setUniqueIdentifier(carUniqueIdentifier);
+				carUniqueIdentifier++;
 				toSpawn.setJunction(&emptyJunction);
 				cars.push_back(toSpawn);
 			}
 		}
 		break;
 	case 100:
-
 		if (cars.size() < 1) {
 			Car toSpawn = Car(basicCar);
 			toSpawn.setIdentifier(cars.size());
+			toSpawn.setUniqueIdentifier(carUniqueIdentifier);
+			carUniqueIdentifier++;
 			toSpawn.setJunction(&emptyJunction);
 			cars.push_back(toSpawn);
 		}
@@ -244,31 +258,13 @@ void display()
 			if (cars.size() < 75) {
 				Car toSpawn = Car(basicCar);
 				toSpawn.setIdentifier(cars.size());
+				toSpawn.setUniqueIdentifier(carUniqueIdentifier);
+				carUniqueIdentifier++;
 				toSpawn.setJunction(&emptyJunction);
 				cars.push_back(toSpawn);
 			}
 		}
 	}
-		if (secondElapsed >= 1000000) {
-			if (cars.size() < 1) {
-				Car toSpawn = Car(glm::mat4(1.0f));
-				toSpawn.SetWidth(scale * (500 / 264.0f));
-				toSpawn.SetHeight(scale);
-				toSpawn.setIdentifier(cars.size());
-				toSpawn.setJunction(&emptyJunction);
-				float red[3] = { 1,0,0 };
-				toSpawn.Init(shader, red, "textures/car.png");
-				//toSpawn.setJunction(mapClass.getMapJunction(1, 0));
-				//toSpawn.respawn((mapClass.getMapJunction(1, 0)));
-				//std::pair<int, int> spawnJunctionIndex = mapClass.getSpawns()[rand() % mapClass.getSpawns().size()];
-				//toSpawn.setJunction((mapClass.getMapJunction(spawnJunctionIndex.first, spawnJunctionIndex.second)));
-				//toSpawn.respawn(toSpawn.getJunction(), toSpawn.getJunction()->getSpawnable().second);
-				cars.push_back(toSpawn);
-			}
-		}
-	//}
-//noCar:
-//	cout;
 	if (secondElapsed >= 1000000) {
 		for (int i = 0; i < mapClass.getMap().size(); i++) {
 			for (int j = 0; j < mapClass.getMap()[i].size(); j++) {
@@ -321,7 +317,6 @@ void display()
 			}
 		}
 	}
-
 	//works out if each car is colliding with a junction, else it respawns it
 	for (int i = 0; i < cars.size(); i++) {
 		for (int j = 0; j < mapClass.getMap().size(); j++) {
@@ -333,19 +328,10 @@ void display()
 				if (cars[i].IsInCollision(mapClass.getMapJunction(j, k)->GetOBB())) {					
 					if (cars[i].getJunction() != mapClass.getMapJunction(j, k) && mapClass.getMapJunction(j, k)->getIdentifier() != cars[i].getPreviousJunction()) {
 						if (mapClass.getMapJunction(j, k)->getType() != RoadType::N) {
-							//cout << "previous1 = " << cars[i].getPreviousJunction() << endl;
-							//cout << cars[i].getJunction()->getIdentifier() << endl;
 							cars[i].setPreviousJunction(cars[i].getJunction()->getIdentifier());
-							//cout << "previous2 = " << cars[i].getPreviousJunction() << endl;
 							cars[i].setJunction((mapClass.getMapJunction(j, k)));
 							cars[i].getJunction()->setIdentifier(mapClass.getMapJunction(j, k)->getIdentifier());
 							cars[i].entryPoint();
-							//std::cout << "entry = " << cars[i].getEntryTurning() << std::endl;
-							//std::cout << "current junction = " << cars[i].getJunction()->getType() << std::endl;
-							//int entry = cars[i].entryPoint();
-							//cars[i].decideDirection(entry);
-							//cars[i].decideDirection(entry);
-
 						}
 						else {
 							goto respawn;
@@ -375,13 +361,13 @@ void display()
 		}
 		
 	end:
-		//cars[i].entryPoint();
 		continue;
 	}
 
 	int numSpawns = mapClass.getSpawns().size();
 	vector<vector<pair<Car, int>>> filledSpawns;
 	filledSpawns.resize(numSpawns);
+	
 	//vector<int> alreadyChecked;
 	//alreadyChecked.resize(cars.size());
 	//cout << "Num spawns = " << numSpawns << endl;

@@ -30,6 +30,7 @@ Car::Car(Car* old)
 	forVec = objectRotation * glm::vec4(forVec, 1.0f);
 	junction = &Junction();
 	path = {};
+	this->uniqueIdentifier = 0;
 }
 
 Car::Car(glm::mat4 rotation) {
@@ -41,6 +42,7 @@ Car::Car(glm::mat4 rotation) {
 	forVec = objectRotation * glm::vec4(forVec, 1.0f);
 	junction = &Junction();
 	path = {};
+	this->uniqueIdentifier = 0;
 
 
 
@@ -471,8 +473,10 @@ int Car::setSpawn(int entry)
 
 glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std::vector<Car> collideCheck)
 {
+	int same = 0;
 	for (int i = 0; i < collideCheck.size(); i++) {
-		if (collideCheck[i] == this) {
+		if (collideCheck[i].getUniqueIdentifier() == this->getUniqueIdentifier()) {
+			same++;
 			continue;
 		}
 		if (collideCheck[i].IsInCollision(collide)) {
@@ -581,6 +585,7 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 			break;
 		}
 	}
+	std::cout << "same =  " << same << "\n\n";
 	
 	glm::vec3 forVec2 = forVec;
 	glm::mat4 matrix = glm::rotate(glm::mat4(1.0f), angle, glm::vec3(0.0f, 0.0f, 1.0f));
