@@ -179,7 +179,7 @@ void display()
 	case 23:
 		//1000000
 		if (secondElapsed >= 1000000) {
-			if (cars.size() < 10) {
+			if (cars.size() < 100) {
 				Car toSpawn = Car::Car(glm::mat4(1.0f));
 				if (cars.empty()) {
 					toSpawn = Car(pathfindingCar);
@@ -446,7 +446,7 @@ void display()
 				//cout << "Vert 1 x = " << boxCheck.vert[1].x << ", Y = " << boxCheck.vert[1].y << endl;
 				//cout << "Vert 2 x = " << boxCheck.vert[2].x << ", Y = " << boxCheck.vert[2].y << endl;
 				//cout << "Vert 3 x = " << boxCheck.vert[3].x << ", Y = " << boxCheck.vert[3].y << endl;
-				
+
 
 				//if (i == 2) {
 					//cout << "Vert 0 x = " << cars[i].GetOBB().vert[0].x << ", Y = " << cars[i].GetOBB().vert[0].y << endl;
@@ -469,28 +469,44 @@ void display()
 					//cout << "Inside the box is " << i << endl;
 				}
 			}
+		}
 			int indexOfBestCar = 0;
 			float bestDist = INT_MAX;
-			for (int i = 0; i < filledSpawns.at(k).size(); i++) {
+			//cout << "Number of cars in spawn " << k << " = " << filledSpawns.at(k).size() << endl;
+			for (int l = 0; l < filledSpawns.at(k).size(); l++) {
 				// Check which car is closer to the centre of the junction and keep that car
-				Car next = filledSpawns.at(k).at(i).first;
+				Car next = filledSpawns.at(k).at(l).first;
 				Junction* current = next.getJunction();
 				float distX = (next.GetXPos() - current->GetXPos()) * (next.GetXPos() - current->GetXPos());
 				float distY = (next.GetYPos() - current->GetYPos()) * (next.GetYPos() - current->GetYPos());
 				if (distX + distY < bestDist) {
 					bestDist = distX + distY;
-					indexOfBestCar = filledSpawns.at(k).at(i).second;
+					indexOfBestCar = filledSpawns.at(k).at(l).second;
 				}
 			}
-			for (int i = 0; i < filledSpawns.at(k).size(); i++) {
-				Car next = filledSpawns.at(k).at(i).first;
-				int index = filledSpawns.at(k).at(i).second;
+			vector<int> deletedCars;
+			//cout << k << endl;
+			for (int l = 0; l < filledSpawns.at(k).size(); l++) {
+				Car next = filledSpawns.at(k).at(l).first;
+				int index = filledSpawns.at(k).at(l).second;
 				if (index != indexOfBestCar) {
-					buffer.at(k).push_back(next);
+					// Correct the index if other cars have been deleted
+					for (int j = 0; j < deletedCars.size(); j++) {
+						//cout << "Correction" << endl;
+						if (deletedCars[j] < index) {
+							index--;
+						}
+					}
+					//cout << "nextCar position = " << next.GetXPos() << ", " << next.GetYPos() << endl;
+					//cout << "Car position in car list = " << cars[index].GetXPos() << ", " << cars[index].GetYPos() << endl;
+					//cout << "Car index = " << index << endl;
+					//buffer.at(k).push_back(next);
+					//cout << "DELETE" << endl;
 					cars.erase(cars.begin() + index);
+					deletedCars.push_back(index);
 				}
 			}
-		}
+		//cout << "\n";
 	}
 
 	for (int i = 0; i < cars.size(); i++) {
@@ -705,14 +721,14 @@ void init()
 	//mapClass.getMapJunction(0, 1)->setOrientation(0, &basicTrafficLight);
 	//mapClass.getMapJunction(0, 1)->setSpawnable(true, { 2 });
 
-	mapClass.addJunction(Junction::Junction(&road, &basicTrafficLight), 1, 0);
-	mapClass.getMapJunction(1, 0)->setOrientation(1, &basicTrafficLight);
-	mapClass.getMapJunction(1, 0)->setSpawnable(true, { 0 });
-	mapClass.addJunction(Junction::Junction(&xJunction, &basicTrafficLight), 1, 1);
-	mapClass.getMapJunction(1, 1)->setOrientation(2, &basicTrafficLight);
-	mapClass.addJunction(Junction::Junction(&road, &basicTrafficLight), 1, 2);
-	mapClass.getMapJunction(1, 2)->setOrientation(1, &basicTrafficLight);
-	mapClass.getMapJunction(1, 2)->setSpawnable(true, { 1 });
+	//mapClass.addJunction(Junction::Junction(&road, &basicTrafficLight), 1, 0);
+	//mapClass.getMapJunction(1, 0)->setOrientation(1, &basicTrafficLight);
+	//mapClass.getMapJunction(1, 0)->setSpawnable(true, { 0 });
+	//mapClass.addJunction(Junction::Junction(&xJunction, &basicTrafficLight), 1, 1);
+	//mapClass.getMapJunction(1, 1)->setOrientation(2, &basicTrafficLight);
+	//mapClass.addJunction(Junction::Junction(&road, &basicTrafficLight), 1, 2);
+	//mapClass.getMapJunction(1, 2)->setOrientation(1, &basicTrafficLight);
+	//mapClass.getMapJunction(1, 2)->setSpawnable(true, { 1 });
 
 	//mapClass.addJunction(Junction::Junction(&road, &basicTrafficLight), 2, 1);
 	//mapClass.getMapJunction(2, 1)->setOrientation(0, &basicTrafficLight);
