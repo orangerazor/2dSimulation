@@ -1107,6 +1107,7 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 
 	//float perpDistHorizontal = (junction->GetYPos() - m_ypos) / perp.y;
 	//float perpDistVertical = (junction->GetXPos() - m_xpos) / perp.x;
+
 	if (m_xpos <= junction->getXRightSquare() && m_xpos >= junction->getXLeftSquare() &&
 		m_ypos <= junction->getYTopSquare() && m_ypos >= junction->getYBotSquare()
 		) {

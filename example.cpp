@@ -492,16 +492,16 @@ void display()
 				if (index != indexOfBestCar) {
 					// Correct the index if other cars have been deleted
 					for (int j = 0; j < deletedCars.size(); j++) {
-						cout << "Correction" << endl;
+						//cout << "Correction" << endl;
 						if (deletedCars[j] < index) {
 							index--;
 						}
 					}
-					cout << "nextCar position = " << next.GetXPos() << ", " << next.GetYPos() << endl;
-					cout << "Car position in car list = " << cars[index].GetXPos() << ", " << cars[index].GetYPos() << endl;
-					cout << "Car index = " << index << endl;
+					//cout << "nextCar position = " << next.GetXPos() << ", " << next.GetYPos() << endl;
+					//cout << "Car position in car list = " << cars[index].GetXPos() << ", " << cars[index].GetYPos() << endl;
+					//cout << "Car index = " << index << endl;
 					//buffer.at(k).push_back(next);
-					cout << "DELETE" << endl;
+					//cout << "DELETE" << endl;
 					cars.erase(cars.begin() + index);
 					deletedCars.push_back(index);
 				}
