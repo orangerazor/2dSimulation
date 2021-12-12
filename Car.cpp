@@ -1282,6 +1282,11 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 	//	}
 	//}
 
+	//Update forVec2 with the rotation for turning applied to it so that it is correct for on left test
+	forVec2 = forVec;
+	matrix = glm::rotate(glm::mat4(1.0f), angle, glm::vec3(0.0f, 0.0f, 1.0f));
+	forVec2 = matrix * glm::vec4(forVec, 1.0f);
+
 	// Use on left test to determine if the car has turned correctly and correct angle
 	switch (exitTurning) {
 	case(0):
@@ -1341,6 +1346,11 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 		}
 		break;
 	}
+
+	//Update forVec2 again for new adjustments
+	forVec2 = forVec;
+	matrix = glm::rotate(glm::mat4(1.0f), angle, glm::vec3(0.0f, 0.0f, 1.0f));
+	forVec2 = matrix * glm::vec4(forVec, 1.0f);
 
 	moving:
 		m_xpos += forVec2.x * speed;
