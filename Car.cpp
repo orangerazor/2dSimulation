@@ -247,7 +247,7 @@ int Car::decideDirection(int entryPoint) {
 	//std::cout << exitPoint << std::endl;
 	exit = exitPoint;
 	if (entryPoint == 3 && exit == 0 && junction->getType() == RoadType::T) {
-		//std::cout << "Well what the fuck are you doing?" << std::endl;
+		std::cout << "Well what the fuck are you doing?" << std::endl;
 	}
 	std::cout << "direction = " << exit << std::endl;
 	direction = exitPoint;
@@ -631,9 +631,7 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 			else {
 				speed = speed;
 			}
-			std::cout << "entry point 0 result = " << m_xpos + (m_Width / 2) - junction->getXLeftSquare() << std::endl;
 			if (m_xpos + (m_Width / 2) >= junction->getXLeftSquare()) {
-				std::cout << "YEET" << std::endl;
 				speed = 12.0f / fps;
 			}
 			//In the box and need to turn correctly
@@ -645,7 +643,7 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 				case 0:
 					break;
 				case 1:
-					if (intersectDistVertical < 0 && intersectDistBot > 0) {
+					if (intersectDistVertical < 0 && m_ypos > junction->getYBotSquare()) {
 						angle -= 2.4 / fps;
 					}
 					break;
@@ -659,9 +657,7 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 			else {
 				speed = speed;
 			}
-			std::cout << "entry point 1 result = " << m_xpos - (m_Width / 2) - junction->getXRightSquare() << std::endl;
 			if (m_xpos - (m_Width / 2) <= junction->getXRightSquare()) {
-				std::cout << "YEET" << std::endl;
 				speed = 12.0f / fps;
 			}
 			//In box so turn
@@ -673,7 +669,7 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 				case 0:
 					break;
 				case 1:
-					if (intersectDistVertical < 0 && intersectDistTop > 0) {
+					if (intersectDistVertical < 0 && m_ypos < junction->getYTopSquare()) {
 						angle -= 2.4 / fps;
 					}
 					break;
@@ -699,7 +695,7 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 				case 0:
 					break;
 				case 1:
-					if (intersectDistHorizontal < 0 && intersectDistLeft > 0) {
+					if (intersectDistHorizontal < 0 && m_xpos > junction->getXLeftSquare()) {
 						angle -= 2.4 / fps;
 					}
 					break;
@@ -724,11 +720,8 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 				case 0:
 					break;
 				case 1:
-					if (entryPoint == 3 && junction->getType() == RoadType::T) {
-						std::cout << "Well what the fuck are you doing?" << std::endl;
-					}
-					if (intersectDistHorizontal < 0 && intersectDistRight > 0) {
-						std::cout << "Are you even fucking listening?" << std::endl;
+					//if (intersectDistHorizontal < 0 && intersectDistRight > 0) {
+					if(intersectDistHorizontal < 0 && m_xpos < junction->getXRightSquare()){
 						angle -= 2.4 / fps;
 					}
 					break;
@@ -738,7 +731,6 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 		}
 		break;
 	case RoadType::X:
-		std::cout << "SCANDEL" << std::endl;
 		switch (entryPoint) {
 		case 0:
 			// If the distance in x from the car is less than the 2/3 width of the car stop unless the lights are green 
@@ -760,7 +752,7 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 				case 0:
 					break;
 				case 1:
-					if (intersectDistVertical < 0 && intersectDistBot > 0) {
+					if (intersectDistVertical < 0 && m_ypos < junction->getYBotSquare()) {
 						angle -= 2.4 / fps;
 					}
 					break;
@@ -786,7 +778,7 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 				case 0:
 					break;
 				case 1:
-					if (intersectDistVertical < 0 && intersectDistTop > 0) {
+					if (intersectDistVertical < 0 && m_ypos < junction->getYTopSquare()) {
 						angle -= 2.4 / fps;
 					}
 					break;
@@ -812,7 +804,7 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 				case 0:
 					break;
 				case 1:
-					if (intersectDistHorizontal < 0 && intersectDistLeft > 0) {
+					if (intersectDistHorizontal < 0 && m_xpos > junction->getXLeftSquare()) {
 						angle -= 2.4 / fps;
 					}
 					break;
@@ -837,7 +829,7 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 				case 0:
 					break;
 				case 1:
-					if (intersectDistHorizontal < 0 && intersectDistRight > 0) {
+					if (intersectDistHorizontal < 0 && m_xpos < junction->getXRightSquare()) {
 						angle -= 2.4 / fps;
 					}
 					break;
