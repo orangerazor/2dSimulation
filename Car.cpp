@@ -628,6 +628,9 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 			else {
 				speed = speed;
 			}
+			if (m_xpos + (m_Width / 2) >= junction->getXRightSquare()) {
+				speed = 12.0 / fps;
+			}
 			//In the box and need to turn correctly
 			if (intersectDistLeft <= 0 && speed > 0.01) {
 				switch (direction) {
@@ -650,6 +653,9 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 			}
 			else {
 				speed = speed;
+			}
+			if (m_xpos - (m_Width / 2) <= junction->getXLeftSquare()) {
+				speed = 12.0 / fps;
 			}
 			//In box so turn
 			if (intersectDistRight <= 0 && speed > 0.01) {
@@ -674,6 +680,9 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 			else {
 				speed = speed;
 			}
+			if (m_ypos - (m_Width / 2) <= junction->getYTopSquare()) {
+				speed = 12.0 / fps;
+			}
 			//In box so turn
 			if (intersectDistTop <= 0 && speed > 0.01) {
 				switch (direction) {
@@ -696,6 +705,9 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 			}
 			else {
 				speed = speed;
+			}
+			if (m_ypos + (m_Width / 2) >= junction->getYBotSquare()) {
+				speed = 12.0 / fps;
 			}
 			if (intersectDistBot <= 0 && speed > 0.01) {
 				switch (direction) {
