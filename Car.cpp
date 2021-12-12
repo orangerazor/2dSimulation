@@ -246,6 +246,9 @@ int Car::decideDirection(int entryPoint) {
 	}
 	//std::cout << exitPoint << std::endl;
 	exit = exitPoint;
+	if (entryPoint == 3 && exit == 0 && junction->getType() == RoadType::T) {
+		//std::cout << "Well what the fuck are you doing?" << std::endl;
+	}
 	std::cout << "direction = " << exit << std::endl;
 	direction = exitPoint;
 	return exitPoint;
@@ -628,8 +631,10 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 			else {
 				speed = speed;
 			}
-			if (m_xpos + (m_Width / 2) >= junction->getXRightSquare()) {
-				speed = 12.0 / fps;
+			std::cout << "entry point 0 result = " << m_xpos + (m_Width / 2) - junction->getXLeftSquare() << std::endl;
+			if (m_xpos + (m_Width / 2) >= junction->getXLeftSquare()) {
+				std::cout << "YEET" << std::endl;
+				speed = 12.0f / fps;
 			}
 			//In the box and need to turn correctly
 			if (intersectDistLeft <= 0 && speed > 0.01) {
@@ -654,8 +659,10 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 			else {
 				speed = speed;
 			}
-			if (m_xpos - (m_Width / 2) <= junction->getXLeftSquare()) {
-				speed = 12.0 / fps;
+			std::cout << "entry point 1 result = " << m_xpos - (m_Width / 2) - junction->getXRightSquare() << std::endl;
+			if (m_xpos - (m_Width / 2) <= junction->getXRightSquare()) {
+				std::cout << "YEET" << std::endl;
+				speed = 12.0f / fps;
 			}
 			//In box so turn
 			if (intersectDistRight <= 0 && speed > 0.01) {
@@ -681,7 +688,7 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 				speed = speed;
 			}
 			if (m_ypos - (m_Width / 2) <= junction->getYTopSquare()) {
-				speed = 12.0 / fps;
+				speed = 12.0f / fps;
 			}
 			//In box so turn
 			if (intersectDistTop <= 0 && speed > 0.01) {
@@ -707,7 +714,7 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 				speed = speed;
 			}
 			if (m_ypos + (m_Width / 2) >= junction->getYBotSquare()) {
-				speed = 12.0 / fps;
+				speed = 12.0f / fps;
 			}
 			if (intersectDistBot <= 0 && speed > 0.01) {
 				switch (direction) {
@@ -717,7 +724,11 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 				case 0:
 					break;
 				case 1:
+					if (entryPoint == 3 && junction->getType() == RoadType::T) {
+						std::cout << "Well what the fuck are you doing?" << std::endl;
+					}
 					if (intersectDistHorizontal < 0 && intersectDistRight > 0) {
+						std::cout << "Are you even fucking listening?" << std::endl;
 						angle -= 2.4 / fps;
 					}
 					break;
@@ -727,6 +738,7 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 		}
 		break;
 	case RoadType::X:
+		std::cout << "SCANDEL" << std::endl;
 		switch (entryPoint) {
 		case 0:
 			// If the distance in x from the car is less than the 2/3 width of the car stop unless the lights are green 
@@ -736,7 +748,7 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 			else {
 				speed = speed;
 			}
-			if (m_xpos + (m_Width / 2) >= junction->getXRightSquare()) {
+			if (m_xpos + (m_Width / 2) >= junction->getXLeftSquare()) {
 				speed = 12.0 / fps;
 			}
 			//In the box and need to turn correctly
@@ -762,7 +774,7 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 			else {
 				speed = speed;
 			}
-			if (m_xpos - (m_Width / 2) <= junction->getXLeftSquare()) {
+			if (m_xpos - (m_Width / 2) <= junction->getXRightSquare()) {
 				speed = 12.0 / fps;
 			}
 			//In box so turn

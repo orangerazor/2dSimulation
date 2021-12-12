@@ -837,6 +837,23 @@ void init()
 		mapClass.getMapJunction(3, 2)->setSpawnable(true, { 3 });
 
 		break;
+	case 4:
+		mapClass = Map::Map(2, 3);
+
+		mapClass.addJunction(Junction::Junction(&road, &basicTrafficLight), 0, 0);
+		mapClass.getMapJunction(0, 0)->setOrientation(1, &basicTrafficLight);
+		mapClass.getMapJunction(0, 0)->setSpawnable(true, { 0 });
+		mapClass.addJunction(Junction::Junction(&tJunction, &basicTrafficLight), 0, 1);
+		mapClass.getMapJunction(0, 1)->setOrientation(0, &basicTrafficLight);
+		mapClass.addJunction(Junction::Junction(&road, &basicTrafficLight), 0, 2);
+		mapClass.getMapJunction(0, 2)->setOrientation(1, &basicTrafficLight);
+		mapClass.getMapJunction(0, 2)->setSpawnable(true, { 1 });
+
+		mapClass.addJunction(Junction::Junction(&road, &basicTrafficLight), 1, 1);
+		mapClass.getMapJunction(1, 1)->setOrientation(0, &basicTrafficLight);
+		mapClass.getMapJunction(1, 1)->setSpawnable(true, { 3 });
+
+		break;
 	case 1:
 	default:
 		mapClass = Map::Map(3, 3);
@@ -967,10 +984,15 @@ void keyboard_down(unsigned char key, int x, int y) {
 		init();
 		break;
 	case('4'):
+		mapSelect = 4;
+		init();
+		break;
+	case('5'):
 		glClearColor((0.0f), (153.0f / 256.0f), (68.0f / 256.0f), (0.0f));
 		cars = {};
 		hour = 100;
 		secondsToHour = 10000000000;
+		break;
 	}
 	
 
