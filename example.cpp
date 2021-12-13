@@ -33,7 +33,7 @@ glm::mat4 ViewMatrix;  // matrix for the modelling and viewing
 glm::mat4 ProjectionMatrix; // matrix for the orthographic projection
 glm::mat4 ModelMatrix;
 glm::mat4 ModelViewMatrix;
-int screenWidth = 720, screenHeight = 720;
+int screenWidth = 1080, screenHeight = 1080;
 
 //booleans to handle when the arrow keys are pressed or released.
 int secondElapsed = 0;
