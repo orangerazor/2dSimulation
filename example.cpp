@@ -1001,6 +1001,7 @@ void keyboard_down(unsigned char key, int x, int y) {
 		glClearColor((0.0f), (153.0f / 256.0f), (68.0f / 256.0f), (0.0f));
 		cars = {};
 		hour = 1000;
+		secondElapsed = 0;
 		secondsToHour = 10000000000.0f;
 		init();
 		break;
@@ -1008,6 +1009,7 @@ void keyboard_down(unsigned char key, int x, int y) {
 		mapSelect = 2;
 		cars = {};
 		hour = 0;
+		secondElapsed = 0;
 		secondsToHour = 10.0f;
 		init();
 		break;
@@ -1015,6 +1017,7 @@ void keyboard_down(unsigned char key, int x, int y) {
 		mapSelect = 3;
 		cars = {};
 		hour = 0;
+		secondElapsed = 0;
 		secondsToHour = 10.0f;
 		init();
 		break;
@@ -1022,6 +1025,7 @@ void keyboard_down(unsigned char key, int x, int y) {
 		mapSelect = 4;
 		cars = {};
 		hour = 0;
+		secondElapsed = 0;
 		secondsToHour = 10.0f;
 		init();
 		break;
@@ -1029,6 +1033,7 @@ void keyboard_down(unsigned char key, int x, int y) {
 		glClearColor((0.0f), (153.0f / 256.0f), (68.0f / 256.0f), (0.0f));
 		cars = {};
 		hour = 100;
+		secondElapsed = 0;
 		secondsToHour = 10000000000;
 		break;
 	case('6'):
@@ -1038,6 +1043,7 @@ void keyboard_down(unsigned char key, int x, int y) {
 		mapSelect = 9;
 		cars = {};
 		hour = 0;
+		secondElapsed = 0;
 		secondsToHour = 10.0f;
 		init();
 		break;
@@ -1162,177 +1168,4 @@ int main(int argc, char **argv)
 
 	return 0;
 }
-
-/*
-CODE DUMP
-
-		Car car(glm::mat4(1.0f));
-		float red[3] = { 1,0,0 };
-		car.SetWidth(scale * (500 / 264.0f));
-		car.SetHeight(scale);
-		car.Init(shader, red, "textures/car.png");
-		car.newSpawn(map[0], 3);
-		cars.push_back(car);
-		speed -= 0.03f;
-		mySquare.IncPos(0.0f, -0.1f);
-		direction = 1;
-
-		Car car(glm::mat4(1.0f));
-		float red[3] = { 1,0,0 };
-		car.SetWidth(scale * (500 / 264.0f));
-		car.SetHeight(scale);
-		car.Init(shader, red, "textures/car.png");
-		car.newSpawn(map[0], 2);
-		cars.push_back(car);
-		speed += 0.03f;
-		mySquare.IncPos(0.0f, 0.1f);
-		mySquare.SetYpos(0.0f);
-		mySquare.SetXpos(0.0f);
-
-		Car car(glm::mat4(1.0f));
-		float red[3] = { 1,0,0 };
-		car.SetWidth(scale * (500 / 264.0f));
-		car.SetHeight(scale);
-		car.Init(shader, red, "textures/car.png");
-		car.newSpawn(map[0], 1);
-		cars.push_back(car);
-		angle -= 0.01f;
-		mySquare.transform(1, 1);
-		mySquare.IncPos(0.1f, 0.0f);
-
-		Car car(glm::mat4(1.0f));
-		float red[3] = { 1,0,0 };
-		car.SetWidth(scale * (500 / 264.0f));
-		car.SetHeight(scale);
-		car.Init(shader, red, "textures/car.png");
-		car.newSpawn(map[0], 0);
-		cars.push_back(car);
-		angle += 0.01f;
-		speed = 0;
-		mySquare.transform(1, 0);
-		mySquare.IncPos(-0.1f, 0.0f);
-
-	mySquare.Init(shader, red, "textures/car.png");
-	car2.Init(shader, red, "textures/car.png");
-	junction.Init(shader, red, "textures/Xjunction.png");
-	std::cout << "size = " << junction.getTrafficLights().size() << std::endl;
-	for (int i = 0; i < 4; i++) {
-		junction.getTrafficLights()[i].SetHeight(scale);
-		junction.getTrafficLights()[i].SetWidth(scale/2);
-		//std::cout << junction.getTrafficLights()[i].getHeight() << std::endl;
-		junction.getTrafficLights()[i].Init(shader, red, "textures/blankTrafficLight.png");
-		junction.getTrafficLights()[i].InitLights(shader, red, "textures/redTrafficLight.png", "textures/rAndATrafficLight.png",
-			"textures/greenTrafficLight.png", "textures/blankTrafficLight.png");
-	}
-	TrafficLight::initTrafficTex();
-
-	junction.SetWidth(15.0f * scale * (2481 / 2481.0f));
-	junction.SetHeight(15.0f * scale);
-	junction.calculateLines();
-
-	left
-	coordinates[0][0] = (*mapClass.getMapJunction(0, 0)).GetOBB().vertOriginal[0].x;
-	coordinates[0][1] = (*mapClass.getMapJunction(0, 0)).GetOBB().vertOriginal[0].y + ((*mapClass.getMapJunction(0, 0)).getHeight()*7/12);
-	coordinates[0][2] = -90.0f;
-	right
-	coordinates[1][0] = (*mapClass.getMapJunction(0, 0)).GetOBB().vertOriginal[0].x+((*mapClass.getMapJunction(0, 0)).getWidth());
-	coordinates[1][1] = (*mapClass.getMapJunction(0, 0)).GetOBB().vertOriginal[0].y + ((*mapClass.getMapJunction(0, 0)).getHeight() * 7 / 12);
-	coordinates[1][2] = -90.0f;
-	top
-	coordinates[2][0] = (*mapClass.getMapJunction(0, 0)).GetOBB().vertOriginal[0].x + ((*mapClass.getMapJunction(0, 0)).getWidth() * 7 / 12);
-	coordinates[2][1] = (*mapClass.getMapJunction(0, 0)).GetOBB().vertOriginal[0].y + ((*mapClass.getMapJunction(0, 0)).getHeight());
-	coordinates[2][2] = 90.0f;
-	bottom
-	coordinates[3][0] = (*mapClass.getMapJunction(0, 0)).GetOBB().vertOriginal[0].x + (((*mapClass.getMapJunction(0, 0)).getWidth() * 5 / 12));
-	coordinates[3][1] = (*mapClass.getMapJunction(0, 0)).GetOBB().vertOriginal[0].y;
-	coordinates[3][2] = 270.0f;
-
-
-					//for (int i = 0; i < cars.size(); i++) {
-				//	Junction currentJunc = *mapClass.getMapJunction(1, 0);
-				//	float carPosX = cars[i].GetXPos();
-				//	float carPosY = cars[i].GetYPos();
-				//	if (
-				//		carPosX <= currentJunc.getLeftInner() &&
-				//		carPosX >= (currentJunc.GetXPos() - (currentJunc.getWidth() * 1/2)) &&
-				//		carPosY <= currentJunc.getYTopSquare() &&
-				//		carPosY >= currentJunc.getYBotSquare() &&
-
-				//		carPosX >= currentJunc.getRightInner() &&
-				//		carPosX <= currentJunc.GetXPos() + (currentJunc.getWidth() * 1/2) &&
-				//		carPosY <= currentJunc.getYTopSquare() &&
-				//		carPosY >= currentJunc.getYBotSquare() &&
-
-				//		carPosY >= currentJunc.getTopInner() &&
-				//		carPosY <= currentJunc.GetYPos() + (currentJunc.getHeight() * 1/2) &&
-				//		carPosX <= currentJunc.getXRightSquare() &&
-				//		carPosX >= currentJunc.getXLeftSquare() &&
-
-				//		carPosY <= currentJunc.getBotInner() &&
-				//		carPosY >= currentJunc.GetYPos() - (currentJunc.getWidth() * 1 / 2) &&
-				//		carPosX <= currentJunc.getXRightSquare() &&
-				//		carPosX >= currentJunc.getXLeftSquare()
-				//		) {
-				//		//cout << "MATRIX DODGE" << endl;
-				//		//goto noCar;
-				//	}
-				//}
-
-					//if (hour > 16 && hour < 18) {
-	//	if (secondElapsed >= 500000) {
-	//		if (cars.size() < 200) {
-	//			Car toSpawn = Car(glm::mat4(1.0f));
-	//			toSpawn.SetWidth(scale * (500 / 264.0f));
-	//			toSpawn.SetHeight(scale);
-	//			toSpawn.setJunction(&emptyJunction);
-	//			toSpawn.setIdentifier(cars.size());
-	//			float red[3] = { 1,0,0 };
-	//			toSpawn.Init(shader, red, "textures/car.png");
-	//			//toSpawn.setJunction(mapClass.getMapJunction(1, 0));
-	//			//toSpawn.respawn((mapClass.getMapJunction(1, 0)));
-	//			cars.push_back(toSpawn);
-	//		}
-	//	}
-	//	break;
-	//case 10:
-	//case 11:
-	//case 12:
-	//case 13:
-	//case 14:
-	//case 19:
-	//case 20:
-	//case 21:
-	//	if (secondElapsed >= 1000000) {
-	//		if (cars.size() < 75) {
-	//			Car toSpawn = Car(glm::mat4(1.0f));
-	//			toSpawn.SetWidth(scale * (500 / 264.0f));
-	//			toSpawn.SetHeight(scale);
-	//			toSpawn.setIdentifier(cars.size());
-	//			float red[3] = { 1,0,0 };
-	//			toSpawn.Init(shader, red, "textures/car.png");
-	//			//toSpawn.setJunction(mapClass.getMapJunction(1, 0));
-	//			//toSpawn.respawn((mapClass.getMapJunction(1, 0)));
-	//			cars.push_back(toSpawn);
-	//		}
-	//	}
-	//	break;
-	//}
-
-	//if (hour > 16 && hour < 18) {
-	//	if (secondElapsed >= 500000) {
-	//		if (cars.size() < 16) {
-	//			Car toSpawn = Car(glm::mat4(1.0f));
-	//			toSpawn.SetWidth(scale * (500 / 264.0f));
-	//			toSpawn.SetHeight(scale);
-	//			toSpawn.setIdentifier(cars.size());
-	//			float red[3] = { 1,0,0 };
-	//			toSpawn.Init(shader, red, "textures/car.png");
-	//			//toSpawn.setJunction(mapClass.getMapJunction(1, 0));
-	//			//toSpawn.respawn((mapClass.getMapJunction(1, 0)));
-	//			cars.push_back(toSpawn);
-	//		}
-	//	}
-	//}
-	//else {
-*/
 
