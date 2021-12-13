@@ -717,7 +717,7 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 			if (intersectDistLeft <= 0 && speed > 0.01) {
 				switch (direction) {
 				case -1:
-					std::cout << "dist = " << intersectDistLeft << std::endl;
+					//std::cout << "dist = " << intersectDistLeft << std::endl;
 					angle += 2.4 / fps;
 					break;
 				case 0:
