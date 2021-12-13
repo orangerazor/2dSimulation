@@ -21,6 +21,10 @@ private:
 	std::string previousJunction;
 	std::vector<int> path;
 	int uniqueIdentifier;
+	int timeWaited;
+	float prevX;
+	float prevY;
+	
 
 	bool currentlyRendered = false;
 
@@ -29,7 +33,7 @@ public:
 	Car();
 	Car(glm::mat4 rotation);
 	glm::mat4 rotate(float speed, int direction, int entryPoint, float fps, std::vector<Car> collideCheck);
-
+	/*void carNewDirection();*/
 	int entryPoint();
 	int decideDirection(int entryPoint);
 	void respawn(Junction *junction, int presetEntry = -1);

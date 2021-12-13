@@ -31,6 +31,7 @@ Car::Car(Car* old)
 	junction = &Junction();
 	path = {};
 	this->uniqueIdentifier = 0;
+	this->timeWaited = 0;
 }
 
 Car::Car(glm::mat4 rotation) {
@@ -43,6 +44,7 @@ Car::Car(glm::mat4 rotation) {
 	junction = &Junction();
 	path = {};
 	this->uniqueIdentifier = 0;
+	this->timeWaited = 0;
 
 
 
@@ -246,10 +248,8 @@ int Car::decideDirection(int entryPoint) {
 	}
 	//std::cout << exitPoint << std::endl;
 	exit = exitPoint;
-	if (entryPoint == 3 && exit == 0 && junction->getType() == RoadType::T) {
-		std::cout << "Well what the fuck are you doing?" << std::endl;
-	}
-	std::cout << "direction = " << exit << std::endl;
+
+	//std::cout << "direction = " << exit << std::endl;
 	direction = exitPoint;
 	return exitPoint;
 }
@@ -257,130 +257,23 @@ int Car::decideDirection(int entryPoint) {
 void Car::respawn(Junction *junction, int presetEntry) {
 	this->junction = junction;
 	//std::cout << "exitTurning = " << exitTurning << std::endl;
-	switch (exitTurning) {
+	
+	int newSpawn = this->setSpawn(presetEntry);
+	switch (newSpawn) {
 	case(0):
-		if (m_xpos <= ((*junction).GetXPos() - ((*junction).getWidth() / 2))) {
-			std::cout << "reset time " << std::endl;
-			std::cout << "0" << std::endl;
-			int newSpawn = this->setSpawn(presetEntry);
-			switch (newSpawn) {
-			case(0):
-				angle -= glm::radians(180.0f);
-				break;
-			case(1):
-				break;
-			case(2):
-				angle -= glm::radians(270.0f);
-				break;
-			case(3):
-				angle -= glm::radians(90.0f);
-				break;
-			}
-			entryTurning = newSpawn;
-		}
+		angle = glm::radians(180.0f);
 		break;
 	case(1):
-		if (m_xpos >= ((*junction).GetXPos() + ((*junction).getWidth() / 2))) {
-			std::cout << "reset time " << std::endl;
-			std::cout << "1" << std::endl;
-			int newSpawn = this->setSpawn(presetEntry);
-			switch (newSpawn) {
-			case(0):
-				break;
-			case(1):
-				angle -= glm::radians(180.0f);
-				break;
-			case(2):
-				angle -= glm::radians(90.0f);
-				break;
-			case(3):
-				angle -= glm::radians(270.0f);
-				break;
-			}
-			entryTurning = newSpawn;
-		}
+		angle = glm::radians(0.0f);
 		break;
 	case(2):
-		if (m_ypos >= ((*junction).GetYPos() + ((*junction).getHeight() / 2))) {
-			std::cout << "reset time " << std::endl;
-			std::cout << "2" << std::endl;
-			int newSpawn = this->setSpawn(presetEntry);
-			switch (newSpawn) {
-			case(0):
-				angle -= glm::radians(90.0f);
-				break;
-			case(1):
-				angle -= glm::radians(270.0f);
-				break;
-			case(2):
-				angle -= glm::radians(180.0f);
-				break;
-			case(3):
-				break;
-			}
-			entryTurning = newSpawn;
-		}
+		angle = glm::radians(90.0f);
 		break;
 	case(3):
-		if (m_ypos <= ((*junction).GetYPos() - ((*junction).getHeight() / 2))) {
-			std::cout << "reset time " << std::endl;
-			std::cout << "3" << std::endl;
-			int newSpawn = this->setSpawn(presetEntry);
-			switch (newSpawn) {
-			case(0):
-				angle -= glm::radians(270.0f);
-				break;
-			case(1):
-				angle -= glm::radians(90.0f);
-				break;
-			case(2):
-				break;
-			case(3):
-				angle -= glm::radians(180.0f);
-				break;
-			}
-			entryTurning = newSpawn;
-		}
+		angle = glm::radians(270.0f);
 		break;
-	default:
-		if (presetEntry == -1) {
-			entryTurning = this->setSpawn(presetEntry);
-			//entryTurning = this->entryPoint();
-			//std::cout << "entryTurning = " << entryTurning << std::endl;
-			//int direction = this->decideDirection(junction, entryTurning);
-			switch (entryTurning) {
-			case(0):
-				angle += glm::radians(180.0f);
-				break;
-			case(1):
-				break;
-			case(2):
-				angle += glm::radians(90.0f);
-				break;
-			case(3):
-				angle += glm::radians(270.0f);
-			}
-			break;
-		}
-		else {
-			entryTurning = this->setSpawn(presetEntry);
-			//entryTurning = this->entryPoint();
-			//int direction = this->decideDirection(junction, entryTurning);
-			switch (entryTurning) {
-			case(0):
-				angle += glm::radians(180.0f);
-				break;
-			case(1):
-				break;
-			case(2):
-				angle += glm::radians(90.0f);
-				break;
-			case(3):
-				angle += glm::radians(270.0f);
-			}
-			
-		}
 	}
+	entryTurning = newSpawn;
 	glm::mat4 spawn = glm::translate(glm::mat4(1.0f), glm::vec3(m_xpos, m_ypos, 0));
 	spawn = glm::rotate(spawn, angle, glm::vec3(0.0, 0.0, 1.0));
 	spawnOBB.transformPoints(spawn);
@@ -484,13 +377,13 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 			//std::cout << "index of collision = " << m_xpos << ", " << m_ypos << std::endl;
 			//std::cout << "Index of other car = " << collideCheck[i].GetXPos() << ", " << collideCheck[i].GetYPos() << std::endl;
 			if (m_xpos < junction->getXRightSquare() && m_xpos > junction->getXLeftSquare() && m_ypos < junction->getYTopSquare() && m_ypos > junction->getYBotSquare() && junction->getType() == RoadType::X) {
-				std::cout << "Obb = (" << collideCheck[i].obb.vert[0].x << ", " << collideCheck[i].obb.vert[0].y << ") (" << collideCheck[i].obb.vert[1].x << ", " << collideCheck[i].obb.vert[1].y << ") (" << collideCheck[i].obb.vert[2].x << ", "
-					<< collideCheck[i].obb.vert[2].y << ") (" << collideCheck[i].obb.vert[3].x << ", " << collideCheck[i].obb.vert[3].y << ")" << std::endl;
+				//std::cout << "Obb = (" << collideCheck[i].obb.vert[0].x << ", " << collideCheck[i].obb.vert[0].y << ") (" << collideCheck[i].obb.vert[1].x << ", " << collideCheck[i].obb.vert[1].y << ") (" << collideCheck[i].obb.vert[2].x << ", "
+				//	<< collideCheck[i].obb.vert[2].y << ") (" << collideCheck[i].obb.vert[3].x << ", " << collideCheck[i].obb.vert[3].y << ")" << std::endl;
 
-				std::cout << "Obb 2 = (" << collide.vert[0].x << ", " << collide.vert[0].y << ") (" << collide.vert[1].x << ", " << collide.vert[1].y << ") (" << collide.vert[2].x << ", "
-					<< collide.vert[2].y << ") (" << collide.vert[3].x << ", " << collide.vert[3].y << ")" << std::endl;
+				//std::cout << "Obb 2 = (" << collide.vert[0].x << ", " << collide.vert[0].y << ") (" << collide.vert[1].x << ", " << collide.vert[1].y << ") (" << collide.vert[2].x << ", "
+				//	<< collide.vert[2].y << ") (" << collide.vert[3].x << ", " << collide.vert[3].y << ")" << std::endl;
 
-				std::cout << "coordinates = (" << m_xpos << ", " << m_ypos << ")\n(" << collideCheck[i].GetXPos() << ", " << collideCheck[i].GetYPos() << ")\n\n";
+				//std::cout << "coordinates = (" << m_xpos << ", " << m_ypos << ")\n(" << collideCheck[i].GetXPos() << ", " << collideCheck[i].GetYPos() << ")\n\n";
 			}
 			speed = 0;
 			goto moving;
@@ -636,6 +529,7 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 			}
 			//In the box and need to turn correctly
 			if (intersectDistLeft <= 0 && speed > 0.01) {
+				
 				switch (direction) {
 				case -1:
 					angle += 2.4 / fps;
@@ -747,6 +641,7 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 			if (intersectDistLeft <= 0 && speed > 0.01) {
 				switch (direction) {
 				case -1:
+					std::cout << "dist = " << intersectDistLeft << std::endl;
 					angle += 2.4 / fps;
 					break;
 				case 0:
@@ -1600,6 +1495,24 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 	//return glm::rotate(transform, angle, glm::vec3(0, 0, 1));
 //return glm::rotate(glm::translate(glm::mat4(1.0f), glm::vec3(-30.10,0.0,0.0)), glm::radians(45.0f), glm::vec3(0.0, 0.0, 1.0));
 }
+
+//void Car::carNewDirection()
+//{
+//	if (prevX == this->m_xpos && prevY == this->m_ypos) {
+//		timeWaited++;
+//	}
+//	else {
+//		timeWaited = 0;
+//		prevX = this->m_xpos;
+//		prevY = this->m_ypos;
+//	}
+//
+//	if (timeWaited == 10) {
+//		std::cout << "shift it \n";
+//		this->direction = -1;
+//		this->path = {};
+//	}
+//}
 
 
 

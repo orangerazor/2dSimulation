@@ -37,7 +37,7 @@ int screenWidth = 720, screenHeight = 720;
 
 //booleans to handle when the arrow keys are pressed or released.
 int secondElapsed = 0;
-float secondsToHour = 1555.0f;
+float secondsToHour = 10.0f;
 int hourElapsed = 0;
 int hour;
 bool Left = false;
@@ -56,6 +56,7 @@ float xpos = 0;
 float ypos = 0;
 int mapSelect = 1;
 int carUniqueIdentifier = 0;
+bool debug = false;
 
 
 Shader shader;
@@ -181,15 +182,9 @@ void display()
 	case 23:
 		//1000000
 		if (secondElapsed >= 1000000) {
-			if (cars.size() < 100) {
+			if (cars.size() < 20) {
 				Car toSpawn = Car::Car(glm::mat4(1.0f));
-				if (cars.empty()) {
-					toSpawn = Car(pathfindingCar);
-				}
-				else {
-					toSpawn = Car(basicCar);
-				}
-				
+				toSpawn = Car(basicCar);
 				toSpawn.setIdentifier(cars.size());
 				toSpawn.setUniqueIdentifier(carUniqueIdentifier);
 				carUniqueIdentifier++;
@@ -233,7 +228,7 @@ void display()
 	case 20:
 	case 21:
 		if (secondElapsed >= 1000000) {
-			if (cars.size() < 75) {
+			if (cars.size() < 100) {
 				Car toSpawn = Car(basicCar);
 				toSpawn.setIdentifier(cars.size());
 				toSpawn.setUniqueIdentifier(carUniqueIdentifier);
@@ -253,6 +248,9 @@ void display()
 			cars.push_back(toSpawn);
 		}
 		break;
+	case 1000:
+		break;
+
 	default:
 		if (secondElapsed >= 1000000) {
 			if (cars.size() < 75) {
@@ -266,6 +264,9 @@ void display()
 		}
 	}
 	if (secondElapsed >= 1000000) {
+		//for (int i = 0; i < cars.size(); i++) {
+		//	cars[i].carNewDirection();
+		//}
 		for (int i = 0; i < mapClass.getMap().size(); i++) {
 			for (int j = 0; j < mapClass.getMap()[i].size(); j++) {
 				if ((*mapClass.getMapJunction(i, j)).getType() == RoadType::X || (*mapClass.getMapJunction(i, j)).getType() == RoadType::T) {
@@ -352,11 +353,13 @@ void display()
 			cars[i].respawn(cars[i].getJunction(), mapClass.getSpawns()[randomSpawn].second);
 			cars[i].setPath(mapClass.pathfinder((*cars[i].getJunction()), mapClass.getSpawns()[randomSpawn].second,
 				* mapClass.getMapJunction(exitJunctionIndex.first, exitJunctionIndex.second), mapClass.getSpawns()[randomExit].second).second);
-			//std::cout << "spawn = " << spawnJunctionIndex.first << ", " << spawnJunctionIndex.second << std::endl;
-			//std::cout << "exit = " << exitJunctionIndex.first << ", " << exitJunctionIndex.second << std::endl;
-			//for (int z = 0; z < cars[i].getPath().size(); z++) {
-			//	std::cout << "z = " << z << ", " << cars[i].getPath()[z] << std::endl;
-			//}
+			if (debug) {
+				std::cout << "spawn = " << spawnJunctionIndex.first << ", " << spawnJunctionIndex.second << std::endl;
+				std::cout << "exit = " << exitJunctionIndex.first << ", " << exitJunctionIndex.second << std::endl;
+				for (int z = 0; z < cars[i].getPath().size(); z++) {
+					std::cout << "z = " << z << ", " << cars[i].getPath()[z] << std::endl;
+				}
+			}
 			cars[i].setPreviousJunction("");
 		}
 		
@@ -809,9 +812,9 @@ void init()
 		mapClass.getMapJunction(1, 0)->setOrientation(1, &basicTrafficLight);
 		mapClass.getMapJunction(1, 0)->setSpawnable(true, { 0 });
 		mapClass.addJunction(Junction::Junction(&xJunction, &basicTrafficLight), 1, 1);
-		mapClass.getMapJunction(1, 1)->setOrientation(2, &basicTrafficLight);
+		mapClass.getMapJunction(1, 1)->setOrientation(0, &basicTrafficLight);
 		mapClass.addJunction(Junction::Junction(&xJunction, &basicTrafficLight), 1, 2);
-		mapClass.getMapJunction(1, 2)->setOrientation(2, &basicTrafficLight);
+		mapClass.getMapJunction(1, 2)->setOrientation(0, &basicTrafficLight);
 		mapClass.addJunction(Junction::Junction(&road, &basicTrafficLight), 1, 3);
 		mapClass.getMapJunction(1, 3)->setOrientation(1, &basicTrafficLight);
 		mapClass.getMapJunction(1, 3)->setSpawnable(true, { 1 });
@@ -821,9 +824,9 @@ void init()
 		mapClass.getMapJunction(2, 0)->setOrientation(1, &basicTrafficLight);
 		mapClass.getMapJunction(2, 0)->setSpawnable(true, { 0 });
 		mapClass.addJunction(Junction::Junction(&xJunction, &basicTrafficLight), 2, 1);
-		mapClass.getMapJunction(2, 1)->setOrientation(2, &basicTrafficLight);
+		mapClass.getMapJunction(2, 1)->setOrientation(0, &basicTrafficLight);
 		mapClass.addJunction(Junction::Junction(&xJunction, &basicTrafficLight), 2, 2);
-		mapClass.getMapJunction(2, 2)->setOrientation(2, &basicTrafficLight);
+		mapClass.getMapJunction(2, 2)->setOrientation(0, &basicTrafficLight);
 		mapClass.addJunction(Junction::Junction(&road, &basicTrafficLight), 2, 3);
 		mapClass.getMapJunction(2, 3)->setOrientation(1, &basicTrafficLight);
 		mapClass.getMapJunction(2, 3)->setSpawnable(true, { 1 });
@@ -854,6 +857,23 @@ void init()
 		mapClass.getMapJunction(1, 1)->setSpawnable(true, { 3 });
 
 		break;
+	case 5:
+		mapClass = Map::Map(3, 3);
+
+		mapClass.addJunction(Junction::Junction(&road, &basicTrafficLight), 0, 0);
+		mapClass.getMapJunction(0, 0)->setOrientation(1, &basicTrafficLight);
+
+		mapClass.addJunction(Junction::Junction(&tJunction, &basicTrafficLight), 0, 2);
+		mapClass.getMapJunction(0, 2)->setOrientation(0, &basicTrafficLight);
+
+		mapClass.addJunction(Junction::Junction(&xJunction, &basicTrafficLight), 2, 0);
+		mapClass.getMapJunction(2, 0)->setOrientation(1, &basicTrafficLight);
+
+		mapClass.addJunction(Junction::Junction(&tJunction, &basicTrafficLight), 2, 2);
+		mapClass.getMapJunction(2, 2)->setOrientation(2, &basicTrafficLight);
+		mapClass.getMapJunction(2, 2)->setSpawnable(true, { 0 });
+		break;
+
 	case 1:
 	default:
 		mapClass = Map::Map(3, 3);
@@ -874,6 +894,8 @@ void init()
 		mapClass.addJunction(Junction::Junction(&road, &basicTrafficLight), 2, 1);
 		mapClass.getMapJunction(2, 1)->setOrientation(0, &basicTrafficLight);
 		mapClass.getMapJunction(2, 1)->setSpawnable(true, { 3 });
+
+		break;
 	}
 
 
@@ -993,7 +1015,20 @@ void keyboard_down(unsigned char key, int x, int y) {
 		hour = 100;
 		secondsToHour = 10000000000;
 		break;
+	case('6'):
+		debug = !debug;
+
+	case('7'):
+		mapSelect = 5;
+		init();
+		glClearColor((0.0f), (153.0f / 256.0f), (68.0f / 256.0f), (0.0f));
+		cars = {};
+		hour = 1000;
+		secondsToHour = 10000000000;
+
 	}
+	
+
 	
 
 
