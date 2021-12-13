@@ -878,6 +878,8 @@ void init()
 		mapClass.addJunction(Junction::Junction(&road, &basicTrafficLight), 3, 2);
 		mapClass.getMapJunction(3, 2)->setOrientation(0, &basicTrafficLight);
 		mapClass.getMapJunction(3, 2)->setSpawnable(true, { 3 });
+
+		break;
 	case 1:
 	default:
 		mapClass = Map::Map(3, 3);
@@ -1031,6 +1033,13 @@ void keyboard_down(unsigned char key, int x, int y) {
 		break;
 	case('6'):
 		debug = !debug;
+		break;
+	case('F'):
+		mapSelect = 9;
+		cars = {};
+		hour = 0;
+		secondsToHour = 10.0f;
+		init();
 		break;
 
 	}
