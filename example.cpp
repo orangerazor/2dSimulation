@@ -1017,6 +1017,7 @@ void keyboard_down(unsigned char key, int x, int y) {
 		break;
 	case('6'):
 		debug = !debug;
+		break;
 
 	case('7'):
 		mapSelect = 5;
@@ -1025,6 +1026,7 @@ void keyboard_down(unsigned char key, int x, int y) {
 		cars = {};
 		hour = 1000;
 		secondsToHour = 10000000000;
+		break;
 
 	}
 	
