@@ -959,12 +959,6 @@ void init()
 	for (int i = 0; i < cars.size(); i++) {
 		cars[i].Init(shader, red, "textures/car.png");
 	}
-	//mapClass.aStar({ *mapClass.getMapJunction(1, 6) }, {}, 1, { *mapClass.getMapJunction(0, 5) }, 3, 7);
-	//std::vector<int> path = mapClass.pathfinder({ *mapClass.getMapJunction(1, 6) }, 1, { *mapClass.getMapJunction(0, 5) }, 2).second;
-	//for (int i = 0; i < path.size(); i++) {
-	//	std::cout << "i = " << i << ", " << path[i] << std::endl;
-	//} 
-	Junction middle = mapClass.getMiddle();
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
