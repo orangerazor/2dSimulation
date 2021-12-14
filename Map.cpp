@@ -1,3 +1,8 @@
+/**
+ * File - Map.cpp
+ * Author - Group 9
+ * Description - An object to handle a vector of junctions
+ */
 #include "Map.h"
 
 Map::Map(int height, int width)
@@ -196,13 +201,7 @@ std::pair<std::vector<Junction>, std::vector<int>> Map::possibleMoves(Junction o
 		}
 		
 	}
-
-	//std::cout << "size = " << potentialNewJunctions.size() << std::endl;
-	//for (int i = 0; i < potentialNewJunctions.size(); i++) {
-	//	std::cout << i << " = " << potentialNewJunctions[i].getIdentifier() << std::endl;
-	//}
 	return std::make_pair(potentialNewJunctions, potentialExits);
-
 }
 
 int Map::fValue(std::vector<Junction> path, Junction goal)
