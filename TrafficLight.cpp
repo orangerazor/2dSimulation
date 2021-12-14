@@ -40,7 +40,7 @@ TrafficLight::TrafficLight() {
     this->lights = { 1,0,0 };
     this->current_phase = 0;
     this->num_of_phases = 4;
-    this->phase_duration = 3;
+    this->phase_duration = 2;
     this->time = 0;
 }
 

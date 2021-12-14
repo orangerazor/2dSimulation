@@ -1,7 +1,8 @@
-//
-// Created by Luke Marden on 06/10/2021.
-//
-
+/**
+ * File - Junction.cpp
+ * Author - Group 9
+ * Description - An object to handle a Junction
+ */
 #include "Junction.h"
 
 Junction::Junction(Junction* oldJ, TrafficLight* oldTL)
@@ -150,10 +151,6 @@ int Junction::getNumberTurnings(){
     return total;
 }
 
-std::string Junction::getName() {
-    return name;
-}
-
 void Junction::trafficLightFlow() {
 
     switch (this->type) {
@@ -167,10 +164,8 @@ void Junction::trafficLightFlow() {
                 
                 trafficLights[2].nextLight();
                 trafficLights[3].nextLight();
-                /*std::cout << trafficLights[0].getLights()[0] << trafficLights[0].getLights()[1] << std::endl;*/
-                if (trafficLights[2].getLights()[0] && !trafficLights[2].getLights()[1] && trafficLights[3].getLights()[0] && !trafficLights[3].getLights()[1] && trafficLights[2].getTimeLeftInState() == 0 && trafficLights[3].getTimeLeftInState() == 0) {
-                    //std::cout << "test"<<std::endl;
-                    //trafficLights[3].nextLight();
+                if (trafficLights[2].getLights()[0] && !trafficLights[2].getLights()[1] && trafficLights[3].getLights()[0] && 
+                    !trafficLights[3].getLights()[1] && trafficLights[2].getTimeLeftInState() == 0 && trafficLights[3].getTimeLeftInState() == 0) {
                     this->state = false;
                 }
                 break;
@@ -179,41 +174,29 @@ void Junction::trafficLightFlow() {
             default:
                 trafficLights[0].nextLight();
                 trafficLights[1].nextLight();
-                /*std::cout << trafficLights[0].getLights()[0] << trafficLights[0].getLights()[1] << std::endl;*/
                 if (trafficLights[0].getLights()[0] && !trafficLights[0].getLights()[1] && trafficLights[0].getLights()[0] && !trafficLights[0].getLights()[1] && trafficLights[0].getTimeLeftInState() == 0 && trafficLights[1].getTimeLeftInState() == 0) {
-
-                    //std::cout << "test"<<std::endl;
-                    //trafficLights[3].nextLight();
                     this->state = false;
                 }
                 break;
             }
-
-            
         }
         else {
             switch (orientation) {
             case(1):
                 trafficLights[1].nextLight();
                 if (trafficLights[1].getLights()[0] && !trafficLights[1].getLights()[1] && trafficLights[1].getTimeLeftInState() == 0) {
-                    //trafficLights[0].nextLight();
-                    //trafficLights[1].nextLight();
                     this->state = true;
                 }
                 break;
             case(2):
                 trafficLights[2].nextLight();
                 if (trafficLights[2].getLights()[0] && !trafficLights[2].getLights()[1] && trafficLights[2].getTimeLeftInState() == 0) {
-                    //trafficLights[0].nextLight();
-                    //trafficLights[1].nextLight();
                     this->state = true;
                 }
                 break;
             case(3):
                 trafficLights[0].nextLight();
                 if (trafficLights[0].getLights()[0] && !trafficLights[0].getLights()[1] && trafficLights[0].getTimeLeftInState() == 0) {
-                    //trafficLights[0].nextLight();
-                    //trafficLights[1].nextLight();
                     this->state = true;
                 }
                 break;
@@ -221,8 +204,6 @@ void Junction::trafficLightFlow() {
             default:
                 trafficLights[3].nextLight();
                 if (trafficLights[3].getLights()[0] && !trafficLights[3].getLights()[1] && trafficLights[3].getTimeLeftInState() == 0) {
-                    //trafficLights[0].nextLight();
-                    //trafficLights[1].nextLight();
                     this->state = true;
                 }
                 break;
@@ -231,24 +212,10 @@ void Junction::trafficLightFlow() {
         }
         break;
     case(RoadType::X):
-        //std::cout << "ident = " << this->identifier << std::endl;
-        //std::cout << "state = " << this->state << std::endl;
-        //std::cout << "tl0 = " << trafficLights[0].getLights()[0] << trafficLights[0].getLights()[1] << trafficLights[0].getLights()[2] << std::endl;
-        //std::cout << "tl0 time left = " << trafficLights[0].getTimeLeftInState() << std::endl;
-        //std::cout << "tl1 = " << trafficLights[1].getLights()[0] << trafficLights[1].getLights()[1] << trafficLights[1].getLights()[2] << std::endl;
-        //std::cout << "tl1 time left = " << trafficLights[1].getTimeLeftInState() << std::endl;
-        //std::cout << "tl2 = " << trafficLights[2].getLights()[0] << trafficLights[2].getLights()[1] << trafficLights[2].getLights()[2] << std::endl;
-        //std::cout << "tl2 time left = " << trafficLights[2].getTimeLeftInState() << std::endl;
-        //std::cout << "tl3 = " << trafficLights[3].getLights()[0] << trafficLights[3].getLights()[1] << trafficLights[3].getLights()[2] << std::endl;
-        //std::cout << "tl3 time left = " << trafficLights[3].getTimeLeftInState() << std::endl;
-        //std::cout << "time = " << trafficLights[0].getTime() << std::endl;
-        
         if (this->state) {
-            
             trafficLights[0].nextLight();
             trafficLights[1].nextLight();
             if (trafficLights[0].getLights()[0] && !trafficLights[0].getLights()[1] && trafficLights[1].getLights()[0] && !trafficLights[1].getLights()[1] && trafficLights[0].getTimeLeftInState() == 0 && trafficLights[1].getTimeLeftInState() == 0) {
-        
                 this->state = false;
             }
         }
@@ -256,7 +223,6 @@ void Junction::trafficLightFlow() {
             trafficLights[2].nextLight();
             trafficLights[3].nextLight();
             if (trafficLights[2].getLights()[0] && !trafficLights[2].getLights()[1] && trafficLights[3].getLights()[0] && !trafficLights[3].getLights()[1] && trafficLights[2].getTimeLeftInState() == 0 && trafficLights[3].getTimeLeftInState() == 0) {
-                
                 this->state = true;
             }
         }
@@ -357,26 +323,3 @@ void Junction::setOrientation(int orientation, TrafficLight* old) {
         }
     }
 }
-
-//bool Junction::operator==(Junction& j)
-//{
-//    if (this->identifier == j.getIdentifier()) {
-//        return true;
-//    }
-//    return false;
-//}
-//
-//bool operator==(Junction& j1, Junction& j2)
-//{
-//    if (j1.getIdentifier() == j2.getIdentifier()) {
-//        return true;
-//    }
-//    return false;
-//}
-
-//int main(){
-//    Junction* testJunction = new Junction("test", true, true, false, true, 60);
-//    std::cout << testJunction->getNumberTurnings();
-//
-//
-//}
