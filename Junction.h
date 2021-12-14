@@ -1,7 +1,8 @@
-//
-// Created by Luke Marden on 06/10/2021.
-//
-
+/**
+ * File - Junction.h
+ * Author - Group 9
+ * Description - An object to handle a Junction
+ */
 #ifndef GROUP9_JUNCTION_H
 #define GROUP9_JUNCTION_H
 #include <functional>
@@ -15,6 +16,9 @@
 #include "Sprite.h"
 #include "TrafficLight.h"
 
+/**
+ * Enum to determine what a junctions type is
+ */
 enum RoadType {
     T,
     X,
@@ -22,18 +26,17 @@ enum RoadType {
     N,
 };
 
-
+/**
+ * Class to handle junctions
+ *
+ */
 class Junction : public Sprite {
 private:
     std::string name;
-    std::array<bool, 4> turnings;
+    std::array<bool, 4> turnings; //left, right, forward, backward
     int speedLimit;
     int orientation;
-    //std::unique_ptr<TrafficLight> pointer;
-    //std::array<pointer, 4> trafficLights;
-    //std::array<TrafficLight, 4> trafficLights;
     TrafficLight* trafficLights = new TrafficLight[4];
-    //std::vector<std::unique_ptr<TrafficLight>> trafficLights;
     glm::vec3 roadStart;
     glm::vec3 roadDirection;
     glm::vec3 joinStart;
@@ -47,7 +50,8 @@ private:
     float ySideCentre;
     float xVerticalCentre;
     std::pair<bool, std::vector<int>> spawnable;
-
+    int xPosition;
+    int yPosition;
     // Respawn boxes
     // Left
     float leftInner;
@@ -61,19 +65,60 @@ private:
     std::string identifier;
 
 public:
-
+    /**
+     * A constructor used to recycle textures of the junction and traffic lights
+     * @param oldj - the old junction
+     * @param oldTL - the old traffic light
+     */
     Junction(Junction* oldJ, TrafficLight* oldTL);
+    /**
+     * A constructor to make an empty junction of non-type
+     */
     Junction();
+    /**
+     * A constructor used to make a new junction
+     * @param name - the initial identifier
+     * @param orientation - the orienation of the junction
+     * @param speedLimit - the speed limit on the junction
+     * @param rotation - the textures rotation
+     * @param type - the type of junction that it is
+     */
     Junction(std::string name, int orientation, int speedLimit, glm::mat4 rotation, RoadType type);
+    /**
+    * a destructor for the junction
+    */
     ~Junction();
+    /**
+    * a method to get the name of the junction
+    * @returns - the name
+    */
     std::string getName();
+    /**
+    * A method to control the traffic lights on a junction based on the orientation and type of the junction 
+    */
     void trafficLightFlow();
+    /**
+    * A method to get the number of turnings possible from a junction
+    * @returns - the number of turnings possible
+    */
     int getNumberTurnings();
+    /**
+    * A method to calculate all the lines within the middle of a junction
+    */
     void calculateLines();
+    /**
+    * A method to check whether a junction is of a non-type
+    * @returns - whether the junction has a type == 'N'
+    */
     bool nullJunction();
+    /**
+    * Sets a new orientation of a junction
+    * @param orientation - the new orientation
+    * @param old - the old traffic light textures
+    */
     void setOrientation(int orientation, TrafficLight *old);
-    int xPosition;
-    int yPosition;
+    
+
 
     inline std::array<bool, 4> getTurnings() {
         return this->turnings;
@@ -137,9 +182,7 @@ public:
     inline RoadType getType() {
         return this->type;
     }
-    //inline std::array<pointer, 4> getTrafficLights() {
-    //    return this->trafficLights;
-    //}
+
     inline std::string getIdentifier(){
         return this->identifier;
     }

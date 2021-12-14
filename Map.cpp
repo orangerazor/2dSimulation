@@ -208,6 +208,6 @@ std::pair<std::vector<Junction>, std::vector<int>> Map::possibleMoves(Junction o
 int Map::fValue(std::vector<Junction> path, Junction goal)
 {
 	int h;
-	h = std::abs(path[path.size() - 1].xPosition - goal.xPosition) + std::abs(path[path.size() - 1].yPosition - goal.yPosition);
+	h = std::abs(path[path.size() - 1].getXPosition() - goal.getXPosition()) + std::abs(path[path.size() - 1].getYPosition() - goal.getYPosition());
 	return path.size()-1+h;
 }
