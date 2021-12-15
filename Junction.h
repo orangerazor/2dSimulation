@@ -32,26 +32,30 @@ enum RoadType {
  */
 class Junction : public Sprite {
 private:
+    //name of a jucntion
     std::string name;
+    //what turnings a car can go down
     std::array<bool, 4> turnings; //left, right, forward, backward
+    //speed limit of a junction
     int speedLimit;
+    //orientation of a junction
     int orientation;
+    //traffic light objects for the turnings
     TrafficLight* trafficLights = new TrafficLight[4];
     glm::vec3 roadStart;
     glm::vec3 roadDirection;
     glm::vec3 joinStart;
     glm::vec3 joinDirection;
+    //the type of the junction
     RoadType type;
+    //which sets of traffic lights to cycle through next
     bool state;
-    float yBotSquare;
-    float yTopSquare;
-    float xLeftSquare;
-    float xRightSquare;
-    float ySideCentre;
-    float xVerticalCentre;
+    //values for lines inside of the junctions middle box
+    float yBotSquare, yTopSquare, xLeftSquare, xRightSquare, ySideCentre, xVerticalCentre;
+    //whether the junction can be spawned on, and the ints that it can spawned on from
     std::pair<bool, std::vector<int>> spawnable;
-    int xPosition;
-    int yPosition;
+    //position in a map
+    int xPosition, yPosition;
     // Respawn boxes
     // Left
     float leftInner;
@@ -61,7 +65,7 @@ private:
     float topInner;
     //Bottom
     float botInner;
-
+    //unique identifier
     std::string identifier;
 
 public:

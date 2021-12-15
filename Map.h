@@ -18,10 +18,15 @@
 */
 class Map : public Sprite {
 private:
+    //width of the map
     int width;
+    //height of the map
     int height;
+    //2d vector of the junctions in a map
     std::vector<std::vector<Junction>> map;
+    //all the spawn points on a map
     std::vector<std::pair<std::pair<int, int>, int>> spawns;
+    //used in pathfinding to find the lowest bound that is higher than the current bound
     std::vector<int> biggerBounds;
 
 public:
