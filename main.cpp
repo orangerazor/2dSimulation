@@ -94,13 +94,14 @@ void reshape(int width, int height)		// Resize the OpenGL window
 
 	glViewport(0, 0, width, height);						// set Viewport dimensions
 
+
+	// Based on whether the screen is long and thin or short and wide adjust the screen whilst maintaining the proportions of the models
 	if (aspect >= 1.0) {
 		ProjectionMatrix = glm::ortho((-25.0f * aspect) / zoom, 25.0f * aspect / zoom, -25.0f / zoom, 25.0f / zoom);
 	}
 	else {
 		ProjectionMatrix = glm::ortho(-25.0f / zoom, 25.0f / zoom, -25.0f / aspect / zoom, 25.0f / aspect / zoom);
 	}
-	//ProjectionMatrix = glm::ortho(-25.0/zoom, 25.0/zoom, -25.0/zoom, 25.0/zoom);
 }
 
 void readjustScreen(int x, int y, int width, int height) {
@@ -377,7 +378,11 @@ void display()
 	//vector<int> alreadyChecked;
 	//alreadyChecked.resize(cars.size());
 	//cout << "Num spawns = " << numSpawns << endl;
+
+	// Collision avoidance
+	// Loop through the number of available spawns, then loop all cars adding all cars inside the spawn box to a list of cars for each spawn
 	for (int k = 0; k < numSpawns; k++) {
+		// OBB on entrance and junction for this spawn
 		OBB boxCheck;
 		for (int i = 0; i < cars.size(); i++) {
 			int carY = cars[i].getJunction()->getYPosition();
@@ -385,9 +390,11 @@ void display()
 			pair<int, int> carIndicies;
 			carIndicies.first = carY;
 			carIndicies.second = carX;
+			// Check that the car being checked is on the junction for this spawn check
 			if (mapClass.getSpawns()[k].first == carIndicies) {
 				Junction* current = mapClass.getMapJunction(carY, carX);
 				int entryPointBox = mapClass.getSpawns()[k].second;
+				// Create the box for the spawn entry
 				switch (entryPointBox) {
 				case 0:
 					boxCheck.vert[0].x = current->GetXPos() - (current->getWidth() / 2);
@@ -430,78 +437,56 @@ void display()
 					boxCheck.vert[3].y = current->getTopInner();
 					break;
 				}
-				//cout << "Vert 0 x = " << cars[i].getSpawnOBB().vert[0].x << ", Y = " << cars[i].getSpawnOBB().vert[0].y << endl;
-				//cout << "Vert 1 x = " << cars[i].getSpawnOBB().vert[1].x << ", Y = " << cars[i].getSpawnOBB().vert[1].y << endl;
-				//cout << "Vert 2 x = " << cars[i].getSpawnOBB().vert[2].x << ", Y = " << cars[i].getSpawnOBB().vert[2].y << endl;
-				//cout << "Vert 3 x = " << cars[i].getSpawnOBB().vert[3].x << ", Y = " << cars[i].getSpawnOBB().vert[3].y << endl;
 
-				//cout << "Vert 0 x = " << boxCheck.vert[0].x << ", Y = " << boxCheck.vert[0].y << endl;
-				//cout << "Vert 1 x = " << boxCheck.vert[1].x << ", Y = " << boxCheck.vert[1].y << endl;
-				//cout << "Vert 2 x = " << boxCheck.vert[2].x << ", Y = " << boxCheck.vert[2].y << endl;
-				//cout << "Vert 3 x = " << boxCheck.vert[3].x << ", Y = " << boxCheck.vert[3].y << endl;
-
-
-				//if (i == 2) {
-					//cout << "Vert 0 x = " << cars[i].GetOBB().vert[0].x << ", Y = " << cars[i].GetOBB().vert[0].y << endl;
-					//cout << "Vert 1 x = " << cars[i].GetOBB().vert[1].x << ", Y = " << cars[i].GetOBB().vert[1].y << endl;
-					//cout << "Vert 2 x = " << cars[i].GetOBB().vert[2].x << ", Y = " << cars[i].GetOBB().vert[2].y << endl;
-					//cout << "Vert 3 x = " << cars[i].GetOBB().vert[3].x << ", Y = " << cars[i].GetOBB().vert[3].y << endl;
-				//}
-
-				//if (cars[i].getSpawnOBB().SAT2D(boxCheck) == 1) {
-				//	cout << "True" << endl;
-				//}
-				//else {
-				//	cout << "False" << endl;
-				//}
+				// If the car is in the box or its temporary spawn OBB add it to a list corresponding the the spawn
 				if (cars[i].IsInCollision(boxCheck) || cars[i].getSpawnOBB().SAT2D(boxCheck)) {
 					pair<Car, int> carInBox;
 					carInBox.first = cars[i];
 					carInBox.second = i;
 					filledSpawns.at(k).push_back(carInBox);
-					//cout << "Inside the box is " << i << endl;
 				}
 			}
 		}
 			int indexOfBestCar = 0;
 			float bestDist = INT_MAX;
-			//cout << "Number of cars in spawn " << k << " = " << filledSpawns.at(k).size() << endl;
+			// Loop through each spawn and the cars there, deciding which is closest to the centre of the junction and keeping that one
 			for (int l = 0; l < filledSpawns.at(k).size(); l++) {
-				// Check which car is closer to the centre of the junction and keep that car
 				Car next = filledSpawns.at(k).at(l).first;
 				Junction* current = next.getJunction();
+				// Distance of current car in loop
 				float distX = (next.GetXPos() - current->GetXPos()) * (next.GetXPos() - current->GetXPos());
 				float distY = (next.GetYPos() - current->GetYPos()) * (next.GetYPos() - current->GetYPos());
+				// If the distance is less than the best, it becomes the best distance and its index is stored
 				if (distX + distY < bestDist) {
 					bestDist = distX + distY;
 					indexOfBestCar = filledSpawns.at(k).at(l).second;
 				}
 			}
+			// List of cars deleted for spawn avoidance
 			vector<int> deletedCars;
-			//cout << k << endl;
+			// Loop through spawn car lists again
 			for (int l = 0; l < filledSpawns.at(k).size(); l++) {
 				Car next = filledSpawns.at(k).at(l).first;
 				int index = filledSpawns.at(k).at(l).second;
+				// If this current car isn't the best one delete it
 				if (index != indexOfBestCar) {
-					// Correct the index if other cars have been deleted
+					// Correct the index if other cars have been deleted because index may have changed
 					for (int j = 0; j < deletedCars.size(); j++) {
-						//cout << "Correction" << endl;
 						if (deletedCars[j] < index) {
 							index--;
 						}
 					}
-					//cout << "nextCar position = " << next.GetXPos() << ", " << next.GetYPos() << endl;
-					//cout << "Car position in car list = " << cars[index].GetXPos() << ", " << cars[index].GetYPos() << endl;
-					//cout << "Car index = " << index << endl;
-					//buffer.at(k).push_back(next);
-					//cout << "DELETE" << endl;
+					// Delete the car and store the index of the deletion to correct later deletion indexes
 					cars.erase(cars.begin() + index);
 					deletedCars.push_back(index);
 				}
 			}
-		//cout << "\n";
 	}
 
+	// Loop through the cars applying all movement calculations to them
+	// 1) Which direction to go
+	// 2) Handling their movement
+	// 3) Rendering them
 	for (int i = 0; i < cars.size(); i++) {
 		int direction = cars[i].decideDirection(cars[i].getEntryTurning());
 		ModelMatrix = cars[i].rotate(12.0f / fps, direction, cars[i].getEntryTurning(), fps, cars);
@@ -509,140 +494,6 @@ void display()
 		cars[i].Render(shader, ModelViewMatrix, ProjectionMatrix, ModelMatrix, 100);
 		cars[i].setCurrentlyRendered(true);
 	}
-
-	//for (int i = 0; i < cars.size(); i++) {
-	//	//cout << "i = " << i << endl;
-	//	//bool avoidDoubleCheck = false;
-	//	//for (int k = 0; k < alreadyChecked.size(); k++) {
-	//	//	if (alreadyChecked.at(k) == i) {
-	//	//		avoidDoubleCheck = true;
-	//	//	}
-	//	//}
-	//	for (int j = 0; j < cars.size(); j++) {
-	//		if (j == i) {
-	//			continue;
-	//		}
-	//		//if (cars[i].IsInCollision(cars[j].getCollide()) && !avoidDoubleCheck) {
-	//			int carY = stoi( cars[i].getJunction()->getIdentifier().substr(0,1) );
-	//			int carX = stoi( cars[i].getJunction()->getIdentifier().substr(1, 1) );
-	//			pair<int, int> carIndicies;
-	//			carIndicies.first = carY;
-	//			carIndicies.second = carX;
-	//			for (int k = 0; k < numSpawns; k++) {
-	//				if (mapClass.getSpawns()[k] == carIndicies) {
-	//					// Determine which car is on the junction already and which one isn't so that the one not on the junction is never spawned rather than the one already spawned despawning
-	//					OBB boxCheck;
-	//					Junction* current = mapClass.getMapJunction(carX, carY);
-	//					int entryPointBox = current->getSpawnable().second;
-	//					switch (entryPointBox) {
-	//					case 0:
-	//						boxCheck.vert[0].x = current->GetXPos() - (current->getWidth() / 2);
-	//						boxCheck.vert[0].y = current->getYBotSquare();
-	//						boxCheck.vert[1].x = current->getRightInner();
-	//						boxCheck.vert[1].y = current->getYBotSquare();
-	//						boxCheck.vert[2].x = current->getRightInner();
-	//						boxCheck.vert[2].y = current->getYTopSquare();
-	//						boxCheck.vert[3].x = current->GetXPos() - (current->getWidth() / 2);
-	//						boxCheck.vert[3].y = current->getYTopSquare();
-	//						break;
-	//					case 1:
-	//						break;
-	//					case 2:
-	//						break;
-	//					case 3:
-	//						break;
-	//					}
-	//					if (cars[i].IsInCollision(boxCheck)) {
-	//						filledSpawns.at(k).push_back(cars[i]);
-	//						cout << "Inside the box is " << i << endl;
-	//					}
-	//					//cout << "Box check vert 0 = " << boxCheck.vert[0].x << ", " << boxCheck.vert[0].y << endl;
-	//					//cout << "Box check vert 1 = " << boxCheck.vert[1].x << ", " << boxCheck.vert[1].y << endl;
-	//					//cout << "Box check vert 2 = " << boxCheck.vert[2].x << ", " << boxCheck.vert[2].y << endl;
-	//					//cout << "Box check vert 3 = " << boxCheck.vert[3].x << ", " << boxCheck.vert[3].y << endl;
-	//					//cout << "Car vertex 0 = " << cars[i].GetOBB().vert[0].x << ", " << cars[i].GetOBB().vert[0].y << endl;
-	//					//cout << "Car vertex 1 = " << cars[i].GetOBB().vert[1].x << ", " << cars[i].GetOBB().vert[1].y << endl;
-	//					//cout << "Car vertex 2 = " << cars[i].GetOBB().vert[2].x << ", " << cars[i].GetOBB().vert[2].y << endl;
-	//					//cout << "Car vertex 3 = " << cars[i].GetOBB().vert[3].x << ", " << cars[i].GetOBB().vert[3].y << endl;
-
-	//					//cout << "i = " << i << " Render status = " << cars[i].getCurrentlyRendered() << endl;
-
-	//						//alreadyChecked.push_back(j);
-	//						//buffer.at(k).push_back(cars[i]);
-	//						//cars.erase(cars.begin() + i);
-	//						//if(!cars[j].IsInCollision(boxCheck)) {
-	//						//	alreadyChecked.push_back(i);
-	//						//	buffer.at(k).push_back(cars[j]);
-	//						//	cars.erase(cars.begin() + j);
-	//						//}
-
-	//						//goto noRenderForYou;
-	//					//}
-	//					//cout << "Outside the box is " << i << endl;
-	//				}
-	//			//}
-	//		}
-	//	}
-	//	for (int k = 0; k < numSpawns; k++) {
-	//		if (!buffer.at(k).empty()) {
-	//			Junction* check = mapClass.getMapJunction(mapClass.getSpawns().at(k).first, mapClass.getSpawns().at(k).second);
-	//			int spawnEntry = check->getSpawnable().second;
-	//			bool freeSpawn = false;
-	//			switch (spawnEntry) {
-	//			case 0:
-	//				if (cars[i].GetXPos() <= check->getLeftInner() && cars[i].GetXPos() >= check->GetXPos() - (check->getWidth() / 2) &&
-	//					cars[i].GetYPos() <= check->getYTopSquare() && cars[i].GetYPos() >= check->getYBotSquare()
-	//					) {
-	//					//filledSpawns.at(k) = true;
-	//				}
-	//				break;
-	//			case 1:
-	//				if (cars[i].GetXPos() >= check->getRightInner() && cars[i].GetXPos() <= check->GetXPos() + (check->getWidth() / 2) &&
-	//					cars[i].GetYPos() <= check->getYTopSquare() && cars[i].GetYPos() >= check->getYBotSquare()
-	//					) {
-	//					//filledSpawns.at(k) = true;
-	//				}
-	//				break;
-	//			case 2:
-	//				if (cars[i].GetYPos() >= check->getTopInner() && cars[i].GetYPos() <= check->GetYPos() + (check->getHeight() / 2) &&
-	//					cars[i].GetXPos() <= check->getXRightSquare() && cars[i].GetXPos() >= check->getXLeftSquare()
-	//					) {
-	//					//filledSpawns.at(k) = true;
-	//				}
-	//				break;
-	//			case 3:
-	//				if (cars[i].GetYPos() <= check->getBotInner() && cars[i].GetYPos() >= check->GetYPos() - (check->getHeight() / 2) &&
-	//					cars[i].GetXPos() <= check->getXRightSquare() && cars[i].GetXPos() >= check->getXLeftSquare()
-	//					) {
-	//					//filledSpawns.at(k) = true;
-	//				}
-	//				break;
-	//			}
-	//		}
-	//	}
-	//	int direction = cars[i].decideDirection(cars[i].getEntryTurning());
-	//	ModelMatrix = cars[i].rotate(12.0f / fps, direction, cars[i].getEntryTurning(), fps, cars);
-	//	ModelViewMatrix = ViewMatrix * ModelMatrix;
-	//	//cout << "i = " << i << endl;
-	//	cars[i].Render(shader, ModelViewMatrix, ProjectionMatrix, ModelMatrix);
-	//	cars[i].setCurrentlyRendered(true);
-	//	goto hopSkipAndAJump;
-	//noRenderForYou:
-	//	//cars[i].SetXpos(INT_MAX);
-	//	//cars[i].SetYpos(INT_MAX);
-	//	//cout << "" << endl;
-	//	continue;
-	//hopSkipAndAJump:
-	//	cout;
-	//}
-	//for (int i = 0; i < numSpawns; i++) {
-	//	//if (filledSpawns.at(i) == false && !buffer.at(i).empty()) {
-	//		//int direction = buffer.at(i).at(0).decideDirection(buffer.at(i).at(0).getEntryTurning());
-	//		//ModelMatrix = buffer.at(i).at(0).rotate(12.0f / fps, direction, cars[i].getEntryTurning(), fps, cars);
-	//		//ModelViewMatrix = ViewMatrix * ModelMatrix;
-	//		//buffer.at(i).at(0).Render(shader, ModelViewMatrix, ProjectionMatrix, ModelMatrix);
-	//	//}
-	//}
 
 	glDisable(GL_BLEND);
 
@@ -655,8 +506,6 @@ void display()
 	secondElapsed += chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
 	hourElapsed += chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
 	fps = 1000000.0f / chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
-	//cout << "fps = " << fps << endl;
-	//cout << "hour = " << hour << endl;
 	//std::this_thread::sleep_for(std::chrono::milliseconds((1000 / fps) - chrono::duration_cast<std::chrono::milliseconds>(end - begin).count()));
 
 }
