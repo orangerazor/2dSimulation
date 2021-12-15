@@ -364,10 +364,6 @@ void display()
 	int numSpawns = mapClass.getSpawns().size();
 	vector<vector<pair<Car, int>>> filledSpawns;
 	filledSpawns.resize(numSpawns);
-	
-	//vector<int> alreadyChecked;
-	//alreadyChecked.resize(cars.size());
-	//cout << "Num spawns = " << numSpawns << endl;
 
 	// Collision avoidance
 	// Loop through the number of available spawns, then loop all cars adding all cars inside the spawn box to a list of cars for each spawn

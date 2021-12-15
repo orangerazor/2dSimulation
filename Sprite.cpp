@@ -243,13 +243,6 @@ void Sprite::Render(Shader& shader, glm::mat4& ModelViewMatrix, glm::mat4& Proje
 		spawnOBB.vert[i].x = 0;
 		spawnOBB.vert[i].y = 0;
 	}
-	//m_xpos = obb.xCentre(ModelViewMatrix);
-	//m_ypos = obb.yCentre(ModelViewMatrix);
-	//glm::vec4 vector = glm::vec4(m_xpos, m_ypos, 0.0f, 1.0f);
-	//vector = ModelViewMatrix * vector;
-	//std::cout << m_xpos << ", " << m_ypos << std::endl;
-	//m_xpos = vector.x;
-	//m_ypos = vector.y;
 	/*******************************************************/
 
 	glUseProgram(shader.handle());  // use the shader
