@@ -31,56 +31,37 @@ Car::Car(Car* old)
 	junction = &Junction();
 	path = {};
 	this->uniqueIdentifier = 0;
-	this->timeWaited = 0;
 }
 
 Car::Car(glm::mat4 rotation) {
 	rayStart = glm::vec3(0, 0, 0);
 	rayDirection = glm::vec3(0, 1, 0);
-	angle = 0;// 1.5708;
+	angle = 0;
 	objectRotation = glm::rotate(glm::mat4(1.0f), -angle, glm::vec3(0,0,1));
 	srand(time(0));
 	forVec = objectRotation * glm::vec4(forVec, 1.0f);
 	junction = &Junction();
 	path = {};
 	this->uniqueIdentifier = 0;
-	this->timeWaited = 0;
-
-
-
-	//// Calculate starting point for the car
-	//float x = model.theBBox.centrePoint.x;
-	//float y = model.theBBox.centrePoint.y;
-	//float z = model.theBBox.centrePoint.z;
-
-	////Calculate direction vector pointing out the front of the car
-	//float zFront = z + 1;
-
-	//// Rotate the points by the rotation matrix
-	//float xRot = (x * rotation[0][0]) + (y * rotation[0][1]) + (z * rotation[0][2]);
-	//float yRot = (x * rotation[1][0]) + (y * rotation[1][1]) + (z * rotation[1][2]);
-	//float zRot = (x * rotation[2][0]) + (y * rotation[2][1]) + (z * rotation[2][2]);
-
-	//float directRotX = (x * rotation[0][0]) + (y * rotation[0][1]) + (zFront * rotation[0][2]);
-	//float directRotY = (x * rotation[1][0]) + (y * rotation[1][1]) + (zFront * rotation[1][2]);
-	//float directRotZ = (x * rotation[2][0]) + (y * rotation[2][1]) + (zFront * rotation[2][2]);
-
-	//rayStart = glm::vec3(xRot, yRot, zRot);
-	//rayDirection = glm::vec3(directRotX, directRotY, directRotZ);
 }
 
 int Car::entryPoint()
 {
-	//std::cout << "Are you ever called deerie?" << std::endl;
-	//convert to use a junction variable
+	// Checks to see if the entry point has already been calculated for this junction
 	if (currentJunction == (*junction).getIdentifier()) {
 		return entryTurning;
 	}
+	// Loop through the 4 possible spawn points of a junction, calculating the distance between the car and these points 
+	// using pythagorus' theorum ( (x1-x2)^2 ) + ( (y1-y2)^2 ) 
+	// and choosing the closest to be set as entry point
 	int entryPoint2 = 0;
 	float bestDist = -1;
 	for (int i = 0; i < 4; i++) {
 		float xVert = INT_MAX;
 		float yVert = INT_MAX;
+		// Get the mid points between two verticies
+		// Look at vertex at i and i + 1
+		// If we want the edge between vertex 3 and 0, use the else stamement
 		if (i < 3) {
 			xVert = ((*junction).GetOBB().vert[i].x + (*junction).GetOBB().vert[i + 1].x) / 2;
 			yVert = ((*junction).GetOBB().vert[i].y + (*junction).GetOBB().vert[i + 1].y) / 2;
@@ -89,10 +70,12 @@ int Car::entryPoint()
 			xVert = ((*junction).GetOBB().vert[i].x + (*junction).GetOBB().vert[0].x) / 2;
 			yVert = ((*junction).GetOBB().vert[i].y + (*junction).GetOBB().vert[0].y) / 2;
 		}
-		//std::cout << xVert << ", " << yVert << std::endl;
+		// Calculate this distance using pythagorus' theorum
 		float distanceFromEdge = ((m_xpos - xVert) * (m_xpos - xVert)) + ((m_ypos - yVert) * (m_ypos - yVert));
+		// If the best distance hasn't been set or the distance for this edge is better than the last, set it to the current distance
 		if (bestDist == -1 || distanceFromEdge < bestDist) {
 			bestDist = distanceFromEdge;
+			// The OBB moves clockwise around the model but our entry indexes are not ordered in this way, so we adjust the entry point to be correct.
 			if (i == 3) {
 				entryPoint2 = 0;
 			}
@@ -105,8 +88,7 @@ int Car::entryPoint()
 		}
 	}
 
-	//std::cout << "entrypoint 1 = " << entryPoint2 << std::endl;
-	//std::cout << "orientation = " << junction->getOrientation() << std::endl;
+	// Depending on the orientation the OBB verticies are moved around the model, this switch statement fixes this by shifting the entry point based on amount rotated
 	switch (junction->getOrientation()) {
 	case 1:
 		switch (entryPoint2) {
@@ -158,22 +140,23 @@ int Car::entryPoint()
 		break;
 	}
 	entryTurning = entryPoint2;
-	//std::cout << "entrypoint 2 = " << entryPoint2 << std::endl;
-	//std::cout << "entry = " << entryPoint2 << std::endl;
 	return entryPoint2;
 }
 
 int Car::decideDirection(int entryPoint) {
 
-	//std::cout << "entryPoint = " << entryPoint << std::endl;
 	int exitPoint;
+	// If the direction has already been set for this junction then return the current decided direction
 	if (currentJunction == this->junction->getIdentifier()) {
 		return exit;
 	}
 	currentJunction = (*junction).getIdentifier();
+	// If a path hasn't already been set
 	if (this->path.empty()) {
+		// Get the number of possible turnings for the cars current junction
 		int numTurns = (*junction).getTurnings().size();
 		std::vector<int> possibleTurnings;
+		// Loop through each turning adding its index to a list
 		for (int i = 0; i < numTurns; i++) {
 			if (i == entryPoint) {
 				continue;
@@ -182,16 +165,20 @@ int Car::decideDirection(int entryPoint) {
 				possibleTurnings.push_back(i);
 			}
 		}
+		// Choose a random index in the list
 		exitPoint = rand() % possibleTurnings.size();
+		// Get the index of the exit at this random index in the list of possible exits
 		exitPoint = possibleTurnings.at(exitPoint);
 		exitTurning = exitPoint;
 	}
+	// If a path is set, get the next exit from the top of the stack and pop
 	else {
 		exitPoint = path[path.size()-1];
 		exitTurning = exitPoint;
 		path.pop_back();
 	}
 	
+	// Based on the entry and exits points, set the direction of the car (-1 for left, 0 for straight, 1 for right)
 	switch (entryPoint) {
 	case(0):
 		switch (exitPoint) {
@@ -246,19 +233,17 @@ int Car::decideDirection(int entryPoint) {
 		}
 		break;
 	}
-	//std::cout << exitPoint << std::endl;
 	exit = exitPoint;
-
-	//std::cout << "direction = " << exit << std::endl;
 	direction = exitPoint;
 	return exitPoint;
 }
 
 void Car::respawn(Junction *junction, int presetEntry) {
-	this->junction = junction;
-	//std::cout << "exitTurning = " << exitTurning << std::endl;
 	
+	this->junction = junction;
+	// Get the index of the new spawn entrance
 	int newSpawn = this->setSpawn(presetEntry);
+	// Rotate the car based on the spawn so it is facing the centre of the junction
 	switch (newSpawn) {
 	case(0):
 		angle = glm::radians(180.0f);
@@ -276,6 +261,7 @@ void Car::respawn(Junction *junction, int presetEntry) {
 	entryTurning = newSpawn;
 	glm::mat4 spawn = glm::translate(glm::mat4(1.0f), glm::vec3(m_xpos, m_ypos, 0));
 	spawn = glm::rotate(spawn, angle, glm::vec3(0.0, 0.0, 1.0));
+	// Sets the temporay OBB that will be reset in render, so we can avoid the cars spawning on top of each other before they are rendered
 	spawnOBB.transformPoints(spawn);
 }
 
@@ -309,6 +295,7 @@ int Car::setSpawn(int entry)
 {
 	setCurrentlyRendered(false);
 	int spawnEntrance;
+	// Loop through the number of possible spawns for a junction adding them to a list
 	int numTurns = (*junction).getTurnings().size();
 	std::vector<int> possibleTurnings;
 	for (int i = 0; i < numTurns; i++) {
@@ -316,6 +303,7 @@ int Car::setSpawn(int entry)
 			possibleTurnings.push_back(i);
 		}
 	}
+	// Adjust the OBB verticies for the orientation as if the model is rotated the expected positions of verticies will change
 	int correctVert = 0;
 	switch (junction->getOrientation()) {
 	case 0:
@@ -333,14 +321,15 @@ int Car::setSpawn(int entry)
 
 	}
 	
+	// If entry has not been set randomly choose a spawn from list, otherwise just pass the preset entry
 	if (entry == -1) {
 		spawnEntrance = rand() % possibleTurnings.size();
 	}
 	else {
 		spawnEntrance = entry;
 	}
-	//std::cout << "entry = " << entry << std::endl;
-	//int turningIndex = possibleTurnings.at(spawnEntrance);
+	// Set the position of the car based on the entry calculated
+	// Uses the uniform distances of the junction to ensure the car is spawned in the correct location
 	switch (entry) {
 	case(0):
 		this->SetXpos((*junction).GetOBB().vert[correctVert].x - (m_Height / 2));
@@ -359,77 +348,77 @@ int Car::setSpawn(int entry)
 		this->SetYpos((*junction).GetOBB().vert[correctVert].y);
 		break;
 	}
+	// Reset the current junction for this car as it has been spawned in a new junction.
 	currentJunction = "";
-	
-	//std::cout << "X coord car centre = " << m_xpos << std::endl;
-	//std::cout << "Y coord car centre = " << m_ypos << std::endl;
-	//std::cout << "Set spawn = " << entry << std::endl;
 	return entry;
 }
 
 glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std::vector<Car> collideCheck)
 {
+	/***********************************************************************/
+	// Check collisions for this car
+
+	// Loop through the list of all other cars
 	for (int i = 0; i < collideCheck.size(); i++) {
+		// If the car being checked is the same as the current car, avoid the collision test
 		if (collideCheck[i].getUniqueIdentifier() == this->getUniqueIdentifier()) {
 			continue;
 		}
+		// Otherwise if the other car is inside the collide box out in front of the this car set the speed to zero and avoid all movement and angle calculations
 		if (collideCheck[i].IsInCollision(collide)) {
-			//std::cout << "index of collision = " << m_xpos << ", " << m_ypos << std::endl;
-			//std::cout << "Index of other car = " << collideCheck[i].GetXPos() << ", " << collideCheck[i].GetYPos() << std::endl;
-			if (m_xpos < junction->getXRightSquare() && m_xpos > junction->getXLeftSquare() && m_ypos < junction->getYTopSquare() && m_ypos > junction->getYBotSquare() && junction->getType() == RoadType::X) {
-				//std::cout << "Obb = (" << collideCheck[i].obb.vert[0].x << ", " << collideCheck[i].obb.vert[0].y << ") (" << collideCheck[i].obb.vert[1].x << ", " << collideCheck[i].obb.vert[1].y << ") (" << collideCheck[i].obb.vert[2].x << ", "
-				//	<< collideCheck[i].obb.vert[2].y << ") (" << collideCheck[i].obb.vert[3].x << ", " << collideCheck[i].obb.vert[3].y << ")" << std::endl;
-
-				//std::cout << "Obb 2 = (" << collide.vert[0].x << ", " << collide.vert[0].y << ") (" << collide.vert[1].x << ", " << collide.vert[1].y << ") (" << collide.vert[2].x << ", "
-				//	<< collide.vert[2].y << ") (" << collide.vert[3].x << ", " << collide.vert[3].y << ")" << std::endl;
-
-				//std::cout << "coordinates = (" << m_xpos << ", " << m_ypos << ")\n(" << collideCheck[i].GetXPos() << ", " << collideCheck[i].GetYPos() << ")\n\n";
-			}
 			speed = 0;
 			goto moving;
 		}
-		//Check to see if car infront is turning right and if so give it space to turn before moving this car and check other lane for right turners and give way to them
-		// Also check if the car in front is moving forwards and if you need to keep out of the box to stop a grid lock
+	/***********************************************************************/
+		// Car keeping the box clear
+
+		// Get the distances in the x and y between this car and the other car
 		float otherCarX = collideCheck[i].GetXPos();
 		float otherCarY = collideCheck[i].GetYPos();
 		float inFrontOrBehindX = otherCarX - m_xpos;
 		float inFrontOrBehindY = otherCarY - m_ypos;
+		// Look at the entry point of this car and check
+		// 1) The direction of the other car
+		// 2) That the other car is inside the box
+		// 3) The distance between this car and the other car in axis parallel to entryPoint (x for left and right, y for top and bottom)
 		switch (entryPoint) {
 		case 0:
-			// Car is in front
+			// Other Car is in front
 			if (inFrontOrBehindX > 0) {
+				// Other Car is moving right
 				if (collideCheck[i].getDirection() == 1) {
-					// Car in box
+					// Other Car is in the box in the same lane as this car
 					if (otherCarX <= junction->getXRightSquare() && otherCarX >= junction->getXLeftSquare() && otherCarY <= junction->getYTopSquare() && otherCarY >= junction->GetYPos()) {
-						//Check distance
+						//If the distance is less than 3 cars and this car isn't exiting the junction (so would be already clear of the box), stop
 						if (inFrontOrBehindX < m_Width * 3 && m_ypos < junction->getYTopSquare()) {
-							//std::cout << "Avoiding right turn in front" << std::endl;
 							speed = 0;
 						}
 					}
-					//Car is coming other way but turning right so give way to it
+					//Other Car is coming other way, in the box and turning right so give way to it
 					if (otherCarX <= junction->getXRightSquare() && otherCarX >= junction->getXLeftSquare() && otherCarY <= junction->GetYPos() && otherCarY >= junction->getYBotSquare()) {
-						//Don't go past the line
+						//Don't go past the line to keep box clear
 						if ((junction->getXLeftSquare() - m_xpos) < (m_Width * 4/3) && m_xpos + (m_Width / 2) < junction->getXLeftSquare()) {
-							//std::cout << "Avoiding right turn other side of road" << std::endl;
 							speed = 0;
 						}
 					}
 				}
-				// Check straight on
+				// Both Cars are going straight and are not on a straight road
+				// Check to see if this car would block junction by moving straight on
 				if (collideCheck[i].getDirection() == 0 && direction == 0 && junction->getType() != RoadType::S) {
-					// Car in box
+					// Other Car is in box and in same lane as this car
 					if (otherCarX <= junction->getXRightSquare() && otherCarX >= junction->getXLeftSquare() && otherCarY >= junction->GetYPos() && otherCarY <= junction->getYTopSquare()) {
-						//Check distance
+						//If the distance is below the width of 4 cars then stop
 						if (inFrontOrBehindX < m_Width * 4) {
 							speed = 0;
 						}
 					}
 				}
 				// Check if a car has turned left in the way of this car so it would block junction
+				// Other car is turning left and this car is either going straight on or right
 				if (collideCheck[i].getDirection() == -1 && direction != -1) {
-					// Car in box
+					// Other Car is in box and in same lane as this car 
 					if (otherCarX <= junction->getXRightSquare() && otherCarX >= junction->getXLeftSquare() && otherCarY <= junction->getYTopSquare() && otherCarY >= junction->GetYPos()) {
+						// If the distance is less than 3 cars then wait
 						if (inFrontOrBehindX < m_Width * 3) {
 							speed = 0;
 						}
@@ -438,41 +427,42 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 			}
 			break;
 		case 1:
-			// Car is in front
+			// Other Car is in front
 			if (inFrontOrBehindX < 0) {
+				// Other Car is moving right
 				if (collideCheck[i].getDirection() == 1) {
-					// Car in box
+					// Other Car is in the box in the same lane as this car
 					if (otherCarX <= junction->getXRightSquare() && otherCarX >= junction->getXLeftSquare() && otherCarY <= junction->GetYPos() && otherCarY >= junction->getYBotSquare()) {
-						//Check distance
+						//If the distance is less than 3 cars and this car isn't exiting the junction (so would be already clear of the box), stop
 						if (inFrontOrBehindX > -m_Width * 3 && m_ypos > junction->getYBotSquare()) {
-							//std::cout << "Avoiding right turn in front" << std::endl;
 							speed = 0;
 						}
 					}
-					//Car is coming other way but turning right so give way to it
+					//Other Car is coming other way, in the box and turning right so give way to it
 					if (otherCarX <= junction->getXRightSquare() && otherCarX >= junction->getXLeftSquare() && otherCarY <= junction->getYTopSquare() && otherCarY >= junction->GetYPos()) {
-						//Don't go past the line
+						//Don't go past the line to keep box clear
 						if ((junction->getXRightSquare() - m_xpos) > (-m_Width * 4 / 3) && m_xpos - (m_Width / 2) > junction->getXRightSquare()) {
-							//std::cout << "Avoiding right turn other side of road" << std::endl;
 							speed = 0;
 						}
 					}
 				}
-				// Check straight on
+				// Both Cars are going straight and are not on a straight road
+				// Check to see if this car would block junction by moving straight on
 				if (collideCheck[i].getDirection() == 0 && direction == 0 && junction->getType() != RoadType::S) {
-					// Car in box
+					// Other Car is in box and in same lane as this car 
 					if (otherCarX <= junction->getXRightSquare() && otherCarX >= junction->getXLeftSquare() && otherCarY >= junction->getYBotSquare() && otherCarY <= junction->GetYPos()) {
-						//Check distance
+						// If the distance is less than 3 cars then wait
 						if (inFrontOrBehindX > -m_Width * 4) {
-							//std::cout << "Avoiding right turn in front" << std::endl;
 							speed = 0;
 						}
 					}
 				}
-				// Check car turning left in the way
+				// Check if a car has turned left in the way of this car so it would block junction
+				// Other car is turning left and this car is either going straight on or right
 				if (collideCheck[i].getDirection() == -1 && direction != -1) {
-					// Car in box & same side of the road
+					// Other Car is in box and in same lane as this car 
 					if (otherCarX <= junction->getXRightSquare() && otherCarX >= junction->getXLeftSquare() && otherCarY >= junction->getYBotSquare() && otherCarY <= junction->GetYPos()) {
+						// If the distance is less than 3 cars then wait
 						if (inFrontOrBehindX > -m_Width * 3) {
 							speed = 0;
 						}
@@ -481,39 +471,42 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 			}
 			break;
 		case 2:
-			// Car is in front
+			// Other Car is in front
 			if (inFrontOrBehindY < 0) {
+				// Other Car is moving right
 				if (collideCheck[i].getDirection() == 1) {
-					// Car in box
+					// Other Car is in the box in the same lane as this car
 					if (otherCarX <= junction->getXRightSquare() && otherCarX >= junction->GetXPos() && otherCarY <= junction->getYTopSquare() && otherCarY >= junction->getYBotSquare()) {
-						//Check distance
+						//If the distance is less than 3 cars and this car isn't exiting the junction (so would be already clear of the box), stop
 						if (inFrontOrBehindY > -m_Width * 3 && m_xpos < junction->getXLeftSquare()) {
-							//std::cout << "Avoiding right turn in front" << std::endl;
 							speed = 0;
 						}
 					}
-					//Car is coming other way but turning right so give way to it
+					//Other Car is coming other way, in the box and turning right so give way to it
 					if (otherCarX <= junction->GetXPos() && otherCarX >= junction->getXLeftSquare() && otherCarY <= junction->getYTopSquare() && otherCarY >= junction->getYBotSquare()) {
-						//Don't go past the line
+						//Don't go past the line to keep box clear
 						if ((junction->getYTopSquare() - m_ypos) > (-m_Width * 4 / 3) && m_ypos - (m_Width / 2) > junction->getYTopSquare()) {
-							//std::cout << "Avoiding right turn other side of road" << std::endl;
 							speed = 0;
 						}
 					}
 				}
+				// Both Cars are going straight and are not on a straight road
+				// Check to see if this car would block junction by moving straight on
 				if (collideCheck[i].getDirection() == 0 && direction == 0 && junction->getType() != RoadType::S) {
+					// Other Car is in box and in same lane as this car 
 					if (otherCarX <= junction->getXRightSquare() && otherCarX >= junction->GetXPos() && otherCarY <= junction->getYTopSquare() && otherCarY >= junction->getYBotSquare()) {
-						//Check distance
+						// If the distance is less than 3 cars then wait
 						if (inFrontOrBehindY > -m_Width * 4) {
-							//std::cout << "Avoiding right turn in front" << std::endl;
 							speed = 0;
 						}
 					}
 				}
-				// Check car turning left in the way
+				// Check if a car has turned left in the way of this car so it would block junction
+				// Other car is turning left and this car is either going straight on or right
 				if (collideCheck[i].getDirection() == -1 && direction != -1) {
-					// Car in box
+					// Other Car is in box and in same lane as this car 
 					if (otherCarX <= junction->getXRightSquare() && otherCarX >= junction->GetXPos() && otherCarY <= junction->getYTopSquare() && otherCarY >= junction->getYBotSquare()) {
+						// If the distance is less than 3 cars then wait
 						if (inFrontOrBehindY > -m_Width * 3) {
 							speed = 0;
 						}
@@ -522,39 +515,42 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 			}
 			break;
 		case 3:
-			// Car is in front
+			// Other Car is in front
 			if (inFrontOrBehindY > 0) {
+				// Other Car is moving right
 				if (collideCheck[i].getDirection() == 1) {
-					// Car in box
+					// Other Car is in the box in the same lane as this car
 					if (otherCarX <= junction->GetXPos() && otherCarX >= junction->getXLeftSquare() && otherCarY <= junction->getYTopSquare() && otherCarY >= junction->getYBotSquare()) {
-						//Check distance
+						//If the distance is less than 3 cars and this car isn't exiting the junction (so would be already clear of the box), stop
 						if (inFrontOrBehindY < m_Width * 3 && m_xpos > junction->getXRightSquare()) {
-							//std::cout << "Avoiding right turn in front" << std::endl;
 							speed = 0;
 						}
 					}
-					//Car is coming other way but turning right so give way to it
+					//Other Car is coming other way, in the box and turning right so give way to it
 					if (otherCarX <= junction->getXRightSquare() && otherCarX >= junction->GetXPos() && otherCarY <= junction->getYTopSquare() && otherCarY >= junction->getYBotSquare()) {
-						//Don't go past the line
+						//Don't go past the line to keep box clear
 						if ((junction->getYBotSquare() - m_ypos) < (m_Width * 4 / 3) && m_ypos + (m_Width / 2) < junction->getYBotSquare()) {
-							//std::cout << "Avoiding right turn other side of road" << std::endl;
 							speed = 0;
 						}
 					}
 				}
+				// Both Cars are going straight and are not on a straight road
+				// Check to see if this car would block junction by moving straight on
 				if (collideCheck[i].getDirection() == 0 && direction == 0 && junction->getType() != RoadType::S) {
+					// Other Car is in box and in same lane as this car 
 					if (otherCarX <= junction->GetXPos() && otherCarX >= junction->getXLeftSquare() && otherCarY <= junction->getYTopSquare() && otherCarY >= junction->getYBotSquare()) {
-						//Check distance
+						// If the distance is less than 3 cars then wait
 						if (inFrontOrBehindY < m_Width * 4) {
-							//std::cout << "Avoiding right turn in front" << std::endl;
 							speed = 0;
 						}
 					}
 				}
-				// Check car turning left in the way
+				// Check if a car has turned left in the way of this car so it would block junction
+				// Other car is turning left and this car is either going straight on or right
 				if (collideCheck[i].getDirection() == -1 && direction != -1) {
-					// Car in box
+					// Other Car is in box and in same lane as this car 
 					if (otherCarX <= junction->GetXPos() && otherCarX >= junction->getXLeftSquare() && otherCarY <= junction->getYTopSquare() && otherCarY >= junction->getYBotSquare()) {
+						// If the distance is less than 3 cars then wait
 						if (inFrontOrBehindY > m_Width * 3) {
 							speed = 0;
 						}
@@ -565,11 +561,14 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 		}
 	}
 	
+	// A copy of the original vector for the car is made and rotated by angle for use in next calculations
 	glm::vec3 forVec2 = forVec;
 	glm::mat4 matrix = glm::rotate(glm::mat4(1.0f), angle, glm::vec3(0.0f, 0.0f, 1.0f));
 	forVec2 = matrix * glm::vec4(forVec, 1.0f);
-	// Use forVec2 to determine how far away a collision is in front of the car
-	// Check the junction edges of the current junction but also any cars out in front
+
+	/***********************************************************************/
+	// Movements based on junction
+
 	float intersectDistTop = INT_MAX;
 	float intersectDistBot = INT_MAX;
 	float intersectDistRight = INT_MAX;
@@ -578,21 +577,27 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 	float intersectDistHorizontal = INT_MAX;
 	float intersectDistVertical = INT_MAX;
 
+	// Distance along the car moving vector until it hits different lines on the junction
 	intersectDistRight = (junction->getXRightSquare() - m_xpos) / (forVec2.x);
 	intersectDistLeft = (junction->getXLeftSquare() - m_xpos) / (forVec2.x);
 	intersectDistTop = (junction->getYTopSquare() - m_ypos) / (forVec2.y);
 	intersectDistBot = (junction->getYBotSquare() - m_ypos) / (forVec2.y);
 
+	// Distance for the lines in the middle of the junction i.e lane dividers
 	intersectDistHorizontal = (junction->GetYPos() - m_ypos) / (forVec2.y);
 	intersectDistVertical = (junction->GetXPos() - m_xpos) / (forVec2.x);
-	//angle += 0.4f / fps;
+
+	// Handle each junction type separately
 	switch (junction->getType()) {
 	case RoadType::S:
+		// In this case the speed and angle will never be changed as a result of the junction
 		break;
 	case RoadType::T:
-		//Check for lights
+		// Use each entry Point to determine how the car should repond.
+		// Each entry point has a different check for which value should be checked for stopping at lights and turning circle
 		switch (entryPoint) {
 		case 0:
+			// Makes the car stop at the line when the lights are red
 			// If the distance in x from the car is less than the 2/3 width of the car stop unless the lights are green 
 			if (abs(intersectDistLeft) < (m_Width * 4/6) && !junction->getTrafficLights()[entryPoint].getLights()[2]) {
 				speed = 0;
@@ -600,16 +605,20 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 			else {
 				speed = speed;
 			}
+			// In the case that the car is already past the lights, force the car to keep moving
 			if (m_xpos + (m_Width / 2) >= junction->getXLeftSquare()) {
 				speed = 12.0f / fps;
 			}
-			//In the box and need to turn correctly
+
+			// Handles the angle changing for the car, checking the direction of the car to decide when it should turn
+			// The car is in the box as x distance between centre and left box line is negative
 			if (intersectDistLeft <= 0 && speed > 0.01) {
-				
 				switch (direction) {
+				// If direction is left turn straight away
 				case -1:
 					angle += 2.4 / fps;
 					break;
+				// Don't turn at all if going straight
 				case 0:
 					break;
 				case 1:
@@ -812,6 +821,8 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 	case RoadType::N:
 		break;
 	}
+
+	/***********************************************************************/
 
 	//Check to see if any line collisions are imminent in front of the car
 	//In the middle box or not
@@ -1571,26 +1582,6 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 	//return glm::rotate(transform, angle, glm::vec3(0, 0, 1));
 //return glm::rotate(glm::translate(glm::mat4(1.0f), glm::vec3(-30.10,0.0,0.0)), glm::radians(45.0f), glm::vec3(0.0, 0.0, 1.0));
 }
-
-//void Car::carNewDirection()
-//{
-//	if (prevX == this->m_xpos && prevY == this->m_ypos) {
-//		timeWaited++;
-//	}
-//	else {
-//		timeWaited = 0;
-//		prevX = this->m_xpos;
-//		prevY = this->m_ypos;
-//	}
-//
-//	if (timeWaited == 10) {
-//		std::cout << "shift it \n";
-//		this->direction = -1;
-//		this->path = {};
-//	}
-//}
-
-
 
 Car::Car()
 {
