@@ -31,56 +31,37 @@ Car::Car(Car* old)
 	junction = &Junction();
 	path = {};
 	this->uniqueIdentifier = 0;
-	this->timeWaited = 0;
 }
 
 Car::Car(glm::mat4 rotation) {
 	rayStart = glm::vec3(0, 0, 0);
 	rayDirection = glm::vec3(0, 1, 0);
-	angle = 0;// 1.5708;
+	angle = 0;
 	objectRotation = glm::rotate(glm::mat4(1.0f), -angle, glm::vec3(0,0,1));
 	srand(time(0));
 	forVec = objectRotation * glm::vec4(forVec, 1.0f);
 	junction = &Junction();
 	path = {};
 	this->uniqueIdentifier = 0;
-	this->timeWaited = 0;
-
-
-
-	//// Calculate starting point for the car
-	//float x = model.theBBox.centrePoint.x;
-	//float y = model.theBBox.centrePoint.y;
-	//float z = model.theBBox.centrePoint.z;
-
-	////Calculate direction vector pointing out the front of the car
-	//float zFront = z + 1;
-
-	//// Rotate the points by the rotation matrix
-	//float xRot = (x * rotation[0][0]) + (y * rotation[0][1]) + (z * rotation[0][2]);
-	//float yRot = (x * rotation[1][0]) + (y * rotation[1][1]) + (z * rotation[1][2]);
-	//float zRot = (x * rotation[2][0]) + (y * rotation[2][1]) + (z * rotation[2][2]);
-
-	//float directRotX = (x * rotation[0][0]) + (y * rotation[0][1]) + (zFront * rotation[0][2]);
-	//float directRotY = (x * rotation[1][0]) + (y * rotation[1][1]) + (zFront * rotation[1][2]);
-	//float directRotZ = (x * rotation[2][0]) + (y * rotation[2][1]) + (zFront * rotation[2][2]);
-
-	//rayStart = glm::vec3(xRot, yRot, zRot);
-	//rayDirection = glm::vec3(directRotX, directRotY, directRotZ);
 }
 
 int Car::entryPoint()
 {
-	//std::cout << "Are you ever called deerie?" << std::endl;
-	//convert to use a junction variable
+	// Checks to see if the entry point has already been calculated for this junction
 	if (currentJunction == (*junction).getIdentifier()) {
 		return entryTurning;
 	}
+	// Loop through the 4 possible spawn points of a junction, calculating the distance between the car and these points 
+	// using pythagorus' theorum ( (x1-x2)^2 ) + ( (y1-y2)^2 ) 
+	// and choosing the closest to be set as entry point
 	int entryPoint2 = 0;
 	float bestDist = -1;
 	for (int i = 0; i < 4; i++) {
 		float xVert = INT_MAX;
 		float yVert = INT_MAX;
+		// Get the mid points between two verticies
+		// Look at vertex at i and i + 1
+		// If we want the edge between vertex 3 and 0, use the else stamement
 		if (i < 3) {
 			xVert = ((*junction).GetOBB().vert[i].x + (*junction).GetOBB().vert[i + 1].x) / 2;
 			yVert = ((*junction).GetOBB().vert[i].y + (*junction).GetOBB().vert[i + 1].y) / 2;
@@ -89,10 +70,12 @@ int Car::entryPoint()
 			xVert = ((*junction).GetOBB().vert[i].x + (*junction).GetOBB().vert[0].x) / 2;
 			yVert = ((*junction).GetOBB().vert[i].y + (*junction).GetOBB().vert[0].y) / 2;
 		}
-		//std::cout << xVert << ", " << yVert << std::endl;
+		// Calculate this distance using pythagorus' theorum
 		float distanceFromEdge = ((m_xpos - xVert) * (m_xpos - xVert)) + ((m_ypos - yVert) * (m_ypos - yVert));
+		// If the best distance hasn't been set or the distance for this edge is better than the last, set it to the current distance
 		if (bestDist == -1 || distanceFromEdge < bestDist) {
 			bestDist = distanceFromEdge;
+			// The OBB moves clockwise around the model but our entry indexes are not ordered in this way, so we adjust the entry point to be correct.
 			if (i == 3) {
 				entryPoint2 = 0;
 			}
@@ -105,8 +88,7 @@ int Car::entryPoint()
 		}
 	}
 
-	//std::cout << "entrypoint 1 = " << entryPoint2 << std::endl;
-	//std::cout << "orientation = " << junction->getOrientation() << std::endl;
+	// Depending on the orientation the OBB verticies are moved around the model, this switch statement fixes this by shifting the entry point based on amount rotated
 	switch (junction->getOrientation()) {
 	case 1:
 		switch (entryPoint2) {
@@ -158,8 +140,6 @@ int Car::entryPoint()
 		break;
 	}
 	entryTurning = entryPoint2;
-	//std::cout << "entrypoint 2 = " << entryPoint2 << std::endl;
-	//std::cout << "entry = " << entryPoint2 << std::endl;
 	return entryPoint2;
 }
 
@@ -1571,26 +1551,6 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 	//return glm::rotate(transform, angle, glm::vec3(0, 0, 1));
 //return glm::rotate(glm::translate(glm::mat4(1.0f), glm::vec3(-30.10,0.0,0.0)), glm::radians(45.0f), glm::vec3(0.0, 0.0, 1.0));
 }
-
-//void Car::carNewDirection()
-//{
-//	if (prevX == this->m_xpos && prevY == this->m_ypos) {
-//		timeWaited++;
-//	}
-//	else {
-//		timeWaited = 0;
-//		prevX = this->m_xpos;
-//		prevY = this->m_ypos;
-//	}
-//
-//	if (timeWaited == 10) {
-//		std::cout << "shift it \n";
-//		this->direction = -1;
-//		this->path = {};
-//	}
-//}
-
-
 
 Car::Car()
 {
