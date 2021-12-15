@@ -145,15 +145,18 @@ int Car::entryPoint()
 
 int Car::decideDirection(int entryPoint) {
 
-	//std::cout << "entryPoint = " << entryPoint << std::endl;
 	int exitPoint;
+	// If the direction has already been set for this junction then return the current decided direction
 	if (currentJunction == this->junction->getIdentifier()) {
 		return exit;
 	}
 	currentJunction = (*junction).getIdentifier();
+	// If a path hasn't already been set
 	if (this->path.empty()) {
+		// Get the number of possible turnings for the cars current junction
 		int numTurns = (*junction).getTurnings().size();
 		std::vector<int> possibleTurnings;
+		// Loop through each turning adding its index to a list
 		for (int i = 0; i < numTurns; i++) {
 			if (i == entryPoint) {
 				continue;
@@ -162,16 +165,20 @@ int Car::decideDirection(int entryPoint) {
 				possibleTurnings.push_back(i);
 			}
 		}
+		// Choose a random index in the list
 		exitPoint = rand() % possibleTurnings.size();
+		// Get the index of the exit at this random index in the list of possible exits
 		exitPoint = possibleTurnings.at(exitPoint);
 		exitTurning = exitPoint;
 	}
+	// If a path is set, get the next exit from the top of the stack and pop
 	else {
 		exitPoint = path[path.size()-1];
 		exitTurning = exitPoint;
 		path.pop_back();
 	}
 	
+	// Based on the entry and exits points, set the direction of the car (-1 for left, 0 for straight, 1 for right)
 	switch (entryPoint) {
 	case(0):
 		switch (exitPoint) {
@@ -226,19 +233,17 @@ int Car::decideDirection(int entryPoint) {
 		}
 		break;
 	}
-	//std::cout << exitPoint << std::endl;
 	exit = exitPoint;
-
-	//std::cout << "direction = " << exit << std::endl;
 	direction = exitPoint;
 	return exitPoint;
 }
 
 void Car::respawn(Junction *junction, int presetEntry) {
-	this->junction = junction;
-	//std::cout << "exitTurning = " << exitTurning << std::endl;
 	
+	this->junction = junction;
+	// Get the index of the new spawn entrance
 	int newSpawn = this->setSpawn(presetEntry);
+	// Rotate the car based on the spawn so it is facing the centre of the junction
 	switch (newSpawn) {
 	case(0):
 		angle = glm::radians(180.0f);
@@ -256,6 +261,7 @@ void Car::respawn(Junction *junction, int presetEntry) {
 	entryTurning = newSpawn;
 	glm::mat4 spawn = glm::translate(glm::mat4(1.0f), glm::vec3(m_xpos, m_ypos, 0));
 	spawn = glm::rotate(spawn, angle, glm::vec3(0.0, 0.0, 1.0));
+	// Sets the temporay OBB that will be reset in render, so we can avoid the cars spawning on top of each other before they are rendered
 	spawnOBB.transformPoints(spawn);
 }
 
@@ -289,6 +295,7 @@ int Car::setSpawn(int entry)
 {
 	setCurrentlyRendered(false);
 	int spawnEntrance;
+	// Loop through the number of possible spawns for a junction adding them to a list
 	int numTurns = (*junction).getTurnings().size();
 	std::vector<int> possibleTurnings;
 	for (int i = 0; i < numTurns; i++) {
@@ -296,6 +303,7 @@ int Car::setSpawn(int entry)
 			possibleTurnings.push_back(i);
 		}
 	}
+	// Adjust the OBB verticies for the orientation as if the model is rotated the expected positions of verticies will change
 	int correctVert = 0;
 	switch (junction->getOrientation()) {
 	case 0:
@@ -313,14 +321,15 @@ int Car::setSpawn(int entry)
 
 	}
 	
+	// If entry has not been set randomly choose a spawn from list, otherwise just pass the preset entry
 	if (entry == -1) {
 		spawnEntrance = rand() % possibleTurnings.size();
 	}
 	else {
 		spawnEntrance = entry;
 	}
-	//std::cout << "entry = " << entry << std::endl;
-	//int turningIndex = possibleTurnings.at(spawnEntrance);
+	// Set the position of the car based on the entry calculated
+	// Uses the uniform distances of the junction to ensure the car is spawned in the correct location
 	switch (entry) {
 	case(0):
 		this->SetXpos((*junction).GetOBB().vert[correctVert].x - (m_Height / 2));
@@ -339,11 +348,8 @@ int Car::setSpawn(int entry)
 		this->SetYpos((*junction).GetOBB().vert[correctVert].y);
 		break;
 	}
+	// Reset the current junction for this car as it has been spawned in a new junction.
 	currentJunction = "";
-	
-	//std::cout << "X coord car centre = " << m_xpos << std::endl;
-	//std::cout << "Y coord car centre = " << m_ypos << std::endl;
-	//std::cout << "Set spawn = " << entry << std::endl;
 	return entry;
 }
 
@@ -354,17 +360,6 @@ glm::mat4 Car::rotate(float speed, int direction, int entryPoint, float fps, std
 			continue;
 		}
 		if (collideCheck[i].IsInCollision(collide)) {
-			//std::cout << "index of collision = " << m_xpos << ", " << m_ypos << std::endl;
-			//std::cout << "Index of other car = " << collideCheck[i].GetXPos() << ", " << collideCheck[i].GetYPos() << std::endl;
-			if (m_xpos < junction->getXRightSquare() && m_xpos > junction->getXLeftSquare() && m_ypos < junction->getYTopSquare() && m_ypos > junction->getYBotSquare() && junction->getType() == RoadType::X) {
-				//std::cout << "Obb = (" << collideCheck[i].obb.vert[0].x << ", " << collideCheck[i].obb.vert[0].y << ") (" << collideCheck[i].obb.vert[1].x << ", " << collideCheck[i].obb.vert[1].y << ") (" << collideCheck[i].obb.vert[2].x << ", "
-				//	<< collideCheck[i].obb.vert[2].y << ") (" << collideCheck[i].obb.vert[3].x << ", " << collideCheck[i].obb.vert[3].y << ")" << std::endl;
-
-				//std::cout << "Obb 2 = (" << collide.vert[0].x << ", " << collide.vert[0].y << ") (" << collide.vert[1].x << ", " << collide.vert[1].y << ") (" << collide.vert[2].x << ", "
-				//	<< collide.vert[2].y << ") (" << collide.vert[3].x << ", " << collide.vert[3].y << ")" << std::endl;
-
-				//std::cout << "coordinates = (" << m_xpos << ", " << m_ypos << ")\n(" << collideCheck[i].GetXPos() << ", " << collideCheck[i].GetYPos() << ")\n\n";
-			}
 			speed = 0;
 			goto moving;
 		}
