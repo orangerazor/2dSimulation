@@ -22,6 +22,7 @@ private:
     int height;
     std::vector<std::vector<Junction>> map;
     std::vector<std::pair<std::pair<int, int>, int>> spawns;
+    std::vector<int> biggerBounds;
 
 public:
     /**
@@ -95,7 +96,9 @@ public:
     std::pair<std::vector<Junction>, std::vector<int>> possibleMoves(Junction origin, int entryPoint);
     /**
     * computes an fvalue for the pathfinder. based on the difference of indices
-    * @param path - 
+    * @param path - the current path
+    * @param goal - the goal junction
+    * @return - the f value
     */
     int fValue (std::vector<Junction> path, Junction goal);
     

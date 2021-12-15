@@ -46,17 +46,6 @@ void Map::removeJunction(int posX, int posY)
 	this->map[posY][posX] = *new Junction();
 }
 
-Junction Map::getMiddle() {
-	int middle = (this->width * this->height) / 2;
-	if (middle == 0) {
-		return this->map[0][0];
-	}
-	//std::cout << "middle=" << middle << std::endl;
-	//std::cout <<"y="<< middle / this->height << std::endl;
-	//std::cout <<"x="<< middle % this->height << std::endl;
-
-	return this->map[middle / this->height][middle % this->height];
-}
 
 void Map::initialiseSpawns() {
 	for (int i = 0; i < this->height; i++){
