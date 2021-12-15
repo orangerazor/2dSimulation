@@ -31,7 +31,6 @@ void Sprite::SetWidth(float size)
 void Sprite::SetHeight(float size)
 {
 	m_Height = size;
-	//std::cout << m_Height << std::endl;
 }
 
 void Sprite::SetXpos(float x)
@@ -75,11 +74,9 @@ void Sprite::IncPos(float x, float y)
 glm::mat4 Sprite::transform(float speed, int direction)
 {
 	if (direction == 0) {
-		//std::cout << "noot noot";
 		objectRotation = glm::rotate(objectRotation, -0.01f, glm::vec3(0, 1, 0));
 	}
 	if (direction == 1) {
-		//std::cout << "noot noot";
 		objectRotation = glm::rotate(objectRotation, 0.01f, glm::vec3(0, 1, 0));
 	}
 	m_xpos += objectRotation[2][0] * speed;
@@ -235,13 +232,8 @@ void Sprite::Init(Shader& shader, float colour[3], std::string filename)
 
 void Sprite::Render(Shader& shader, glm::mat4& ModelViewMatrix, glm::mat4& ProjectionMatrix, glm::mat4& ModelMatrix, int hour)
 {
-	//std::cout << this->getHeight() << std::endl;
 	/****UPDATE THE CORNER VALUES BASED ON TRANSFORMATION***/
-	//std::cout << m_Height << std::endl;
-	//std::cout << "X before = " << obb.vert[0].x << " Y before = " << obb.vert[0].y << std::endl;
-	//std::cout << ModelMatrix[3][0] << ", " << ModelMatrix[3][1] << std::endl;
 	obb.transformPoints(ModelMatrix);
-	//std::cout << "X after = " << obb.vert[0].x << " Y after = " << obb.vert[0].y << std::endl;
 	collide.transformPoints(ModelMatrix);
 	for (int i = 0; i < 4; i++) {
 		spawnOBB.vert[i].x = 0;
@@ -269,6 +261,7 @@ void Sprite::Render(Shader& shader, glm::mat4& ModelViewMatrix, glm::mat4& Proje
 	//pass the uniform for the ModelView matrix to the shader
 	glUniformMatrix4fv(glGetUniformLocation(shader.handle(), "ModelViewMatrix"), 1, GL_FALSE, &ModelViewMatrix[0][0]);
 
+	//changes the filter on a texture based on the time of the day
 	if (hour == 0) {
 		glUniform1f(glGetUniformLocation(shader.handle(), "dayVal"), 0.0);
 
