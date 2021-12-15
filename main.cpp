@@ -124,6 +124,7 @@ void display()
 	//clear the colour and depth buffers
 	glClear(GL_COLOR_BUFFER_BIT);
 	glEnable(GL_BLEND);
+	//sets the background colour depending on the hour
 	if (hour == 1000) {
 		glClearColor((0.0f), (153.0f / 256.0f), (68.0f / 256.0f), (0.0f));
 	}
@@ -174,6 +175,7 @@ void display()
 			break;
 		}
 	}
+	//changes the car spawning rate depending on the time of the day
 	switch (hour)
 	{
 	case 0:
@@ -183,7 +185,6 @@ void display()
 	case 4:
 	case 22:
 	case 23:
-		//1000000
 		if (secondElapsed >= 1000000) {
 			if (cars.size() < 20) {
 				Car toSpawn = Car::Car(glm::mat4(1.0f));
@@ -193,12 +194,6 @@ void display()
 				carUniqueIdentifier++;
 				toSpawn.setJunction(&emptyJunction);
 				cars.push_back(toSpawn);
-				/*std::cout << "car size = " << cars.size() << std::endl;
-				for (int i = 0; i < cars.size(); i++) {
-					std::cout << "I = " << i << std::endl;
-					std::cout << "x = " << cars[i].GetXPos() << ", y = " << cars[i].GetYPos() << std::endl;
-				}
-				std::cout << "\n\n";*/
 			}
 		}
 		break;
@@ -266,23 +261,18 @@ void display()
 			}
 		}
 	}
+	//cycles the traffic lights per second for all the junctions
 	if (secondElapsed >= 1000000) {
-		//for (int i = 0; i < cars.size(); i++) {
-		//	cars[i].carNewDirection();
-		//}
 		for (int i = 0; i < mapClass.getMap().size(); i++) {
 			for (int j = 0; j < mapClass.getMap()[i].size(); j++) {
 				if ((*mapClass.getMapJunction(i, j)).getType() == RoadType::X || (*mapClass.getMapJunction(i, j)).getType() == RoadType::T) {
 					(*mapClass.getMapJunction(i, j)).trafficLightFlow();
-					//cout << "1 = " << (*mapClass.getMapJunction(i, j)).getTrafficLights()[1].getLights()[0] << (*mapClass.getMapJunction(i, j)).getTrafficLights()[1].getLights()[1] << (*mapClass.getMapJunction(i, j)).getTrafficLights()[1].getLights()[2] << endl;
-					//cout << "2 = " << (*mapClass.getMapJunction(i, j)).getTrafficLights()[2].getLights()[0] << (*mapClass.getMapJunction(i, j)).getTrafficLights()[2].getLights()[1] << (*mapClass.getMapJunction(i, j)).getTrafficLights()[2].getLights()[2] << endl;
-					//cout << "3 = " << (*mapClass.getMapJunction(i, j)).getTrafficLights()[3].getLights()[0] << (*mapClass.getMapJunction(i, j)).getTrafficLights()[3].getLights()[1] << (*mapClass.getMapJunction(i, j)).getTrafficLights()[3].getLights()[2] << endl;
-					//cout << "tl phase = " << (*mapClass.getMapJunction(i, j)).getTrafficLights();
 				}
 			}
 		}
 		secondElapsed = 0;
 	}
+	//renders all the junctions and moves the traffic points to the relevant points on the map
 	for (int i = 0; i < mapClass.getMap().size(); i++) {
 		for (int j = 0; j < mapClass.getMap()[i].size(); j++) {
 			glm::mat4 junctionRender = glm::mat4(1.0f);
@@ -326,7 +316,6 @@ void display()
 		for (int j = 0; j < mapClass.getMap().size(); j++) {
 			for (int k = 0; k < mapClass.getMap()[0].size(); k++) {
 				if (cars[i].getJunction()->getType() == RoadType::N) {
-					//cout << "car junction type = " << cars[i].getJunction()->getType() << endl;
 					goto respawn;
 				}
 				if (cars[i].IsInCollision(mapClass.getMapJunction(j, k)->GetOBB())) {					
@@ -347,6 +336,7 @@ void display()
 		}
 	respawn:
 		if (mapClass.getSpawns().size() > 0) {
+			//randomly given spawn point and generated a path to a random exit
 			int randomSpawn = rand() % mapClass.getSpawns().size(), randomExit;
 			//https://stackoverflow.com/questions/21813602/three-random-numbers-which-are-not-equal-to-each-other
 			do randomExit = rand() % mapClass.getSpawns().size(); while (randomSpawn == randomExit);
@@ -499,9 +489,8 @@ void display()
 					deletedCars.push_back(index);
 				}
 			}
-		//cout << "\n";
 	}
-
+	// renders all the cars
 	for (int i = 0; i < cars.size(); i++) {
 		int direction = cars[i].decideDirection(cars[i].getEntryTurning());
 		ModelMatrix = cars[i].rotate(12.0f / fps, direction, cars[i].getEntryTurning(), fps, cars);
@@ -510,154 +499,17 @@ void display()
 		cars[i].setCurrentlyRendered(true);
 	}
 
-	//for (int i = 0; i < cars.size(); i++) {
-	//	//cout << "i = " << i << endl;
-	//	//bool avoidDoubleCheck = false;
-	//	//for (int k = 0; k < alreadyChecked.size(); k++) {
-	//	//	if (alreadyChecked.at(k) == i) {
-	//	//		avoidDoubleCheck = true;
-	//	//	}
-	//	//}
-	//	for (int j = 0; j < cars.size(); j++) {
-	//		if (j == i) {
-	//			continue;
-	//		}
-	//		//if (cars[i].IsInCollision(cars[j].getCollide()) && !avoidDoubleCheck) {
-	//			int carY = stoi( cars[i].getJunction()->getIdentifier().substr(0,1) );
-	//			int carX = stoi( cars[i].getJunction()->getIdentifier().substr(1, 1) );
-	//			pair<int, int> carIndicies;
-	//			carIndicies.first = carY;
-	//			carIndicies.second = carX;
-	//			for (int k = 0; k < numSpawns; k++) {
-	//				if (mapClass.getSpawns()[k] == carIndicies) {
-	//					// Determine which car is on the junction already and which one isn't so that the one not on the junction is never spawned rather than the one already spawned despawning
-	//					OBB boxCheck;
-	//					Junction* current = mapClass.getMapJunction(carX, carY);
-	//					int entryPointBox = current->getSpawnable().second;
-	//					switch (entryPointBox) {
-	//					case 0:
-	//						boxCheck.vert[0].x = current->GetXPos() - (current->getWidth() / 2);
-	//						boxCheck.vert[0].y = current->getYBotSquare();
-	//						boxCheck.vert[1].x = current->getRightInner();
-	//						boxCheck.vert[1].y = current->getYBotSquare();
-	//						boxCheck.vert[2].x = current->getRightInner();
-	//						boxCheck.vert[2].y = current->getYTopSquare();
-	//						boxCheck.vert[3].x = current->GetXPos() - (current->getWidth() / 2);
-	//						boxCheck.vert[3].y = current->getYTopSquare();
-	//						break;
-	//					case 1:
-	//						break;
-	//					case 2:
-	//						break;
-	//					case 3:
-	//						break;
-	//					}
-	//					if (cars[i].IsInCollision(boxCheck)) {
-	//						filledSpawns.at(k).push_back(cars[i]);
-	//						cout << "Inside the box is " << i << endl;
-	//					}
-	//					//cout << "Box check vert 0 = " << boxCheck.vert[0].x << ", " << boxCheck.vert[0].y << endl;
-	//					//cout << "Box check vert 1 = " << boxCheck.vert[1].x << ", " << boxCheck.vert[1].y << endl;
-	//					//cout << "Box check vert 2 = " << boxCheck.vert[2].x << ", " << boxCheck.vert[2].y << endl;
-	//					//cout << "Box check vert 3 = " << boxCheck.vert[3].x << ", " << boxCheck.vert[3].y << endl;
-	//					//cout << "Car vertex 0 = " << cars[i].GetOBB().vert[0].x << ", " << cars[i].GetOBB().vert[0].y << endl;
-	//					//cout << "Car vertex 1 = " << cars[i].GetOBB().vert[1].x << ", " << cars[i].GetOBB().vert[1].y << endl;
-	//					//cout << "Car vertex 2 = " << cars[i].GetOBB().vert[2].x << ", " << cars[i].GetOBB().vert[2].y << endl;
-	//					//cout << "Car vertex 3 = " << cars[i].GetOBB().vert[3].x << ", " << cars[i].GetOBB().vert[3].y << endl;
-
-	//					//cout << "i = " << i << " Render status = " << cars[i].getCurrentlyRendered() << endl;
-
-	//						//alreadyChecked.push_back(j);
-	//						//buffer.at(k).push_back(cars[i]);
-	//						//cars.erase(cars.begin() + i);
-	//						//if(!cars[j].IsInCollision(boxCheck)) {
-	//						//	alreadyChecked.push_back(i);
-	//						//	buffer.at(k).push_back(cars[j]);
-	//						//	cars.erase(cars.begin() + j);
-	//						//}
-
-	//						//goto noRenderForYou;
-	//					//}
-	//					//cout << "Outside the box is " << i << endl;
-	//				}
-	//			//}
-	//		}
-	//	}
-	//	for (int k = 0; k < numSpawns; k++) {
-	//		if (!buffer.at(k).empty()) {
-	//			Junction* check = mapClass.getMapJunction(mapClass.getSpawns().at(k).first, mapClass.getSpawns().at(k).second);
-	//			int spawnEntry = check->getSpawnable().second;
-	//			bool freeSpawn = false;
-	//			switch (spawnEntry) {
-	//			case 0:
-	//				if (cars[i].GetXPos() <= check->getLeftInner() && cars[i].GetXPos() >= check->GetXPos() - (check->getWidth() / 2) &&
-	//					cars[i].GetYPos() <= check->getYTopSquare() && cars[i].GetYPos() >= check->getYBotSquare()
-	//					) {
-	//					//filledSpawns.at(k) = true;
-	//				}
-	//				break;
-	//			case 1:
-	//				if (cars[i].GetXPos() >= check->getRightInner() && cars[i].GetXPos() <= check->GetXPos() + (check->getWidth() / 2) &&
-	//					cars[i].GetYPos() <= check->getYTopSquare() && cars[i].GetYPos() >= check->getYBotSquare()
-	//					) {
-	//					//filledSpawns.at(k) = true;
-	//				}
-	//				break;
-	//			case 2:
-	//				if (cars[i].GetYPos() >= check->getTopInner() && cars[i].GetYPos() <= check->GetYPos() + (check->getHeight() / 2) &&
-	//					cars[i].GetXPos() <= check->getXRightSquare() && cars[i].GetXPos() >= check->getXLeftSquare()
-	//					) {
-	//					//filledSpawns.at(k) = true;
-	//				}
-	//				break;
-	//			case 3:
-	//				if (cars[i].GetYPos() <= check->getBotInner() && cars[i].GetYPos() >= check->GetYPos() - (check->getHeight() / 2) &&
-	//					cars[i].GetXPos() <= check->getXRightSquare() && cars[i].GetXPos() >= check->getXLeftSquare()
-	//					) {
-	//					//filledSpawns.at(k) = true;
-	//				}
-	//				break;
-	//			}
-	//		}
-	//	}
-	//	int direction = cars[i].decideDirection(cars[i].getEntryTurning());
-	//	ModelMatrix = cars[i].rotate(12.0f / fps, direction, cars[i].getEntryTurning(), fps, cars);
-	//	ModelViewMatrix = ViewMatrix * ModelMatrix;
-	//	//cout << "i = " << i << endl;
-	//	cars[i].Render(shader, ModelViewMatrix, ProjectionMatrix, ModelMatrix);
-	//	cars[i].setCurrentlyRendered(true);
-	//	goto hopSkipAndAJump;
-	//noRenderForYou:
-	//	//cars[i].SetXpos(INT_MAX);
-	//	//cars[i].SetYpos(INT_MAX);
-	//	//cout << "" << endl;
-	//	continue;
-	//hopSkipAndAJump:
-	//	cout;
-	//}
-	//for (int i = 0; i < numSpawns; i++) {
-	//	//if (filledSpawns.at(i) == false && !buffer.at(i).empty()) {
-	//		//int direction = buffer.at(i).at(0).decideDirection(buffer.at(i).at(0).getEntryTurning());
-	//		//ModelMatrix = buffer.at(i).at(0).rotate(12.0f / fps, direction, cars[i].getEntryTurning(), fps, cars);
-	//		//ModelViewMatrix = ViewMatrix * ModelMatrix;
-	//		//buffer.at(i).at(0).Render(shader, ModelViewMatrix, ProjectionMatrix, ModelMatrix);
-	//	//}
-	//}
+	
 
 	glDisable(GL_BLEND);
 
 	glutSwapBuffers();
 	std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
 
-	//std::chrono::duration<double> elapsed = end - begin;
-
-
 	secondElapsed += chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
 	hourElapsed += chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+	//used to proportionally set speed to the fps
 	fps = 1000000.0f / chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
-	//cout << "fps = " << fps << endl;
-	//cout << "hour = " << hour << endl;
-	//std::this_thread::sleep_for(std::chrono::milliseconds((1000 / fps) - chrono::duration_cast<std::chrono::milliseconds>(end - begin).count()));
 
 }
 
@@ -676,14 +528,7 @@ void init()
 	{
 		std::cout << "failed to load shader" << std::endl;
 	}
-	///This part commented is to scale the width of the sprite to match the dimensions of the car.png image.
-
-	//mapClass.addJunction(Junction::Junction("X", 0, 0, glm::mat4(1.0f), RoadType::X),0,1);
-	//mapClass.addJunction(Junction::Junction("X", 0, 0, glm::mat4(1.0f), RoadType::X),0,2);
-	//mapClass.getMapJunction(0, 2)->setSpawnable(true, 1);
-	//mapClass.getMapJunction(0, 2)->setOrientation(2);
-	//mapClass.addJunction(Junction::Junction("X", 0, 0, glm::mat4(1.0f), RoadType::X), 0, 0);
-	//mapClass.getMapJunction(0, 0)->setSpawnable(true, 0);
+	//intial objects loaded for other objects to take the textures from
 	tJunction.SetWidth(15.0f * scale * (2481 / 2481.0f));
 	tJunction.SetHeight(15.0f * scale);
 	tJunction.Init(shader, red, "textures/Tjunction.png");
@@ -705,26 +550,10 @@ void init()
 	basicCar.SetHeight(scale);
 	basicCar.Init(shader, red, "textures/car.png");
 
-
-	//mapClass.addJunction(Junction::Junction(&road, &basicTrafficLight), 0, 1);
-	//mapClass.getMapJunction(0, 1)->setOrientation(0, &basicTrafficLight);
-	//mapClass.getMapJunction(0, 1)->setSpawnable(true, { 2 });
-
-	//mapClass.addJunction(Junction::Junction(&road, &basicTrafficLight), 1, 0);
-	//mapClass.getMapJunction(1, 0)->setOrientation(1, &basicTrafficLight);
-	//mapClass.getMapJunction(1, 0)->setSpawnable(true, { 0 });
-	//mapClass.addJunction(Junction::Junction(&xJunction, &basicTrafficLight), 1, 1);
-	//mapClass.getMapJunction(1, 1)->setOrientation(2, &basicTrafficLight);
-	//mapClass.addJunction(Junction::Junction(&road, &basicTrafficLight), 1, 2);
-	//mapClass.getMapJunction(1, 2)->setOrientation(1, &basicTrafficLight);
-	//mapClass.getMapJunction(1, 2)->setSpawnable(true, { 1 });
-
-	//mapClass.addJunction(Junction::Junction(&road, &basicTrafficLight), 2, 1);
-	//mapClass.getMapJunction(2, 1)->setOrientation(0, &basicTrafficLight);
-	//mapClass.getMapJunction(2, 1)->setSpawnable(true, { 3 });
 	switch (mapSelect)
 	{
 	case 2:
+		//x junction
 		mapClass = Map::Map(3, 3);
 
 		mapClass.addJunction(Junction::Junction(&road, &basicTrafficLight), 0, 1);
@@ -747,7 +576,7 @@ void init()
 		
 		break;
 	case 3:
-		
+		// t junction
 		mapClass = Map::Map(2, 3);
 
 		mapClass.addJunction(Junction::Junction(&road, &basicTrafficLight), 0, 0);
@@ -764,6 +593,7 @@ void init()
 		mapClass.getMapJunction(1, 1)->setSpawnable(true, { 3 });
 		break;
 	case 4:
+		// city map
 		mapClass = Map::Map(7, 7);
 		//row 1
 		mapClass.addJunction(Junction::Junction(road), 0, 1);
@@ -837,7 +667,7 @@ void init()
 
 		break;
 	case 9:
-		
+		// hashtag map
 		mapClass = Map::Map(4, 4);
 		//row 1
 		mapClass.addJunction(Junction::Junction(&road, &basicTrafficLight), 0, 1);
@@ -882,6 +712,7 @@ void init()
 		break;
 	case 1:
 	default:
+		//displays the textures for the junctions
 		mapClass = Map::Map(3, 3);
 
 		mapClass.addJunction(Junction::Junction(&road, &basicTrafficLight), 0, 0);
@@ -901,23 +732,7 @@ void init()
 	}
 
 
-	//mapClass.addJunction(road, 0, 1);
-	//(*mapClass.getMapJunction(0, 1)).setOrientation(1);
-	//(*mapClass.getMapJunction(0, 1)).setSpawnable(true, 0);
-	//mapClass.addJunction(road, 0, 1);
-	//(*mapClass.getMapJunction(0, 1)).setOrientation(0);
-	//(*mapClass.getMapJunction(0, 1)).setSpawnable(true, 2);
-	//mapClass.addJunction(xJunction, 1, 1);
-	//mapClass.addJunction(road, 1, 0);
-	//(*mapClass.getMapJunction(1, 0)).setOrientation(1);
-	//(*mapClass.getMapJunction(1, 0)).setSpawnable(true, 0);
-	//mapClass.addJunction(road, 1, 2);
-	//(*mapClass.getMapJunction(1, 2)).setOrientation(1);
-	//(*mapClass.getMapJunction(1, 2)).setSpawnable(true, 1);
-	//mapClass.addJunction(road, 2, 1);
-	//(*mapClass.getMapJunction(2, 1)).setOrientation(0);
-	//(*mapClass.getMapJunction(2, 1)).setSpawnable(true, 3);
-	//
+	//initialises the map
 	for (int i = 0; i < mapClass.getMap().size(); i++) {
 		for (int j = 0; j < mapClass.getMap()[0].size(); j++) {
 			Junction pointer = *mapClass.getMapJunction(i, j);
@@ -926,23 +741,6 @@ void init()
 			(*mapClass.getMapJunction(i, j)).SetYpos(-i* (*mapClass.getMapJunction(i, j)).getHeight());
 			(*mapClass.getMapJunction(i, j)).calculateLines();
 			(*mapClass.getMapJunction(i, j)).setIdentifier(std::to_string(i) + std::to_string(j));
-
-			//switch ((*mapClass.getMapJunction(i, j)).getType())
-			//{
-			//case(RoadType::N):
-			//	(*mapClass.getMapJunction(i, j)).Init(shader, red, "textures/blank.png");
-			//	break;
-			//case(RoadType::S):
-			//	(*mapClass.getMapJunction(i, j)).Init(shader, red, "textures/Road.png");
-			//	break;
-			//case(RoadType::T):
-			//	(*mapClass.getMapJunction(i, j)).Init(shader, red, "textures/Tjunction.png");
-			//	break;
-			//case(RoadType::X):
-			//default:
-			//	(*mapClass.getMapJunction(i, j)).Init(shader, red, "textures/Xjunction.png");
-			//	break;
-			//}
 			for (int k = 0; k < 4; k++) {
 				if ((*mapClass.getMapJunction(i, j)).getType() == RoadType::S) {
 					break;
