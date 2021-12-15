@@ -832,12 +832,14 @@ void special(int key, int x, int y)
 
 void keyboard_down(unsigned char key, int x, int y) {
 	switch (key) {
+		// Adapts the viewport to zoom in and out using glortho
 	case(','):
 		zoomOut = true;
 		break;
 	case('.'):
 		zoomIn = true;
 		break;
+	// Different keys load up different maps
 	case('1'):
 		mapSelect = 1;
 		init();
@@ -872,6 +874,7 @@ void keyboard_down(unsigned char key, int x, int y) {
 		secondsToHour = 10.0f;
 		init();
 		break;
+	// Loads a single car
 	case('5'):
 		glClearColor((0.0f), (153.0f / 256.0f), (68.0f / 256.0f), (0.0f));
 		cars = {};
@@ -879,6 +882,7 @@ void keyboard_down(unsigned char key, int x, int y) {
 		secondElapsed = 0;
 		secondsToHour = 10000000000;
 		break;
+	// Turns on console output of path finding algorithm
 	case('6'):
 		debug = !debug;
 		break;
@@ -932,6 +936,7 @@ void specialUp(int key, int x, int y)
 
 void processKeys()
 {
+	// Arrow keys move the camera using the view matrix 
 	if (Left)
 	{
 		xpos -= 1000/fps;
