@@ -141,6 +141,8 @@ void Sprite::Init(Shader& shader, float colour[3], std::string filename)
 	obb.vertOriginal[3].y = halfHeight;
 
 	/*************************************/
+	// Box out in front of model
+
 	collide.vertOriginal[0].x = -3 * m_Width / 4;
 	collide.vertOriginal[0].y = -halfHeight;
 
@@ -153,6 +155,8 @@ void Sprite::Init(Shader& shader, float colour[3], std::string filename)
 	collide.vertOriginal[3].x = -3 * m_Width / 4;
 	collide.vertOriginal[3].y = halfHeight;
 	/*******************/
+	// Special box only initialised for one frame upon respawn
+
 	spawnOBB.vertOriginal[0].x = -halfWidth;
 	spawnOBB.vertOriginal[0].y = -halfHeight;
 
