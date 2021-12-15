@@ -1,6 +1,8 @@
-//
-// Created by Luke Marden on 11/10/2021.
-//
+/**
+ * File - TrafficLight.cpp
+ * Author - Group 9
+ * Description - An object to handle a traffic light
+ */
 
 #include "TrafficLight.h"
 #include "ImageLoading.h"
