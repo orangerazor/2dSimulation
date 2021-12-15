@@ -67,19 +67,18 @@ void Map::initialiseSpawns() {
 
 std::pair<std::vector<Junction>, std::vector<int>> Map::pathfinder(Junction start, int entryPoint, Junction goal, int exitPoint) {
 	std::pair<std::vector<Junction>, std::vector<int>> solution;
+	//sets the intial bound as the starts f value
 	int bound = this->fValue({ start }, goal);
-	//std::cout << "bound = " << bound << std::endl;
-	//std::cout << "start = " << start.getIdentifier() << std::endl;
-	//std::cout << "goal = " << goal.getIdentifier() << std::endl;
 	while (true)
 	{
-		
+		//performs a star at set bound
 		solution = this->aStar({ start }, {}, entryPoint, goal, exitPoint, bound);
+		//if there is a path returned it has been found, and break the while
 		if (solution.first.size()!=0) {
 			return solution;
 		}
+		// else find the new lowest bound above the current bound
 		else {
-			//std::cout << "bound = " << bound << std::endl;
 			bound = *std::min_element(biggerBounds.begin(), biggerBounds.end());
 			biggerBounds = {};
 		}
@@ -91,23 +90,25 @@ std::pair<std::vector<Junction>, std::vector<int>> Map::aStar(std::vector<Juncti
 {
 	int fValue;
 	std::pair<std::vector<Junction>, std::vector<int>> solution;
+	//if last junction in path is the goal, the path has been found
 	if (path[path.size() - 1].getIdentifier() == goal.getIdentifier()) {
-		//std::cout << "found" << std::endl;
 		exits.push_back(exitPoint);
+		//make the exits a stack
 		std::reverse(exits.begin(), exits.end());
 		return std::make_pair(path, exits);
 	}
+	//generate all possible moves from a junction
 	std::pair<std::vector<Junction>, std::vector<int>> nextMoves = possibleMoves(path[path.size() - 1], entryPoint);
 	for (int i = 0; i < nextMoves.first.size(); i++) {
 	https://coduber.com/how-to-check-if-vector-contains-a-given-element-in-cpp/
+		//if the new junction isnt already in the path then
 		if (std::find(path.begin(), path.end(), nextMoves.first[i]) == path.end()) {
 			std::vector<int> newExits = exits;
 			std::vector<Junction> newPath = path;
 			newExits.push_back(nextMoves.second[i]);
 			newPath.push_back(nextMoves.first[i]);
 			fValue = this->fValue(path, goal);
-			//std::cout << "path-1 = " << path[path.size() - 1].getIdentifier() << std::endl;
-			
+			// if the fvalue is lower than the bound, recursively continue the search
 			if (fValue <= bound) {
 				switch (newExits[newExits.size() - 1])
 				{
@@ -128,9 +129,8 @@ std::pair<std::vector<Junction>, std::vector<int>> Map::aStar(std::vector<Juncti
 					return solution;
 				}
 			}
+			//else put the bound in with the new potential values for bound
 			else {
-				//std::cout << "fvalue = " << fValue << std::endl;
-
 				biggerBounds.push_back(fValue);
 			}
 			
@@ -148,6 +148,7 @@ std::pair<std::vector<Junction>, std::vector<int>> Map::possibleMoves(Junction o
 	std::vector<int> potentialExits;
 	std::vector<int> possibleTurnings;
 	std::pair<int, int> originPosition = origin.getPosition();
+	//if the turning isnt the one already on add it to potential routes
 	for (int i = 0; i < origin.getTurnings().size(); i++) {
 		if (i == entryPoint) {
 			continue;
@@ -156,7 +157,7 @@ std::pair<std::vector<Junction>, std::vector<int>> Map::possibleMoves(Junction o
 			possibleTurnings.push_back(i);
 		}
 	}
-
+	//for every possible turning adds the new jucntion to the output
 	for (int i = 0; i < possibleTurnings.size(); i++) {
 		switch (possibleTurnings[i])
 		{
@@ -195,6 +196,7 @@ std::pair<std::vector<Junction>, std::vector<int>> Map::possibleMoves(Junction o
 
 int Map::fValue(std::vector<Junction> path, Junction goal)
 {
+	//f value is the difference in index and the length of the path
 	int h;
 	h = std::abs(path[path.size() - 1].getXPosition() - goal.getXPosition()) + std::abs(path[path.size() - 1].getYPosition() - goal.getYPosition());
 	return path.size()-1+h;
